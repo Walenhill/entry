@@ -1,4 +1,4 @@
 # entry
 это продукт для решения проблем записи.
-vue3 + laravel, nginx, docker
+vue3 + laravel(пока чистая php), nginx, docker
 дальнейшая инфа будет дполняться
