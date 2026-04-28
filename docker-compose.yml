@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: booking_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_DATABASE:-booking_db}
+      MYSQL_USER: ${DB_USERNAME:-booking_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-userpassword}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - booking_network
+
+  php:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: booking_php
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: booking_db
+      DB_USERNAME: booking_user
+      DB_PASSWORD: userpassword
+      MASTER_PASSWORD: change_this_master_password
+    networks:
+      - booking_network
+
+  vue:
+    build:
+      context: ./fronted-vue
+      dockerfile: Dockerfile
+    container_name: booking_vue
+    restart: unless-stopped
+    volumes:
+      - ./fronted-vue:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8080
+    depends_on:
+      - php
+    networks:
+      - booking_network
+
+volumes:
+  mysql_data:
+
+networks:
+  booking_network:
+    driver: bridge
