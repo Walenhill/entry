@@ -25,110 +25,375 @@ if ($connect->connect_error) {
     exit();
 }
 
-$request = explode('/', $_GET['q']); //Запрос делится по частям в массив
+// Установка кодировки
+$connect->set_charset("utf8mb4");
+
+$request = $_SERVER['REQUEST_URI'];
+$parsedUrl = parse_url($request);
+$path = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+
+// Убираем префикс /api/ если он есть
+if (strpos($path, '/api/') === 0) {
+    $path = substr($path, 5);
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Получаем мастер-пароль из переменных окружения
+$masterPassword = getenv('MASTER_PASSWORD') ?: 'master123';
+
+// Функция для проверки авторизации админа
+function checkAdminAuth() {
+    global $masterPassword;
+    $headers = getallheaders();
+    $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+    
+    if (empty($authHeader) || strpos($authHeader, 'Bearer ') !== 0) {
+        return false;
+    }
+    
+    $token = substr($authHeader, 7);
+    return $token === $masterPassword;
+}
+
+// Функция для получения JSON тела запроса
+function getJsonInput() {
+    $input = file_get_contents('php://input');
+    return json_decode($input, true);
+}
+
 switch ($method) {
-    case 'GET':#GET запросы
-        if ($request[0] == 'get-slots') //api/get-slots    с фильтром: ?role=master — все слоты ?role=client — только свободные. // Для /master добавь проверку пароля (хардкод 'master123').
-        { 
-            if ($request[1] == 'master')
-            {
-                include('auth.html');
-                exit();
-            } 
-            elseif ($request[1] == 'client')
-            {
-                header('Content-type: application/json');
-              
-                $check = $connect->prepare("SELECT time, status FROM slots WHERE status = 'Свободно'");
-                $check->execute();
-                $slots = $check->get_result();
-                $slotList = [];
-                while ($slot = mysqli_fetch_assoc($slots)) {
-                    $slotList[] = $slot;
-                }
-                echo json_encode($slotList); //Возвращает: [{ "time": "14:00", "status": "Свободно" }, { "time": "15:00", "status": "Занято" }] (JSON).
-                $slots->free();
+    case 'GET':
+        // GET /slots - получение всех слотов (для админа) или только свободных (для клиентов)
+        // GET /slots?date=2024-06-01 - фильтрация по дате
+        if ($path === 'slots' || strpos($path, 'slots?') === 0) {
+            header('Content-type: application/json');
+            
+            // Получаем параметры query string
+            $queryParams = [];
+            if (isset($parsedUrl['query'])) {
+                parse_str($parsedUrl['query'], $queryParams);
             }
+            
+            $dateFilter = isset($queryParams['date']) ? $queryParams['date'] : null;
+            $role = isset($queryParams['role']) ? $queryParams['role'] : 'client';
+            
+            // Для админа проверяем авторизацию
+            $isAdmin = false;
+            if ($role === 'admin') {
+                $isAdmin = checkAdminAuth();
+                if (!$isAdmin) {
+                    http_response_code(401);
+                    echo json_encode(['error' => 'Unauthorized']);
+                    exit();
+                }
+            }
+            
+            // Формируем SQL запрос
+            if ($isAdmin) {
+                // Админ видит все слоты
+                $sql = "SELECT id, start_time, end_time, description, status, client_name, client_phone, created_at FROM slots";
+                $params = [];
+                $types = "";
+                
+                if ($dateFilter) {
+                    $sql .= " WHERE DATE(start_time) = ?";
+                    $params[] = $dateFilter;
+                    $types .= "s";
+                }
+                
+                $sql .= " ORDER BY start_time ASC";
+            } else {
+                // Клиент видит только свободные слоты
+                $sql = "SELECT id, start_time, end_time, description FROM slots WHERE status = 'available'";
+                $params = [];
+                $types = "";
+                
+                if ($dateFilter) {
+                    $sql .= " AND DATE(start_time) = ?";
+                    $params[] = $dateFilter;
+                    $types .= "s";
+                }
+                
+                $sql .= " ORDER BY start_time ASC";
+            }
+            
+            $stmt = $connect->prepare($sql);
+            if (!empty($params)) {
+                $stmt->bind_param($types, ...$params);
+            }
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            $slots = [];
+            while ($row = $result->fetch_assoc()) {
+                $slots[] = $row;
+            }
+            
+            echo json_encode($slots);
+            $stmt->close();
         }
         break;
-    case 'POST':#POST запросы
-        if ($request[0] == 'add-slot') //POST /api/add-slot
-        {
-            header('Content-type: application/json');
-            //Принимает: { "time": "17:00" } (JSON).
-            //Действие: сохраняет слот в базу как "Свободно".
-            
-            $time = $_POST['time'];
-            
-            $add_slot = $connect->prepare("INSERT INTO slots(`time`, `status`) VALUES( ? , 'Свободно')");
-            $add_slot->bind_param("s", $time);
-            $add_slot->execute();
-
-            http_response_code(201);
-            
-            $info = 
-            ["success" => true, "slot" => ["time" => $time, "status" => "Свободно"] ];
-            
-            echo json_encode($info); //Возвращает: { "success": true, "slot": { "time": "17:00", "status": "Свободно" } }.
-
-            $add_slot->free();
         
-        }
-        else if ($request[0] == 'book-slot')  //POST /api/book-slot
-        {
+    case 'POST':
+        $jsonData = getJsonInput();
+        
+        // POST /slots/generate - генерация слотов по шаблону (только админ)
+        if ($path === 'slots/generate') {
             header('Content-type: application/json');
-            //Принимает: { "time": "14:00", "name": "Маша", "phone": "+79991234567", "service": "Шугаринг ног" } (JSON).
-            //Действие: меняет статус слота на "Занято", сохраняет данные клиента.
-
-            $time = $_POST['time'];
-            $name = $_POST['name'];
-            $phone = $_POST['phone'];
-            $service = $_POST['service'];
             
-            $book_slot = $connect->prepare("INSERT INTO slots (`time`, `status`, `name`, `phone`, `service`) VALUES (?, 'Занято', ?, ?, ?)");
-            $book_slot->bind_param("ssss", $time, $name, $phone, $service);
-            
-            $book_slot->execute();
-            
-            http_response_code(201);
-            
-            $info = ["success" => true, "slot" => ["time" => $time, "status" => "Занято", "name" => $name, "phone" => $phone, "service" => $service] ];
-            echo json_encode($info); //Возвращает: { "success": true, "slot": { "time": "14:00", "status": "Занято", "name": "Маша", "phone": "+79991234567", "service": "Шугаринг ног" } }.
-
-            $book_slot->close();
-        }
-        else if ($request[0] == 'get-slots') {
-            // Получаем пароль из переменной окружения
-            $masterPassword = getenv('MASTER_PASSWORD') ?: 'master123';
-            
-            if($_POST['password'] == $masterPassword) {
-                        
-                header('Content-type: application/json');
-                    
-                $check = $connect->prepare("SELECT time, status FROM slots");
-                $check->execute();
-                $slots = $check->get_result();
-                $slotList = [];
-                while ($slot = mysqli_fetch_assoc($slots)) {
-                    $slotList[] = $slot;
-                }
-                echo json_encode($slotList); //Возвращает: [{ "time": "14:00", "status": "Свободно" }, { "time": "15:00", "status": "Занято" }] (JSON).
-                $slots->free();
-            }
-            else {
+            if (!checkAdminAuth()) {
                 http_response_code(401);
                 echo json_encode(['error' => 'Unauthorized']);
+                exit();
+            }
+            
+            // Ожидаем: { "date": "2024-06-01", "start_hour": 10, "end_hour": 18, "duration": 60, "description": "Консультация" }
+            $date = isset($jsonData['date']) ? $jsonData['date'] : null;
+            $startHour = isset($jsonData['start_hour']) ? (int)$jsonData['start_hour'] : 9;
+            $endHour = isset($jsonData['end_hour']) ? (int)$jsonData['end_hour'] : 18;
+            $duration = isset($jsonData['duration']) ? (int)$jsonData['duration'] : 60;
+            $description = isset($jsonData['description']) ? $jsonData['description'] : 'Слот';
+            
+            if (!$date) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Date is required']);
+                exit();
+            }
+            
+            $createdCount = 0;
+            $currentTime = strtotime("$date " . sprintf('%02d:00:00', $startHour));
+            $endTime = strtotime("$date " . sprintf('%02d:00:00', $endHour));
+            
+            while ($currentTime + ($duration * 60) <= $endTime) {
+                $startTime = date('Y-m-d H:i:s', $currentTime);
+                $slotEndTime = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
+                
+                $stmt = $connect->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
+                $stmt->bind_param("sss", $startTime, $slotEndTime, $description);
+                
+                if ($stmt->execute()) {
+                    $createdCount++;
+                }
+                $stmt->close();
+                
+                $currentTime += ($duration * 60);
+            }
+            
+            http_response_code(201);
+            echo json_encode([
+                'success' => true,
+                'message' => "Created $createdCount slots",
+                'count' => $createdCount
+            ]);
+        }
+        
+        // POST /slots - создание одного слота (только админ)
+        elseif ($path === 'slots') {
+            header('Content-type: application/json');
+            
+            if (!checkAdminAuth()) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Unauthorized']);
+                exit();
+            }
+            
+            // Ожидаем: { "start_time": "2024-06-01 10:00:00", "end_time": "2024-06-01 11:00:00", "description": "Консультация" }
+            $startTime = isset($jsonData['start_time']) ? $jsonData['start_time'] : null;
+            $endTime = isset($jsonData['end_time']) ? $jsonData['end_time'] : null;
+            $description = isset($jsonData['description']) ? $jsonData['description'] : '';
+            
+            if (!$startTime || !$endTime) {
+                http_response_code(400);
+                echo json_encode(['error' => 'start_time and end_time are required']);
+                exit();
+            }
+            
+            $stmt = $connect->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
+            $stmt->bind_param("sss", $startTime, $endTime, $description);
+            
+            if ($stmt->execute()) {
+                $newId = $connect->insert_id;
+                http_response_code(201);
+                echo json_encode([
+                    'success' => true,
+                    'slot' => [
+                        'id' => $newId,
+                        'start_time' => $startTime,
+                        'end_time' => $endTime,
+                        'description' => $description,
+                        'status' => 'available'
+                    ]
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to create slot']);
+            }
+            $stmt->close();
+        }
+        
+        // POST /slots/{id}/book - бронирование слота (клиент)
+        elseif (preg_match('#^slots/(\d+)/book$#', $path, $matches)) {
+            header('Content-type: application/json');
+            
+            $slotId = (int)$matches[1];
+            
+            // Ожидаем: { "client_name": "Иван", "client_phone": "+79991234567" }
+            $clientName = isset($jsonData['client_name']) ? $jsonData['client_name'] : null;
+            $clientPhone = isset($jsonData['client_phone']) ? $jsonData['client_phone'] : null;
+            
+            if (!$clientName || !$clientPhone) {
+                http_response_code(400);
+                echo json_encode(['error' => 'client_name and client_phone are required']);
+                exit();
+            }
+            
+            // Проверяем, что слот существует и свободен
+            $checkStmt = $connect->prepare("SELECT id, status FROM slots WHERE id = ?");
+            $checkStmt->bind_param("i", $slotId);
+            $checkStmt->execute();
+            $result = $checkStmt->get_result();
+            
+            if ($result->num_rows === 0) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Slot not found']);
+                $checkStmt->close();
+                exit();
+            }
+            
+            $slot = $result->fetch_assoc();
+            $checkStmt->close();
+            
+            if ($slot['status'] !== 'available') {
+                http_response_code(409);
+                echo json_encode(['error' => 'Slot is not available']);
+                exit();
+            }
+            
+            // Бронируем слот
+            $bookStmt = $connect->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ?");
+            $bookStmt->bind_param("ssi", $clientName, $clientPhone, $slotId);
+            
+            if ($bookStmt->execute()) {
+                http_response_code(200);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Slot booked successfully',
+                    'slot' => [
+                        'id' => $slotId,
+                        'status' => 'booked',
+                        'client_name' => $clientName,
+                        'client_phone' => $clientPhone
+                    ]
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to book slot']);
+            }
+            $bookStmt->close();
+        }
+        
+        // POST /slots/{id}/cancel - отмена бронирования (только админ)
+        elseif (preg_match('#^slots/(\d+)/cancel$#', $path, $matches)) {
+            header('Content-type: application/json');
+            
+            if (!checkAdminAuth()) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Unauthorized']);
+                exit();
+            }
+            
+            $slotId = (int)$matches[1];
+            
+            // Проверяем, что слот существует и забронирован
+            $checkStmt = $connect->prepare("SELECT id, status FROM slots WHERE id = ?");
+            $checkStmt->bind_param("i", $slotId);
+            $checkStmt->execute();
+            $result = $checkStmt->get_result();
+            
+            if ($result->num_rows === 0) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Slot not found']);
+                $checkStmt->close();
+                exit();
+            }
+            
+            $slot = $result->fetch_assoc();
+            $checkStmt->close();
+            
+            if ($slot['status'] !== 'booked') {
+                http_response_code(409);
+                echo json_encode(['error' => 'Slot is not booked']);
+                exit();
+            }
+            
+            // Отменяем бронирование
+            $cancelStmt = $connect->prepare("UPDATE slots SET status = 'cancelled' WHERE id = ?");
+            $cancelStmt->bind_param("i", $slotId);
+            
+            if ($cancelStmt->execute()) {
+                http_response_code(200);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Booking cancelled successfully'
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to cancel booking']);
+            }
+            $cancelStmt->close();
+        }
+        
+        // POST /auth/login - аутентификация админа
+        elseif ($path === 'auth/login') {
+            header('Content-type: application/json');
+            
+            $password = isset($jsonData['password']) ? $jsonData['password'] : '';
+            
+            if ($password === $masterPassword) {
+                http_response_code(200);
+                echo json_encode([
+                    'success' => true,
+                    'token' => $password,
+                    'message' => 'Login successful'
+                ]);
+            } else {
+                http_response_code(401);
+                echo json_encode(['error' => 'Invalid password']);
             }
         }
         break;
-    case 'PUT':
-        //
-        break;
+        
     case 'DELETE':
-        //
+        // DELETE /slots/{id} - удаление слота (только админ)
+        if (preg_match('#^slots/(\d+)$#', $path, $matches)) {
+            header('Content-type: application/json');
+            
+            if (!checkAdminAuth()) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Unauthorized']);
+                exit();
+            }
+            
+            $slotId = (int)$matches[1];
+            
+            $stmt = $connect->prepare("DELETE FROM slots WHERE id = ?");
+            $stmt->bind_param("i", $slotId);
+            
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    http_response_code(200);
+                    echo json_encode(['success' => true, 'message' => 'Slot deleted']);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Slot not found']);
+                }
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to delete slot']);
+            }
+            $stmt->close();
+        }
         break;
 }
 

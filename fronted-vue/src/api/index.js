@@ -24,32 +24,35 @@ apiClient.interceptors.request.use(
 );
 
 export const slotsApi = {
-  // Получить все слоты
-  getAllSlots() {
-    return apiClient.get('/slots');
+  // Получить все слоты (для клиента - только свободные, для админа - все)
+  getAllSlots(date = null, role = 'client') {
+    const params = {};
+    if (date) params.date = date;
+    if (role) params.role = role;
+    return apiClient.get('/slots', { params });
   },
 
-  // Получить слот по ID
-  getSlotById(id) {
-    return apiClient.get(`/slots/${id}`);
-  },
-
-  // Создать новый слот
+  // Создать новый слот (только админ)
   createSlot(slotData) {
     return apiClient.post('/slots', slotData);
   },
 
-  // Забронировать слот
+  // Сгенерировать слоты по шаблону (только админ)
+  generateSlots(templateData) {
+    return apiClient.post('/slots/generate', templateData);
+  },
+
+  // Забронировать слот (клиент)
   bookSlot(id, bookingData) {
     return apiClient.post(`/slots/${id}/book`, bookingData);
   },
 
-  // Отменить бронь
+  // Отменить бронь (только админ)
   cancelBooking(id) {
-    return apiClient.delete(`/slots/${id}/book`);
+    return apiClient.post(`/slots/${id}/cancel`);
   },
 
-  // Удалить слот
+  // Удалить слот (только админ)
   deleteSlot(id) {
     return apiClient.delete(`/slots/${id}`);
   },
@@ -64,6 +67,11 @@ export const authApi = {
   // Выйти из системы
   logout() {
     localStorage.removeItem('auth_token');
+  },
+  
+  // Проверка аутентификации
+  isAuthenticated() {
+    return !!localStorage.getItem('auth_token');
   },
 };
 
