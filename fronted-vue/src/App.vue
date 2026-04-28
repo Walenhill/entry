@@ -1,30 +1,49 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <LoginForm v-if="!isAuthenticated" @login-success="handleLoginSuccess" />
+    <SlotsManager v-else @logout="handleLogout" />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup>
+import { ref, onMounted } from 'vue';
+import LoginForm from './components/LoginForm.vue';
+import SlotsManager from './components/SlotsManager.vue';
+
+const isAuthenticated = ref(false);
+
+const handleLoginSuccess = () => {
+  isAuthenticated.value = true;
+};
+
+const handleLogout = () => {
+  isAuthenticated.value = false;
+};
+
+onMounted(() => {
+  // Проверка наличия токена при загрузке
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    isAuthenticated.value = true;
+  }
+});
+</script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+#app {
+  min-height: 100vh;
 }
 </style>
