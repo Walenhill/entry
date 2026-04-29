@@ -2,8 +2,70 @@
   <div class="slots-container">
     <header class="header">
       <h1>Управление слотами</h1>
-      <button @click="handleLogout" class="logout-btn">Выйти</button>
+      <div class="header-actions">
+        <button @click="showStats = !showStats" class="btn-stats">📊 Статистика</button>
+        <button @click="handleLogout" class="logout-btn">Выйти</button>
+      </div>
     </header>
+
+    <!-- Модальное окно статистики -->
+    <div v-if="showStats" class="modal-overlay" @click.self="showStats = false">
+      <div class="modal-content">
+        <h2>📊 Статистика</h2>
+        <button @click="showStats = false" class="close-btn">×</button>
+        
+        <div v-if="statsLoading" class="loading">Загрузка...</div>
+        <div v-else-if="statsError" class="error">{{ statsError }}</div>
+        <div v-else-if="statsData" class="stats-body">
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-value">{{ statsData.summary.total }}</div>
+              <div class="stat-label">Всего слотов</div>
+            </div>
+            <div class="stat-card booked">
+              <div class="stat-value">{{ statsData.summary.booked }}</div>
+              <div class="stat-label">Забронировано</div>
+            </div>
+            <div class="stat-card available">
+              <div class="stat-value">{{ statsData.summary.available }}</div>
+              <div class="stat-label">Свободно</div>
+            </div>
+            <div class="stat-card cancelled">
+              <div class="stat-value">{{ statsData.summary.cancelled }}</div>
+              <div class="stat-label">Отменено</div>
+            </div>
+          </div>
+
+          <div class="load-section">
+            <h3>Загрузка: {{ statsData.load_percentage }}%</h3>
+            <div class="progress-bar">
+              <div class="progress-fill" :style="{ width: statsData.load_percentage + '%' }"></div>
+            </div>
+          </div>
+
+          <div class="top-clients">
+            <h3>🏆 Топ клиентов</h3>
+            <div v-if="!statsData.top_clients || statsData.top_clients.length === 0" class="no-data">Нет данных</div>
+            <table v-else class="clients-table">
+              <thead>
+                <tr>
+                  <th>Имя</th>
+                  <th>Телефон</th>
+                  <th>Визитов</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(client, index) in statsData.top_clients" :key="index">
+                  <td>{{ client.client_name }}</td>
+                  <td>{{ client.client_phone }}</td>
+                  <td><strong>{{ client.visits }}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="controls">
       <button @click="showCreateForm = !showCreateForm" class="btn-primary">
@@ -127,6 +189,10 @@ const isCreating = ref(false);
 const showBookingModal = ref(false);
 const isBooking = ref(false);
 const selectedSlot = ref(null);
+const showStats = ref(false);
+const statsData = ref(null);
+const statsLoading = ref(false);
+const statsError = ref(null);
 
 const newSlot = ref({
   date: '',
@@ -141,6 +207,33 @@ const bookingData = ref({
 });
 
 const emit = defineEmits(['logout']);
+
+// Загрузка статистики
+const loadStats = async () => {
+  statsLoading.value = true;
+  statsError.value = null;
+  try {
+    const response = await slotsApi.getStats();
+    if (response.data.success) {
+      statsData.value = response.data.data;
+    } else {
+      statsError.value = 'Ошибка получения данных';
+    }
+  } catch (err) {
+    console.error('Stats error:', err);
+    statsError.value = err.response?.data?.error || 'Ошибка подключения';
+  } finally {
+    statsLoading.value = false;
+  }
+};
+
+// Показ статистики с загрузкой
+const toggleStats = () => {
+  showStats.value = !showStats.value;
+  if (showStats.value && !statsData.value) {
+    loadStats();
+  }
+};
 
 // Загрузка слотов
 const loadSlots = async () => {
@@ -260,6 +353,26 @@ onMounted(() => {
 .header h1 {
   color: #333;
   margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-stats {
+  padding: 10px 20px;
+  background-color: #9b59b6;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-stats:hover {
+  background-color: #8e44ad;
 }
 
 .logout-btn {
@@ -502,6 +615,146 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #999;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.stats-body {
+  margin-top: 20px;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #3498db;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: #7f8c8d;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.stat-card.booked .stat-value {
+  color: #27ae60;
+}
+
+.stat-card.available .stat-value {
+  color: #3498db;
+}
+
+.stat-card.cancelled .stat-value {
+  color: #e74c3c;
+}
+
+.load-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.load-section h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.progress-bar {
+  height: 25px;
+  background: #ecf0f1;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #27ae60);
+  transition: width 0.5s ease;
+}
+
+.top-clients {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.top-clients h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.no-data {
+  text-align: center;
+  color: #95a5a6;
+  padding: 20px;
+}
+
+.clients-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.clients-table th,
+.clients-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.clients-table th {
+  background: #ecf0f1;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.clients-table tr:last-child td {
+  border-bottom: none;
 }
 
 .modal {
