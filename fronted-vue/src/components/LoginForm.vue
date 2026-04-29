@@ -35,17 +35,16 @@ const handleLogin = async () => {
   error.value = '';
 
   try {
-    const response = await authApi.login(password.value);
+    const success = await authApi.login(password.value);
     
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
+    if (success) {
       emit('login-success');
     } else {
       error.value = 'Неверный ответ сервера';
     }
   } catch (err) {
     console.error('Login error:', err);
-    error.value = err.response?.data?.message || 'Ошибка входа. Проверьте пароль.';
+    error.value = err.response?.data?.error || 'Ошибка входа. Проверьте пароль.';
   } finally {
     isLoading.value = false;
   }

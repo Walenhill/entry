@@ -7,21 +7,8 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable cookies for session auth
 });
-
-// Интерсептор для добавления токена авторизации
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 export const slotsApi = {
   // Получить все слоты (для клиента - только свободные, для админа - все)
@@ -65,18 +52,29 @@ export const slotsApi = {
 
 export const authApi = {
   // Войти в систему
-  login(password) {
-    return apiClient.post('/auth/login', { password });
+  async login(password) {
+    const response = await apiClient.post('/auth/login', { password });
+    return response.data.success === true;
   },
 
   // Выйти из системы
-  logout() {
-    localStorage.removeItem('auth_token');
+  async logout() {
+    try {
+      await apiClient.post('/auth/logout');
+    } catch (e) {
+      // Ignore errors on logout
+    }
   },
   
-  // Проверка аутентификации
-  isAuthenticated() {
-    return !!localStorage.getItem('auth_token');
+  // Проверка аутентификации через проверку сессии на бэкенде
+  async isAuthenticated() {
+    try {
+      // Пытаемся получить слоты как админ - если успешно, значит авторизован
+      await apiClient.get('/slots', { params: { role: 'admin' } });
+      return true;
+    } catch (e) {
+      return false;
+    }
   },
 };
 

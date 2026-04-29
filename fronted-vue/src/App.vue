@@ -9,8 +9,10 @@
 import { ref, onMounted } from 'vue';
 import LoginForm from './components/LoginForm.vue';
 import SlotsManager from './components/SlotsManager.vue';
+import { authApi } from './api';
 
 const isAuthenticated = ref(false);
+const isChecking = ref(true);
 
 const handleLoginSuccess = () => {
   isAuthenticated.value = true;
@@ -20,12 +22,11 @@ const handleLogout = () => {
   isAuthenticated.value = false;
 };
 
-onMounted(() => {
-  // Проверка наличия токена при загрузке
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    isAuthenticated.value = true;
-  }
+onMounted(async () => {
+  // Проверка сессии на бэкенде при загрузке
+  const authenticated = await authApi.isAuthenticated();
+  isAuthenticated.value = authenticated;
+  isChecking.value = false;
 });
 </script>
 

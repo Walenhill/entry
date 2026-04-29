@@ -16,10 +16,14 @@ if (file_exists($envFile)) {
     }
 }
 
-// Set CORS headers for frontend access
-header("Access-Control-Allow-Origin: *");
+// Initialize secure session before any output
+require_once __DIR__ . '/includes/auth.php';
+initSecureSession();
+
+// Set CORS headers for frontend access with credentials
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
 
 // Handle preflight OPTIONS request
