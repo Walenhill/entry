@@ -182,6 +182,57 @@ switch ($method) {
             $stmt->close();
         }
         break;
+    
+    case 'GET':
+        // GET /stats - статистика (только админ)
+        if ($path === 'stats') {
+            header('Content-type: application/json');
+            
+            if (!checkAdminAuth()) {
+                http_response_code(401);
+                echo json_encode(['error' => 'Unauthorized']);
+                exit();
+            }
+            
+            try {
+                // Общая статистика
+                $stmt = $pdo->query("SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 'booked' THEN 1 ELSE 0 END) as booked,
+                    SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) as available,
+                    SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled
+                    FROM slots");
+                $summary = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                // Загрузка в процентах
+                $total = (int)$summary['total'];
+                $booked = (int)$summary['booked'];
+                $loadPercentage = $total > 0 ? round(($booked / $total) * 100, 1) : 0;
+
+                // Топ клиентов
+                $stmt = $pdo->query("SELECT client_name, client_phone, COUNT(*) as visits 
+                    FROM slots 
+                    WHERE status = 'booked' AND client_name IS NOT NULL
+                    GROUP BY client_phone, client_name 
+                    ORDER BY visits DESC 
+                    LIMIT 5");
+                $topClients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                echo json_encode([
+                    'success' => true,
+                    'data' => [
+                        'summary' => $summary,
+                        'load_percentage' => $loadPercentage,
+                        'top_clients' => $topClients
+                    ]
+                ]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+            }
+            exit();
+        }
+        break;
         
     case 'POST':
         $jsonData = getJsonInput();

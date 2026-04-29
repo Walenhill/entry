@@ -56,6 +56,11 @@ export const slotsApi = {
   deleteSlot(id) {
     return apiClient.delete(`/slots/${id}`);
   },
+
+  // Получить статистику (только админ)
+  getStats() {
+    return apiClient.get('/stats');
+  },
 };
 
 export const authApi = {
