@@ -56,7 +56,8 @@ function checkAdminAuth() {
     
     $token = $matches[1];
     $secretKey = getenv('SECRET_KEY') ?: 'default_secret_key_change_me';
-    $expectedToken = hash('sha256', getenv('MASTER_PASSWORD') ?: 'admin123' . $secretKey);
+    $masterPassword = getenv('MASTER_PASSWORD') ?: 'admin123';
+    $expectedToken = hash('sha256', $masterPassword . $secretKey);
     
     if ($token !== $expectedToken) {
         jsonResponse(['error' => 'Invalid token'], 403);
@@ -75,9 +76,10 @@ function generateToken() {
 }
 
 /**
- * Validate datetime format
+ * Validate datetime format (YYYY-MM-DD HH:MM:SS)
  */
 function validateDateTime($datetime) {
+    if (!$datetime) return false;
     $format = 'Y-m-d H:i:s';
     $d = DateTime::createFromFormat($format, $datetime);
     return $d && $d->format($format) === $datetime;
@@ -96,4 +98,35 @@ function hasTimeOverlap($start1, $end1, $start2, $end2) {
 function sanitizeInput($input) {
     $conn = getDbConnection();
     return $conn->real_escape_string(trim($input));
+}
+
+/**
+ * Get request path without /api/ prefix
+ */
+function getRequestPath() {
+    $request = $_SERVER['REQUEST_URI'] ?? '/';
+    $parsedUrl = parse_url($request);
+    $path = $parsedUrl['path'] ?? '/';
+    
+    // Remove /api/ prefix if present
+    if (strpos($path, '/api/') === 0) {
+        $path = substr($path, 5);
+    }
+    
+    return $path;
+}
+
+/**
+ * Get query parameters from URL
+ */
+function getQueryParams() {
+    $request = $_SERVER['REQUEST_URI'] ?? '/';
+    $parsedUrl = parse_url($request);
+    $queryParams = [];
+    
+    if (isset($parsedUrl['query'])) {
+        parse_str($parsedUrl['query'], $queryParams);
+    }
+    
+    return $queryParams;
 }

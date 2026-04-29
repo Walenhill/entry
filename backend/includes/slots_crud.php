@@ -277,37 +277,39 @@ function hasOverlappingSlots($startTime, $endTime) {
 }
 
 /**
- * Get statistics
+ * Get statistics for admin dashboard
  */
 function getStatistics() {
     $conn = getDbConnection();
     
-    // Total slots
-    $result = $conn->query("SELECT COUNT(*) as total FROM slots");
-    $total = $result->fetch_assoc()['total'];
+    // Total slots by status
+    $result = $conn->query("SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'booked' THEN 1 ELSE 0 END) as booked,
+        SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) as available,
+        SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled
+        FROM slots");
+    $summary = $result->fetch_assoc();
     
-    // Booked slots
-    $result = $conn->query("SELECT COUNT(*) as booked FROM slots WHERE status = 'booked'");
-    $booked = $result->fetch_assoc()['booked'];
+    // Occupancy rate
+    $total = (int)$summary['total'];
+    $booked = (int)$summary['booked'];
+    $occupancyRate = $total > 0 ? round(($booked / $total) * 100, 2) : 0;
     
-    // Available slots
-    $result = $conn->query("SELECT COUNT(*) as available FROM slots WHERE status = 'available'");
-    $available = $result->fetch_assoc()['available'];
-    
-    // Top clients
-    $result = $conn->query("SELECT client_name, client_phone, COUNT(*) as visits FROM slots WHERE status = 'booked' GROUP BY client_phone ORDER BY visits DESC LIMIT 5");
+    // Top clients by visits
+    $result = $conn->query("SELECT client_name, client_phone, COUNT(*) as visits 
+        FROM slots 
+        WHERE status = 'booked' AND client_name IS NOT NULL
+        GROUP BY client_phone, client_name 
+        ORDER BY visits DESC 
+        LIMIT 5");
     $topClients = [];
     while ($row = $result->fetch_assoc()) {
         $topClients[] = $row;
     }
     
-    // Occupancy rate
-    $occupancyRate = $total > 0 ? round(($booked / $total) * 100, 2) : 0;
-    
     return [
-        'total_slots' => $total,
-        'booked_slots' => $booked,
-        'available_slots' => $available,
+        'summary' => $summary,
         'occupancy_rate' => $occupancyRate,
         'top_clients' => $topClients
     ];
