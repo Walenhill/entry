@@ -12,6 +12,20 @@ CREATE TABLE IF NOT EXISTS slots (
     INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Таблица попыток входа (для защиты от брутфорса)
+CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ip_time (ip_address, attempt_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Таблица настроек (хранение хеша пароля админа)
+CREATE TABLE IF NOT EXISTS settings (
+    setting_key VARCHAR(50) PRIMARY KEY,
+    setting_value TEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Добавление тестовых данных (свободные слоты)
 INSERT INTO slots (start_time, end_time, description, status) VALUES 
 ('2024-06-01 10:00:00', '2024-06-01 11:00:00', 'Утренний слот', 'available'),

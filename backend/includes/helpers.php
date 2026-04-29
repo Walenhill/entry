@@ -45,34 +45,11 @@ function getInput() {
 }
 
 /**
- * Check admin authorization
+ * Sanitize input string
  */
-function checkAdminAuth() {
-    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    
-    if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-        jsonResponse(['error' => 'Authorization required'], 401);
-    }
-    
-    $token = $matches[1];
-    $secretKey = getenv('SECRET_KEY') ?: 'default_secret_key_change_me';
-    $masterPassword = getenv('MASTER_PASSWORD') ?: 'admin123';
-    $expectedToken = hash('sha256', $masterPassword . $secretKey);
-    
-    if ($token !== $expectedToken) {
-        jsonResponse(['error' => 'Invalid token'], 403);
-    }
-    
-    return true;
-}
-
-/**
- * Generate auth token
- */
-function generateToken() {
-    $password = getenv('MASTER_PASSWORD') ?: 'admin123';
-    $secretKey = getenv('SECRET_KEY') ?: 'default_secret_key_change_me';
-    return hash('sha256', $password . $secretKey);
+function sanitizeInput($input) {
+    $conn = getDbConnection();
+    return $conn->real_escape_string(trim($input));
 }
 
 /**
@@ -90,14 +67,6 @@ function validateDateTime($datetime) {
  */
 function hasTimeOverlap($start1, $end1, $start2, $end2) {
     return ($start1 < $end2) && ($start2 < $end1);
-}
-
-/**
- * Sanitize input string
- */
-function sanitizeInput($input) {
-    $conn = getDbConnection();
-    return $conn->real_escape_string(trim($input));
 }
 
 /**

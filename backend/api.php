@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/slots_crud.php';
+require_once __DIR__ . '/includes/auth.php';
 
 // Get request details
 $method = $_SERVER['REQUEST_METHOD'];
@@ -86,7 +87,24 @@ function handlePostRequest($path) {
     
     // POST /auth/login - Admin login
     if ($path === 'auth/login') {
-        handleLogin($data);
+        $result = loginAdmin($data['password'] ?? '');
+        
+        if ($result['success']) {
+            jsonResponse([
+                'success' => true,
+                'message' => 'Login successful'
+            ]);
+        } else {
+            jsonResponse(['error' => $result['error']], 401);
+        }
+        return;
+    }
+    
+    // POST /auth/logout - Admin logout
+    if ($path === 'auth/logout') {
+        checkAdminAuth();
+        $result = logoutAdmin();
+        jsonResponse($result);
         return;
     }
     
@@ -246,23 +264,4 @@ function handleDeleteRequest($path) {
     }
     
     jsonResponse(['error' => 'Endpoint not found'], 404);
-}
-
-/**
- * Handle admin login
- */
-function handleLogin($data) {
-    $password = $data['password'] ?? '';
-    $masterPassword = getenv('MASTER_PASSWORD') ?: 'admin123';
-    
-    if ($password !== $masterPassword) {
-        jsonResponse(['error' => 'Invalid password'], 401);
-    }
-    
-    $token = generateToken();
-    
-    jsonResponse([
-        'success' => true,
-        'token' => $token
-    ]);
 }
