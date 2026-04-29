@@ -42,9 +42,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Получаем мастер-пароль из переменных окружения
 $masterPassword = getenv('MASTER_PASSWORD') ?: 'master123';
 
+// Простой секретный ключ для генерации токена (не хранить в коде в production!)
+$secretKey = getenv('SECRET_KEY') ?: 'your-secret-key-change-in-production';
+
 // Функция для проверки авторизации админа
 function checkAdminAuth() {
-    global $masterPassword;
+    global $masterPassword, $secretKey;
     $headers = getallheaders();
     $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
     
@@ -53,13 +56,58 @@ function checkAdminAuth() {
     }
     
     $token = substr($authHeader, 7);
-    return $token === $masterPassword;
+    
+    // Проверяем, что токен соответствует ожидаемому формату
+    // В реальном проекте используйте JWT библиотеку
+    $expectedToken = hash('sha256', $masterPassword . $secretKey);
+    return $token === $expectedToken;
+}
+
+// Функция для генерации токена
+function generateToken($password) {
+    global $secretKey;
+    return hash('sha256', $password . $secretKey);
 }
 
 // Функция для получения JSON тела запроса
 function getJsonInput() {
     $input = file_get_contents('php://input');
     return json_decode($input, true);
+}
+
+// Функция валидации даты и времени
+function validateDateTime($dateTimeStr) {
+    if (!$dateTimeStr) return false;
+    $format = 'Y-m-d H:i:s';
+    $dt = DateTime::createFromFormat($format, $dateTimeStr);
+    return $dt && $dt->format($format) === $dateTimeStr;
+}
+
+// Функция проверки пересечения слотов
+function hasTimeOverlap($connect, $startTime, $endTime, $excludeId = null) {
+    $sql = "SELECT id FROM slots WHERE status != 'cancelled' AND (
+        (start_time < ? AND end_time > ?) OR
+        (start_time < ? AND end_time > ?) OR
+        (start_time >= ? AND end_time <= ?)
+    )";
+    
+    $params = [$startTime, $startTime, $endTime, $endTime, $startTime, $endTime];
+    $types = "ssssss";
+    
+    if ($excludeId !== null) {
+        $sql .= " AND id != ?";
+        $params[] = $excludeId;
+        $types .= "i";
+    }
+    
+    $stmt = $connect->prepare($sql);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $hasOverlap = $result->num_rows > 0;
+    $stmt->close();
+    
+    return $hasOverlap;
 }
 
 switch ($method) {
@@ -161,6 +209,27 @@ switch ($method) {
                 exit();
             }
             
+            // Валидация формата даты
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid date format. Use YYYY-MM-DD']);
+                exit();
+            }
+            
+            // Валидация часов
+            if ($startHour < 0 || $startHour > 23 || $endHour < 0 || $endHour > 23 || $startHour >= $endHour) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid hours. start_hour must be less than end_hour']);
+                exit();
+            }
+            
+            // Валидация длительности
+            if ($duration <= 0 || $duration > 600) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Duration must be between 1 and 600 minutes']);
+                exit();
+            }
+            
             $createdCount = 0;
             $currentTime = strtotime("$date " . sprintf('%02d:00:00', $startHour));
             $endTime = strtotime("$date " . sprintf('%02d:00:00', $endHour));
@@ -169,13 +238,16 @@ switch ($method) {
                 $startTime = date('Y-m-d H:i:s', $currentTime);
                 $slotEndTime = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
                 
-                $stmt = $connect->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
-                $stmt->bind_param("sss", $startTime, $slotEndTime, $description);
-                
-                if ($stmt->execute()) {
-                    $createdCount++;
+                // Проверка на пересечение перед созданием
+                if (!hasTimeOverlap($connect, $startTime, $slotEndTime)) {
+                    $stmt = $connect->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
+                    $stmt->bind_param("sss", $startTime, $slotEndTime, $description);
+                    
+                    if ($stmt->execute()) {
+                        $createdCount++;
+                    }
+                    $stmt->close();
                 }
-                $stmt->close();
                 
                 $currentTime += ($duration * 60);
             }
@@ -206,6 +278,27 @@ switch ($method) {
             if (!$startTime || !$endTime) {
                 http_response_code(400);
                 echo json_encode(['error' => 'start_time and end_time are required']);
+                exit();
+            }
+            
+            // Валидация формата даты и времени
+            if (!validateDateTime($startTime) || !validateDateTime($endTime)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid date/time format. Use YYYY-MM-DD HH:MM:SS']);
+                exit();
+            }
+            
+            // Проверка: время начала должно быть меньше времени конца
+            if (strtotime($startTime) >= strtotime($endTime)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'start_time must be before end_time']);
+                exit();
+            }
+            
+            // Проверка на пересечение с существующими слотами
+            if (hasTimeOverlap($connect, $startTime, $endTime)) {
+                http_response_code(409);
+                echo json_encode(['error' => 'Time slot overlaps with existing slot']);
                 exit();
             }
             
@@ -351,10 +444,11 @@ switch ($method) {
             $password = isset($jsonData['password']) ? $jsonData['password'] : '';
             
             if ($password === $masterPassword) {
+                $token = generateToken($password);
                 http_response_code(200);
                 echo json_encode([
                     'success' => true,
-                    'token' => $password,
+                    'token' => $token,
                     'message' => 'Login successful'
                 ]);
             } else {

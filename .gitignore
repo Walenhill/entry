@@ -1,20 +1,64 @@
-```
-# Database migration files
-*.sql
+```gitignore
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+dist/
+build/
+target/
 
-# PHP compiled files
-*.php~
+# Dependencies
+.venv/
+venv/
+node_modules/
+.julia/
+.zig-cache/
 
-# Environment files
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Environment
 .env
 .env.local
 .env.*
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
+# Editors
+.vscode/
+.idea/
 *.swp
-*~
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+.eggs/
+
+# PHP specific
+vendor/
+composer.lock
+
+# Build/cache directories
+.mypy_cache/
+.pytest_cache/
+.gradle/
+.npm/
+.yarn/
 ```
