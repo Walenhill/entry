@@ -200,7 +200,7 @@ function bookSlot($id, $clientData) {
         return ['error' => 'Client name and phone are required'];
     }
     
-    $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ?, booked_at = NOW() WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ?");
     $stmt->bind_param("ssi", $clientName, $clientPhone, $id);
     
     if (!$stmt->execute()) {
@@ -230,7 +230,7 @@ function cancelBooking($id) {
         return ['error' => 'Slot is not booked'];
     }
     
-    $stmt = $conn->prepare("UPDATE slots SET status = 'cancelled', client_name = NULL, client_phone = NULL, booked_at = NULL WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE slots SET status = 'cancelled', client_name = NULL, client_phone = NULL WHERE id = ?");
     $stmt->bind_param("i", $id);
     
     if (!$stmt->execute()) {
