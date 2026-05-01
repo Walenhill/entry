@@ -9,6 +9,7 @@
 import { ref, onMounted } from 'vue';
 import LoginForm from './components/LoginForm.vue';
 import SlotsManager from './components/SlotsManager.vue';
+import { authApi } from './api';
 
 const isAuthenticated = ref(false);
 
@@ -18,13 +19,20 @@ const handleLoginSuccess = () => {
 
 const handleLogout = () => {
   isAuthenticated.value = false;
+  localStorage.removeItem('is_logged_in');
 };
 
-onMounted(() => {
-  // Проверка наличия сессии при загрузке
-  const isLoggedIn = localStorage.getItem('is_logged_in');
-  if (isLoggedIn === 'true') {
-    isAuthenticated.value = true;
+onMounted(async () => {
+  // Проверка наличия сессии при загрузке на бэкенде
+  try {
+    const response = await authApi.check();
+    if (response.data.authenticated) {
+      isAuthenticated.value = true;
+      localStorage.setItem('is_logged_in', 'true');
+    }
+  } catch (error) {
+    isAuthenticated.value = false;
+    localStorage.removeItem('is_logged_in');
   }
 });
 </script>

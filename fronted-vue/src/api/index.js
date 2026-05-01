@@ -15,8 +15,12 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('is_logged_in');
-      // optionally trigger reload or router redirect if using vue-router
-      window.location.reload();
+
+      // Do not force reload on /auth/check or /auth/login endpoints, otherwise we get infinite redirect loops or lose error context
+      const url = error.config ? error.config.url : '';
+      if (!url.includes('/auth/check') && !url.includes('/auth/login')) {
+         window.location.reload();
+      }
     }
     return Promise.reject(error);
   }
@@ -74,7 +78,12 @@ export const authApi = {
     return apiClient.post('/auth/logout');
   },
   
-  // Проверка аутентификации
+  // Проверка аутентификации на бэкенде
+  check() {
+    return apiClient.get('/auth/check');
+  },
+
+  // Локальная проверка
   isAuthenticated() {
     return localStorage.getItem('is_logged_in') === 'true';
   },

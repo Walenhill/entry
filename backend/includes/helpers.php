@@ -10,7 +10,7 @@ function getDbConnection() {
         $host = getenv('DB_HOST') ?: 'localhost';
         $user = getenv('DB_USERNAME') ?: 'root';
         $pass = getenv('DB_PASSWORD') ?: '';
-        $name = getenv('DB_NAME') ?: 'booking_system';
+        $name = getenv('DB_DATABASE') ?: (getenv('DB_NAME') ?: 'booking_db');
         
         $conn = new mysqli($host, $user, $pass, $name);
         

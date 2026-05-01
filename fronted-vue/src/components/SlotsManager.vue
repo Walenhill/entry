@@ -3,7 +3,7 @@
     <header class="header">
       <h1>Управление слотами</h1>
       <div class="header-actions">
-        <button @click="showStats = !showStats" class="btn-stats">📊 Статистика</button>
+        <button @click="toggleStats" class="btn-stats">📊 Статистика</button>
         <button @click="handleLogout" class="logout-btn">Выйти</button>
       </div>
     </header>

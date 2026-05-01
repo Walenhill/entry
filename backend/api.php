@@ -55,6 +55,16 @@ function handleGetRequest($path, $queryParams) {
         jsonResponse($slots);
     }
     
+    // GET /auth/check - Check if authenticated
+    elseif ($path === 'auth/check') {
+        initSecureSession();
+        if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+            jsonResponse(['success' => true, 'authenticated' => true]);
+        } else {
+            jsonResponse(['success' => false, 'authenticated' => false], 401);
+        }
+    }
+
     // GET /stats - Get statistics (admin only)
     elseif ($path === 'stats') {
         checkAdminAuth();
