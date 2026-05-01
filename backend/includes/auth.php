@@ -83,8 +83,8 @@ function getAdminPasswordHash() {
     $conn = getDbConnection();
     
     $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = ?");
-    $stmt->bind_param("s", $key);
     $key = 'admin_password_hash';
+    $stmt->bind_param("s", $key);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
@@ -120,7 +120,7 @@ function initSecureSession() {
         // Безопасные настройки сессии
         ini_set('session.cookie_httponly', 1);
         ini_set('session.cookie_secure', 0); // Установить в 1 при использовании HTTPS
-        ini_set('session.cookie_samesite', 'Strict');
+        ini_set('session.cookie_samesite', 'Lax');
         ini_set('session.use_strict_mode', 1);
         ini_set('session.use_only_cookies', 1);
         

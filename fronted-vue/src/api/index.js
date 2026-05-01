@@ -4,21 +4,20 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Интерсептор для добавления токена авторизации
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
+apiClient.interceptors.response.use(
+  (response) => response,
   (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('is_logged_in');
+      // optionally trigger reload or router redirect if using vue-router
+      window.location.reload();
+    }
     return Promise.reject(error);
   }
 );
@@ -71,12 +70,13 @@ export const authApi = {
 
   // Выйти из системы
   logout() {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('is_logged_in');
+    return apiClient.post('/auth/logout');
   },
   
   // Проверка аутентификации
   isAuthenticated() {
-    return !!localStorage.getItem('auth_token');
+    return localStorage.getItem('is_logged_in') === 'true';
   },
 };
 
