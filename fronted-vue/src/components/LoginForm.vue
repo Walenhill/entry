@@ -37,8 +37,8 @@ const handleLogin = async () => {
   try {
     const response = await authApi.login(password.value);
     
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
+    if (response.data.success) {
+      localStorage.setItem('is_logged_in', 'true');
       emit('login-success');
     } else {
       error.value = 'Неверный ответ сервера';

@@ -21,9 +21,9 @@ const handleLogout = () => {
 };
 
 onMounted(() => {
-  // Проверка наличия токена при загрузке
-  const token = localStorage.getItem('auth_token');
-  if (token) {
+  // Проверка наличия сессии при загрузке
+  const isLoggedIn = localStorage.getItem('is_logged_in');
+  if (isLoggedIn === 'true') {
     isAuthenticated.value = true;
   }
 });

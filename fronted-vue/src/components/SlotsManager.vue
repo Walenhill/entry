@@ -37,9 +37,9 @@
           </div>
 
           <div class="load-section">
-            <h3>Загрузка: {{ statsData.load_percentage }}%</h3>
+            <h3>Загрузка: {{ statsData.occupancy_rate }}%</h3>
             <div class="progress-bar">
-              <div class="progress-fill" :style="{ width: statsData.load_percentage + '%' }"></div>
+              <div class="progress-fill" :style="{ width: statsData.occupancy_rate + '%' }"></div>
             </div>
           </div>
 
@@ -125,7 +125,7 @@
         
         <div v-if="slot.booked_by" class="booking-info">
           <strong>Забронировал:</strong> {{ slot.booked_by }}
-          <p v-if="slot.booking_comment"><strong>Комментарий:</strong> {{ slot.booking_comment }}</p>
+          <p v-if="slot.booking_comment"><strong>Телефон:</strong> {{ slot.booking_comment }}</p>
         </div>
 
         <div class="slot-actions">
@@ -163,8 +163,8 @@
             <input type="text" v-model="bookingData.name" required placeholder="Иван Иванов" />
           </div>
           <div class="form-group">
-            <label>Комментарий:</label>
-            <textarea v-model="bookingData.comment" rows="3" placeholder="Дополнительная информация"></textarea>
+            <label>Телефон:</label>
+            <input type="text" v-model="bookingData.comment" required placeholder="+7 (999) 000-00-00" />
           </div>
           <div class="modal-actions">
             <button type="button" @click="closeBookingModal" class="btn-secondary">Отмена</button>
@@ -180,7 +180,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { slotsApi } from '../api';
+import { slotsApi, authApi } from '../api';
 
 const slots = ref([]);
 const isLoading = ref(false);
@@ -239,8 +239,28 @@ const toggleStats = () => {
 const loadSlots = async () => {
   isLoading.value = true;
   try {
-    const response = await slotsApi.getAllSlots();
-    slots.value = response.data.slots || [];
+    // Admin needs to see all slots
+    const response = await slotsApi.getAllSlots(null, 'admin');
+    const rawSlots = Array.isArray(response.data) ? response.data : [];
+
+    // Map backend format to frontend format
+    slots.value = rawSlots.map(slot => {
+      const startDate = new Date(slot.start_time.replace(' ', 'T'));
+      const endDate = new Date(slot.end_time.replace(' ', 'T'));
+
+      const padZero = (num) => num.toString().padStart(2, '0');
+
+      return {
+        id: slot.id,
+        date: `${startDate.getFullYear()}-${padZero(startDate.getMonth() + 1)}-${padZero(startDate.getDate())}`,
+        start_time: `${padZero(startDate.getHours())}:${padZero(startDate.getMinutes())}`,
+        end_time: `${padZero(endDate.getHours())}:${padZero(endDate.getMinutes())}`,
+        description: slot.description,
+        is_booked: slot.status === 'booked',
+        booked_by: slot.client_name,
+        booking_comment: slot.client_phone // Use client_phone for the comment field in UI
+      };
+    });
   } catch (error) {
     console.error('Error loading slots:', error);
     alert('Ошибка загрузки слотов');
@@ -253,7 +273,16 @@ const loadSlots = async () => {
 const createSlot = async () => {
   isCreating.value = true;
   try {
-    await slotsApi.createSlot(newSlot.value);
+    // Backend expects 'YYYY-MM-DD HH:MM:SS'
+    const start_time = `${newSlot.value.date} ${newSlot.value.start_time}:00`;
+    const end_time = `${newSlot.value.date} ${newSlot.value.end_time}:00`;
+
+    await slotsApi.createSlot({
+      start_time,
+      end_time,
+      description: newSlot.value.description
+    });
+
     showCreateForm.value = false;
     newSlot.value = { date: '', start_time: '', end_time: '', description: '' };
     await loadSlots();
@@ -284,9 +313,10 @@ const bookSlot = async () => {
   
   isBooking.value = true;
   try {
+    // Backend expects client_name and client_phone
     await slotsApi.bookSlot(selectedSlot.value.id, {
-      name: bookingData.value.name,
-      comment: bookingData.value.comment
+      client_name: bookingData.value.name,
+      client_phone: bookingData.value.comment
     });
     closeBookingModal();
     await loadSlots();
@@ -325,7 +355,12 @@ const deleteSlot = async (slotId) => {
 };
 
 // Выход
-const handleLogout = () => {
+const handleLogout = async () => {
+  try {
+    await authApi.logout();
+  } catch (e) {
+    console.error('Logout error', e);
+  }
   emit('logout');
 };
 
