@@ -31,6 +31,29 @@ function testValidateDateTime() {
     return true;
 }
 
+function testSanitizeInput() {
+    echo "Testing sanitizeInput... ";
+
+    $cases = [
+        ['  hello  ', 'hello', 'Basic trimming'],
+        ['O\'Connor', 'O\'Connor', 'Preserve single quotes'],
+        ['"Hello"', '"Hello"', 'Preserve double quotes'],
+        ['', '', 'Empty string'],
+        ['  ', '', 'Whitespace only string']
+    ];
+
+    foreach ($cases as [$input, $expected, $label]) {
+        $result = sanitizeInput($input);
+        if ($result !== $expected) {
+            echo "\nFAIL: $label failed for input '" . var_export($input, true) . "'. Expected " . var_export($expected, true) . ", got " . var_export($result, true) . "\n";
+            return false;
+        }
+    }
+
+    echo "PASS\n";
+    return true;
+}
+
 function testHasTimeOverlap() {
     echo "Testing hasTimeOverlap... ";
 
@@ -64,6 +87,7 @@ function testHasTimeOverlap() {
 // Run tests
 $tests = [
     'testValidateDateTime',
+    'testSanitizeInput',
     'testHasTimeOverlap'
 ];
 
