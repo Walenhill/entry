@@ -119,7 +119,12 @@ function initSecureSession() {
     if (session_status() === PHP_SESSION_NONE) {
         // Безопасные настройки сессии
         ini_set('session.cookie_httponly', 1);
-        ini_set('session.cookie_secure', 0); // Установить в 1 при использовании HTTPS
+
+        // Dynamically set secure cookie flag based on connection protocol
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+                    (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        ini_set('session.cookie_secure', $isSecure ? 1 : 0);
+
         ini_set('session.cookie_samesite', 'Lax');
         ini_set('session.use_strict_mode', 1);
         ini_set('session.use_only_cookies', 1);
