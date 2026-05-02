@@ -50,8 +50,7 @@ function getInput() {
  * Sanitize input string
  */
 function sanitizeInput($input) {
-    $conn = getDbConnection();
-    return $conn->real_escape_string(trim($input));
+    return trim($input);
 }
 
 /**
