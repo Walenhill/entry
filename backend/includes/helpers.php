@@ -15,8 +15,10 @@ function getDbConnection() {
         $conn = new mysqli($host, $user, $pass, $name);
         
         if ($conn->connect_error) {
+            // Log the actual error for debugging, but don't expose it to the user
+            error_log('Database connection failed: ' . $conn->connect_error);
             http_response_code(500);
-            echo json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]);
+            echo json_encode(['error' => 'Database connection failed']);
             exit;
         }
         
