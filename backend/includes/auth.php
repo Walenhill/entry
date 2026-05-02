@@ -163,9 +163,12 @@ function loginAdmin($password) {
     
     $storedHash = getAdminPasswordHash();
     
-    // Если хеш еще не установлен, используем пароль по умолчанию
+    // Если хеш еще не установлен, используем пароль из переменных окружения
     if (!$storedHash) {
-        $defaultPassword = getenv('MASTER_PASSWORD') ?: 'admin123';
+        $defaultPassword = getenv('MASTER_PASSWORD');
+        if (!$defaultPassword) {
+            return ['success' => false, 'error' => 'Server configuration error: MASTER_PASSWORD is not set.'];
+        }
         $storedHash = hashPassword($defaultPassword);
         setAdminPasswordHash($storedHash);
     }
