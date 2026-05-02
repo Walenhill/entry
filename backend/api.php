@@ -83,6 +83,7 @@ function handleGetRequest($path, $queryParams) {
  * Handle POST requests
  */
 function handlePostRequest($path) {
+    verifyCsrfToken();
     $data = getInput();
     
     // POST /auth/login - Admin login
@@ -200,6 +201,7 @@ function handlePostRequest($path) {
  * Handle PUT/PATCH requests
  */
 function handleUpdateRequest($path) {
+    verifyCsrfToken();
     $data = getInput();
     
     // PUT /slots/{id} - Update slot (admin only)
@@ -242,6 +244,8 @@ function handleUpdateRequest($path) {
  * Handle DELETE requests
  */
 function handleDeleteRequest($path) {
+    verifyCsrfToken();
+
     // DELETE /slots/{id} - Delete slot (admin only)
     if (preg_match('#^slots/(\d+)$#', $path, $matches)) {
         checkAdminAuth();
