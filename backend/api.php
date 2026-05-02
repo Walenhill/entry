@@ -71,6 +71,20 @@ function handleGetRequest($path, $queryParams) {
             jsonResponse(['error' => 'Slot not found'], 404);
         }
         
+        $role = $queryParams['role'] ?? 'client';
+        $isAdmin = false;
+
+        if ($role === 'admin') {
+            checkAdminAuth();
+            $isAdmin = true;
+        }
+
+        // Obscure PII if user is not admin
+        if (!$isAdmin) {
+            unset($slot['client_name']);
+            unset($slot['client_phone']);
+        }
+
         jsonResponse($slot);
     }
     
