@@ -181,6 +181,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { slotsApi, authApi } from '../api';
+import { handleApiError } from '../utils/errorHandler';
 
 const slots = ref([]);
 const isLoading = ref(false);
@@ -262,8 +263,7 @@ const loadSlots = async () => {
       };
     });
   } catch (error) {
-    console.error('Error loading slots:', error);
-    alert('Ошибка загрузки слотов');
+    handleApiError(error, 'Error loading slots:', 'Ошибка загрузки слотов');
   } finally {
     isLoading.value = false;
   }
@@ -287,8 +287,7 @@ const createSlot = async () => {
     newSlot.value = { date: '', start_time: '', end_time: '', description: '' };
     await loadSlots();
   } catch (error) {
-    console.error('Error creating slot:', error);
-    alert('Ошибка создания слота: ' + (error.response?.data?.message || error.message));
+    handleApiError(error, 'Error creating slot:', 'Ошибка создания слота');
   } finally {
     isCreating.value = false;
   }
@@ -321,8 +320,7 @@ const bookSlot = async () => {
     closeBookingModal();
     await loadSlots();
   } catch (error) {
-    console.error('Error booking slot:', error);
-    alert('Ошибка бронирования: ' + (error.response?.data?.message || error.message));
+    handleApiError(error, 'Error booking slot:', 'Ошибка бронирования');
   } finally {
     isBooking.value = false;
   }
@@ -336,8 +334,7 @@ const cancelBooking = async (slotId) => {
     await slotsApi.cancelBooking(slotId);
     await loadSlots();
   } catch (error) {
-    console.error('Error canceling booking:', error);
-    alert('Ошибка отмены брони: ' + (error.response?.data?.message || error.message));
+    handleApiError(error, 'Error canceling booking:', 'Ошибка отмены брони');
   }
 };
 
@@ -349,8 +346,7 @@ const deleteSlot = async (slotId) => {
     await slotsApi.deleteSlot(slotId);
     await loadSlots();
   } catch (error) {
-    console.error('Error deleting slot:', error);
-    alert('Ошибка удаления слота: ' + (error.response?.data?.message || error.message));
+    handleApiError(error, 'Error deleting slot:', 'Ошибка удаления слота');
   }
 };
 
