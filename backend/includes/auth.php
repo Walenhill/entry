@@ -209,39 +209,3 @@ function logoutAdmin() {
 }
 
 
-/**
- * Verify CSRF token / Origin
- */
-function verifyCsrfToken() {
-    $method = $_SERVER['REQUEST_METHOD'] ?? '';
-    if (in_array($method, ['GET', 'HEAD', 'OPTIONS'])) {
-        return;
-    }
-
-    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-    if (strpos(strtolower($contentType), 'application/json') === false) {
-        jsonResponse(['error' => 'CSRF verification failed: Invalid Content-Type'], 403);
-    }
-
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    if (empty($origin)) {
-        $referer = $_SERVER['HTTP_REFERER'] ?? '';
-        if ($referer) {
-            $parsed = parse_url($referer);
-            $origin = ($parsed['scheme'] ?? '') . '://' . ($parsed['host'] ?? '');
-            if (isset($parsed['port'])) {
-                $origin .= ':' . $parsed['port'];
-            }
-        }
-    }
-
-    global $allowedOrigins;
-    $validOrigins = is_array($allowedOrigins) ? $allowedOrigins : [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-    ];
-
-    if (!empty($origin) && !in_array($origin, $validOrigins)) {
-        jsonResponse(['error' => 'CSRF verification failed: Invalid Origin'], 403);
-    }
-}
