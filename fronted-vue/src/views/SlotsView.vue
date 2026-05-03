@@ -83,6 +83,8 @@ const handleCreateSlot = async (formData) => {
     const end_time = `${formData.date} ${formData.end_time}:00`;
 
     await slotsStore.createSlot({
+      staff_id: formData.staff_id,
+      service_id: formData.service_id,
       start_time,
       end_time,
       description: formData.description
