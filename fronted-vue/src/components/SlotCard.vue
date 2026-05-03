@@ -30,7 +30,7 @@
       <template v-else>
         <button @click="$emit('cancel', slot.id)" class="btn btn-warning flex-1">Отменить бронь</button>
       </template>
-      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот">
+      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот" aria-label="Удалить слот">
         🗑
       </button>
     </div>

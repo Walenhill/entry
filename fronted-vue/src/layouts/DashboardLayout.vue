@@ -3,7 +3,7 @@
     <aside class="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <h2 class="logo">BookingApp</h2>
-        <button class="close-mobile" @click="isMobileMenuOpen = false">×</button>
+        <button class="close-mobile" @click="isMobileMenuOpen = false" aria-label="Закрыть меню">×</button>
       </div>
 
       <nav class="sidebar-nav">
@@ -22,7 +22,7 @@
 
     <div class="main-content">
       <header class="topbar">
-        <button class="menu-toggle" @click="isMobileMenuOpen = true">☰</button>
+        <button class="menu-toggle" @click="isMobileMenuOpen = true" aria-label="Открыть меню">☰</button>
         <div class="user-info">
           <span>Администратор</span>
         </div>

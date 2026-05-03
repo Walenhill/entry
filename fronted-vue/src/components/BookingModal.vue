@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3>Бронирование слота</h3>
-        <button class="close-btn" @click="$emit('close')">×</button>
+        <button class="close-btn" @click="$emit('close')" aria-label="Закрыть">×</button>
       </div>
 
       <div v-if="slot" class="modal-info mb-4">

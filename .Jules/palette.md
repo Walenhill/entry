@@ -1,0 +1,3 @@
+## 2026-05-03 - Missing ARIA Labels for Icon-Only Buttons
+**Learning:** Found several icon-only buttons (like menu toggle, close modals, and delete actions) across components that completely lack ARIA attributes. Since the components rely heavily on Russian localizations for their text, it is important to provide `aria-label`s in Russian (e.g., "Закрыть", "Удалить слот", "Открыть меню") to maintain consistency and provide screen reader access.
+**Action:** When working on this app's components, I need to always verify that icon-only buttons or those relying on symbols (like '☰', '×', '🗑') have the `aria-label` attribute present to ensure accessibility.
