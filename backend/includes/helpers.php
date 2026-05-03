@@ -64,13 +64,6 @@ function validateDateTime($datetime) {
 }
 
 /**
- * Check if two time ranges overlap
- */
-function hasTimeOverlap($start1, $end1, $start2, $end2) {
-    return ($start1 < $end2) && ($start2 < $end1);
-}
-
-/**
  * Get request path without /api/ prefix
  */
 function getRequestPath() {

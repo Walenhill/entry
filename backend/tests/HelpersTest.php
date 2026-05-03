@@ -54,41 +54,10 @@ function testSanitizeInput() {
     return true;
 }
 
-function testHasTimeOverlap() {
-    echo "Testing hasTimeOverlap... ";
-
-    $cases = [
-        // Overlapping
-        ['10:00', '12:00', '11:00', '13:00', true, 'Simple overlap'],
-        ['10:00', '12:00', '09:00', '11:00', true, 'Overlap from start'],
-        ['10:00', '12:00', '10:30', '11:30', true, 'Inner overlap'],
-        ['10:00', '12:00', '09:00', '13:00', true, 'Outer overlap'],
-
-        // Not overlapping
-        ['10:00', '11:00', '12:00', '13:00', false, 'Separated'],
-        ['12:00', '13:00', '10:00', '11:00', false, 'Separated reverse'],
-
-        // Touching
-        ['10:00', '11:00', '11:00', '12:00', false, 'Touching end-to-start'],
-        ['11:00', '12:00', '10:00', '11:00', false, 'Touching start-to-end']
-    ];
-
-    foreach ($cases as [$s1, $e1, $s2, $e2, $expected, $label]) {
-        if (hasTimeOverlap($s1, $e1, $s2, $e2) !== $expected) {
-            echo "\nFAIL: $label failed for range1[$s1, $e1] and range2[$s2, $e2]. Expected " . var_export($expected, true) . "\n";
-            return false;
-        }
-    }
-
-    echo "PASS\n";
-    return true;
-}
-
 // Run tests
 $tests = [
     'testValidateDateTime',
-    'testSanitizeInput',
-    'testHasTimeOverlap'
+    'testSanitizeInput'
 ];
 
 $passedCount = 0;
