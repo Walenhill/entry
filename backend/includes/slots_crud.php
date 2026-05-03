@@ -21,7 +21,9 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     }
     
     if ($dateFilter) {
-        $conditions[] = "DATE(start_time) = ?";
+        // Use a range query instead of DATE(start_time) = ? to make the query SARGable
+        // and allow MySQL to use the idx_start_time index.
+        $conditions[] = "start_time >= ? AND start_time < ? + INTERVAL 1 DAY";
     }
     
     if (!empty($conditions)) {
@@ -33,7 +35,7 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     $stmt = $conn->prepare($sql);
     
     if ($dateFilter) {
-        $stmt->bind_param("s", $dateFilter);
+        $stmt->bind_param("ss", $dateFilter, $dateFilter);
     }
     
     $stmt->execute();
