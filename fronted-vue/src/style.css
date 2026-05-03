@@ -74,6 +74,7 @@ p {
 input, textarea, select {
   width: 100%;
   padding: 0.75rem 1rem;
+  min-height: 48px; /* Touch target size guideline */
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
@@ -81,6 +82,9 @@ input, textarea, select {
   font-family: inherit;
   font-size: 1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
+  /* Prevent zoom on iOS */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -106,14 +110,17 @@ label {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.625rem 1.25rem;
+  padding: 0.75rem 1.5rem; /* Increased padding */
+  min-height: 48px; /* Touch target size guideline */
   border: none;
   border-radius: var(--border-radius-md);
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 600; /* Bolder for readability */
+  font-size: 1rem; /* Larger font size */
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
+  /* Better mobile touch interaction */
+  touch-action: manipulation;
 }
 
 .btn:disabled {
@@ -189,17 +196,26 @@ label {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 1rem; /* Adds space for mobile */
 }
 
 .modal-content {
   background-color: var(--bg-surface);
-  padding: 2rem;
+  padding: 1.5rem; /* Adjusted for mobile */
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-lg);
   max-width: 500px;
-  width: 90%;
+  width: 100%;
   position: relative;
+  max-height: 90vh; /* Prevent overflow off screen */
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .modal-content {
+    padding: 2rem;
+  }
 }
 
 /* Utilities */
