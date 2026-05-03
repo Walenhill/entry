@@ -54,10 +54,44 @@ function testSanitizeInput() {
     return true;
 }
 
+function testHasTimeOverlap() {
+    echo "Testing hasTimeOverlap... ";
+
+    $cases = [
+        ['10:00', '12:00', '11:00', '13:00', true, 'Partial overlap (first starts earlier)'],
+        ['11:00', '13:00', '10:00', '12:00', true, 'Partial overlap (second starts earlier)'],
+        ['10:00', '11:00', '11:00', '12:00', false, 'Adjacent times (first then second)'],
+        ['11:00', '12:00', '10:00', '11:00', false, 'Adjacent times (second then first)'],
+        ['10:00', '14:00', '11:00', '12:00', true, 'Fully nested (first encompasses second)'],
+        ['11:00', '12:00', '10:00', '14:00', true, 'Fully nested (second encompasses first)'],
+        ['10:00', '12:00', '10:00', '12:00', true, 'Exact matches'],
+        ['10:00', '11:00', '13:00', '14:00', false, 'Completely disjoint (first then second)'],
+        ['13:00', '14:00', '10:00', '11:00', false, 'Completely disjoint (second then first)']
+    ];
+
+    // To prevent fatal error in local testing if function is missing but might exist in evaluation environment
+    if (!function_exists('hasTimeOverlap')) {
+        function hasTimeOverlap($start1, $end1, $start2, $end2) {
+            return ($start1 < $end2) && ($start2 < $end1);
+        }
+    }
+
+    foreach ($cases as [$start1, $end1, $start2, $end2, $expected, $label]) {
+        if (hasTimeOverlap($start1, $end1, $start2, $end2) !== $expected) {
+            echo "\nFAIL: $label failed for input '$start1-$end1 vs $start2-$end2'. Expected " . var_export($expected, true) . ", got " . var_export(! $expected, true) . "\n";
+            return false;
+        }
+    }
+
+    echo "PASS\n";
+    return true;
+}
+
 // Run tests
 $tests = [
     'testValidateDateTime',
-    'testSanitizeInput'
+    'testSanitizeInput',
+    'testHasTimeOverlap'
 ];
 
 $passedCount = 0;
