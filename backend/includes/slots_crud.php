@@ -94,9 +94,13 @@ function createSlot($data) {
         return ['error' => 'Time slot overlaps with existing booking'];
     }
     
-    $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
+    // Hardcode default staff_id and service_id for now
+    $staffId = $data['staff_id'] ?? 1;
+    $serviceId = $data['service_id'] ?? 1;
+
+    $stmt = $conn->prepare("INSERT INTO slots (staff_id, service_id, start_time, end_time, description, status) VALUES (?, ?, ?, ?, ?, 'available')");
     $description = sanitizeInput($data['description'] ?? '');
-    $stmt->bind_param("sss", $data['start_time'], $data['end_time'], $description);
+    $stmt->bind_param("iisss", $staffId, $serviceId, $data['start_time'], $data['end_time'], $description);
     
     if (!$stmt->execute()) {
         $stmt->close();
@@ -147,6 +151,10 @@ function generateSlotsFromTemplate($template) {
     $currentTime = strtotime("$date " . sprintf('%02d:00:00', $startHour));
     $endTime = strtotime("$date " . sprintf('%02d:00:00', $endHour));
     
+    // Hardcode default staff_id and service_id for now
+    $staffId = $template['staff_id'] ?? 1;
+    $serviceId = $template['service_id'] ?? 1;
+
     while ($currentTime + ($duration * 60) <= $endTime) {
         $startTimeStr = date('Y-m-d H:i:s', $currentTime);
         $endTimeStr = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
@@ -155,8 +163,8 @@ function generateSlotsFromTemplate($template) {
         if (hasOverlappingSlots($startTimeStr, $endTimeStr)) {
             $skippedCount++;
         } else {
-            $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
-            $stmt->bind_param("sss", $startTimeStr, $endTimeStr, $description);
+            $stmt = $conn->prepare("INSERT INTO slots (staff_id, service_id, start_time, end_time, description, status) VALUES (?, ?, ?, ?, ?, 'available')");
+            $stmt->bind_param("iisss", $staffId, $serviceId, $startTimeStr, $endTimeStr, $description);
             
             if ($stmt->execute()) {
                 $newId = $conn->insert_id;

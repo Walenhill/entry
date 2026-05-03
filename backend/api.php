@@ -54,6 +54,28 @@ function handleGetRequest($path, $queryParams) {
         $slots = getSlots($isAdmin, $dateFilter);
         jsonResponse($slots);
     }
+
+    // GET /services - Get all services
+    elseif ($path === 'services') {
+        $conn = getDbConnection();
+        $result = $conn->query("SELECT id, name, description, duration_minutes, price FROM services WHERE is_active = 1");
+        $services = [];
+        while ($row = $result->fetch_assoc()) {
+            $services[] = $row;
+        }
+        jsonResponse($services);
+    }
+
+    // GET /staff - Get all staff
+    elseif ($path === 'staff') {
+        $conn = getDbConnection();
+        $result = $conn->query("SELECT id, name, role FROM staff WHERE is_active = 1");
+        $staff = [];
+        while ($row = $result->fetch_assoc()) {
+            $staff[] = $row;
+        }
+        jsonResponse($staff);
+    }
     
     // GET /stats - Get statistics (admin only)
     elseif ($path === 'stats') {

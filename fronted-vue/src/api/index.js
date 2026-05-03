@@ -62,6 +62,15 @@ export const slotsApi = {
   },
 };
 
+export const directoryApi = {
+  getServices() {
+    return apiClient.get('/services');
+  },
+  getStaff() {
+    return apiClient.get('/staff');
+  }
+};
+
 export const authApi = {
   // Войти в систему
   login(password) {
