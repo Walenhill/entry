@@ -147,28 +147,41 @@ function generateSlotsFromTemplate($template) {
     $currentTime = strtotime("$date " . sprintf('%02d:00:00', $startHour));
     $endTime = strtotime("$date " . sprintf('%02d:00:00', $endHour));
     
+    // Prepare the insertion statement once outside the loop
+    $insertStmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
+    $loopStartTimeStr = "";
+    $loopEndTimeStr = "";
+    $insertStmt->bind_param("sss", $loopStartTimeStr, $loopEndTimeStr, $description);
+
     while ($currentTime + ($duration * 60) <= $endTime) {
-        $startTimeStr = date('Y-m-d H:i:s', $currentTime);
-        $endTimeStr = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
+        $loopStartTimeStr = date('Y-m-d H:i:s', $currentTime);
+        $loopEndTimeStr = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
         
         // Check for overlaps
-        if (hasOverlappingSlots($startTimeStr, $endTimeStr)) {
+        if (hasOverlappingSlots($loopStartTimeStr, $loopEndTimeStr)) {
             $skippedCount++;
         } else {
-            $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
-            $stmt->bind_param("sss", $startTimeStr, $endTimeStr, $description);
-            
-            if ($stmt->execute()) {
+            if ($insertStmt->execute()) {
                 $newId = $conn->insert_id;
-                $createdSlots[] = getSlotById($newId);
+                // Construct the slot directly in memory to avoid O(N) database reads
+                $createdSlots[] = [
+                    'id' => $newId,
+                    'start_time' => $loopStartTimeStr,
+                    'end_time' => $loopEndTimeStr,
+                    'description' => $description,
+                    'status' => 'available',
+                    'client_name' => null,
+                    'client_phone' => null
+                ];
                 $createdCount++;
             }
-            $stmt->close();
         }
         
         $currentTime += ($duration * 60);
     }
     
+    $insertStmt->close();
+
     return [
         'created_count' => $createdCount,
         'skipped_count' => $skippedCount,
@@ -267,8 +280,8 @@ function deleteSlot($id) {
 function hasOverlappingSlots($startTime, $endTime) {
     $conn = getDbConnection();
     
-    $stmt = $conn->prepare("SELECT id FROM slots WHERE status != 'cancelled' AND ((start_time < ? AND end_time > ?) OR (start_time < ? AND end_time > ?))");
-    $stmt->bind_param("ssss", $endTime, $startTime, $endTime, $startTime);
+    $stmt = $conn->prepare("SELECT id FROM slots WHERE status != 'cancelled' AND (start_time < ? AND end_time > ?)");
+    $stmt->bind_param("ss", $endTime, $startTime);
     $stmt->execute();
     $result = $stmt->get_result();
     
