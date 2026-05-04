@@ -50,7 +50,10 @@ function getInput() {
  * Sanitize input string
  */
 function sanitizeInput($input) {
-    return trim($input);
+    if (!is_string($input)) {
+        return '';
+    }
+    return trim(strip_tags($input));
 }
 
 /**
