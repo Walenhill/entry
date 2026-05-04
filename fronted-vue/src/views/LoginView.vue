@@ -8,7 +8,7 @@
 
       <form @submit.prevent="handleLogin">
         <div class="form-group mb-4">
-          <label for="password">Пароль</label>
+          <label for="password">Пароль <span class="text-danger">*</span></label>
           <input
             type="password"
             id="password"

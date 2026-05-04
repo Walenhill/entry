@@ -4,15 +4,15 @@
     <form @submit.prevent="handleSubmit">
       <div class="form-row">
         <div class="form-group">
-          <label for="date">Дата</label>
+          <label for="date">Дата <span class="text-danger">*</span></label>
           <input type="date" id="date" v-model="form.date" required />
         </div>
         <div class="form-group">
-          <label for="start_time">Начало</label>
+          <label for="start_time">Начало <span class="text-danger">*</span></label>
           <input type="time" id="start_time" v-model="form.start_time" required />
         </div>
         <div class="form-group">
-          <label for="end_time">Конец</label>
+          <label for="end_time">Конец <span class="text-danger">*</span></label>
           <input type="time" id="end_time" v-model="form.end_time" required />
         </div>
       </div>
