@@ -73,6 +73,9 @@ function hashPassword($password) {
  * Проверка пароля
  */
 function verifyPassword($password, $hash) {
+    if (!is_string($password)) {
+        return false;
+    }
     return password_verify($password, $hash);
 }
 

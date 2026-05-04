@@ -70,12 +70,30 @@ function testVerifyPasswordFailure() {
     return true;
 }
 
+function testVerifyPasswordTypeError() {
+    echo "Testing verifyPassword type error handling... ";
+    try {
+        $result = verifyPassword(['invalid' => 'type'], 'some_hash');
+        if ($result === false) {
+            echo "PASS\n";
+            return true;
+        } else {
+            echo "FAIL: Expected false for non-string password\n";
+            return false;
+        }
+    } catch (TypeError $e) {
+        echo "FAIL: Caught TypeError instead of returning false\n";
+        return false;
+    }
+}
+
 // Run tests
 $tests = [
     'testHashPasswordFormat',
     'testHashPasswordSalting',
     'testVerifyPasswordSuccess',
-    'testVerifyPasswordFailure'
+    'testVerifyPasswordFailure',
+    'testVerifyPasswordTypeError'
 ];
 
 $passedCount = 0;
