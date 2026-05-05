@@ -1,8 +1,8 @@
 <template>
   <div v-if="show" class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-content">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal-header">
-        <h3>Бронирование слота</h3>
+        <h3 id="modal-title">Бронирование слота</h3>
         <button class="close-btn" @click="$emit('close')" aria-label="Закрыть">×</button>
       </div>
 
@@ -17,26 +17,29 @@
           <input
             type="text"
             id="clientName"
+            ref="nameInput"
             v-model="formData.name"
             required
             placeholder="Введите имя"
+            autocomplete="name"
           />
         </div>
 
         <div class="form-group mb-4">
           <label for="clientPhone">Телефон <span class="text-danger">*</span></label>
           <input
-            type="text"
+            type="tel"
             id="clientPhone"
             v-model="formData.phone"
             required
             placeholder="Введите номер телефона"
+            autocomplete="tel"
           />
         </div>
 
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" @click="$emit('close')">Отмена</button>
-          <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+          <button type="submit" class="btn btn-primary" :disabled="isSubmitting" :aria-busy="isSubmitting">
             {{ isSubmitting ? 'Сохранение...' : 'Подтвердить бронь' }}
           </button>
         </div>
@@ -46,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick, onUnmounted } from 'vue';
 
 const props = defineProps({
   show: Boolean,
@@ -61,11 +64,29 @@ const formData = ref({
   phone: ''
 });
 
-// Reset form when modal opens
+const nameInput = ref(null);
+
+const handleKeydown = (e) => {
+  if (e.key === 'Escape') {
+    emit('close');
+  }
+};
+
+// Reset form and manage event listeners when modal opens/closes
 watch(() => props.show, (newVal) => {
   if (newVal) {
     formData.value = { name: '', phone: '' };
+    document.addEventListener('keydown', handleKeydown);
+    nextTick(() => {
+      nameInput.value?.focus();
+    });
+  } else {
+    document.removeEventListener('keydown', handleKeydown);
   }
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
 });
 
 const handleSubmit = () => {
