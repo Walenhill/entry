@@ -3,10 +3,13 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Копирование package файлов
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
+
+# Установка pnpm
+RUN npm install -g pnpm
 
 # Установка зависимостей
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 # Копирование исходного кода
 COPY . .
@@ -15,4 +18,4 @@ COPY . .
 EXPOSE 5173
 
 # Запуск приложения в режиме разработки
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["pnpm", "run", "dev", "--", "--host"]

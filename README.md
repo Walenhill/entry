@@ -36,6 +36,20 @@ cp fronted-vue/.env.example fronted-vue/.env
 docker compose up -d --build
 ```
 
+### Вариант 1.1: Docker Production
+
+Для запуска в production среде с оптимизированной сборкой фронтенда (через Nginx) и без проброса локальных директорий:
+
+```bash
+# 1. Скопируйте корневой конфиг
+cp .env.example .env
+
+# 2. Отредактируйте переменные (пароли, порты) в .env
+
+# 3. Запустите
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
 Приложение доступно:
 - Фронтенд: http://localhost:5173
 - Бэкенд API: http://localhost:8080
