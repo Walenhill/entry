@@ -42,8 +42,8 @@ switch ($method) {
 function handleGetRequest($path, $queryParams) {
     // GET /slots - Get all slots (admin) or available only (client)
     if ($path === 'slots' || strpos($path, 'slots?') === 0) {
-        $dateFilter = $queryParams['date'] ?? null;
-        $role = $queryParams['role'] ?? 'client';
+        $dateFilter = isset($queryParams['date']) && is_string($queryParams['date']) ? $queryParams['date'] : null;
+        $role = isset($queryParams['role']) && is_string($queryParams['role']) ? $queryParams['role'] : 'client';
         
         $isAdmin = false;
         if ($role === 'admin') {

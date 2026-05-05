@@ -60,7 +60,7 @@ function sanitizeInput($input) {
  * Validate datetime format (YYYY-MM-DD HH:MM:SS)
  */
 function validateDateTime($datetime) {
-    if (!$datetime) return false;
+    if (!$datetime || !is_string($datetime)) return false;
     $format = 'Y-m-d H:i:s';
     $d = DateTime::createFromFormat($format, $datetime);
     return $d && $d->format($format) === $datetime;

@@ -117,14 +117,14 @@ function createSlot($data) {
 function generateSlotsFromTemplate($template) {
     $conn = getDbConnection();
     
-    $date = $template['date'];
-    $startHour = (int)$template['start_hour'];
-    $endHour = (int)$template['end_hour'];
-    $duration = (int)$template['duration'];
+    $date = $template['date'] ?? null;
+    $startHour = isset($template['start_hour']) ? (int)$template['start_hour'] : 0;
+    $endHour = isset($template['end_hour']) ? (int)$template['end_hour'] : 0;
+    $duration = isset($template['duration']) ? (int)$template['duration'] : 0;
     $description = sanitizeInput($template['description'] ?? 'Appointment');
     
     // Validate inputs
-    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+    if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
         return ['error' => 'Invalid date format. Use YYYY-MM-DD'];
     }
     
