@@ -1,0 +1,58 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: booking_mysql_prod
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_DATABASE:-booking_db}
+      MYSQL_USER: ${DB_USERNAME:-booking_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-userpassword}
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - booking_network_prod
+
+  php:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: booking_php_prod
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-booking_db}
+      DB_USERNAME: ${DB_USERNAME:-booking_user}
+      DB_PASSWORD: ${DB_PASSWORD:-userpassword}
+      MASTER_PASSWORD: ${MASTER_PASSWORD:-change_this_master_password}
+      APP_ENV: production
+      APP_DEBUG: false
+    networks:
+      - booking_network_prod
+
+  vue:
+    build:
+      context: ./fronted-vue
+      dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_BASE_URL=/api
+    container_name: booking_vue_prod
+    restart: always
+    ports:
+      - "${APP_PORT:-80}:80"
+    depends_on:
+      - php
+    networks:
+      - booking_network_prod
+
+volumes:
+  mysql_data_prod:
+
+networks:
+  booking_network_prod:
+    driver: bridge

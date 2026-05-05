@@ -21,6 +21,12 @@ $allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
 ];
+
+$frontendUrl = getenv('FRONTEND_URL');
+if ($frontendUrl) {
+    $allowedOrigins[] = rtrim($frontendUrl, '/');
+}
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
 if (in_array($origin, $allowedOrigins)) {
