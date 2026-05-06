@@ -46,6 +46,24 @@ describe('handleApiError', () => {
     assert.strictEqual(alertCalls[0], 'Alert Prefix: Server validation error');
   });
 
+  test('uses error.response.data.error when message is not available', () => {
+    const error = {
+      response: {
+        data: {
+          error: 'Backend error'
+        }
+      }
+    };
+
+    handleApiError(error, 'Backend log', 'Alert Prefix');
+
+    assert.strictEqual(consoleErrorCalls.length, 1);
+    assert.deepStrictEqual(consoleErrorCalls[0], ['Backend log', error]);
+
+    assert.strictEqual(alertCalls.length, 1);
+    assert.strictEqual(alertCalls[0], 'Alert Prefix: Backend error');
+  });
+
   test('falls back to error.message when response.data.message is unavailable', () => {
     const error = new Error('Network error');
 
