@@ -6,6 +6,6 @@
  */
 export const handleApiError = (error, logMessage, alertPrefix) => {
   console.error(logMessage, error);
-  const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+  const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || 'Unknown error';
   alert(`${alertPrefix}: ${errorMessage}`);
 };
