@@ -19,6 +19,7 @@
             id="clientName"
             v-model="formData.name"
             required
+            autocomplete="name"
             placeholder="Введите имя"
           />
         </div>
@@ -26,10 +27,11 @@
         <div class="form-group mb-4">
           <label for="clientPhone">Телефон <span class="text-danger">*</span></label>
           <input
-            type="text"
+            type="tel"
             id="clientPhone"
             v-model="formData.phone"
             required
+            autocomplete="tel"
             placeholder="Введите номер телефона"
           />
         </div>
@@ -46,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
   show: Boolean,
@@ -71,6 +73,20 @@ watch(() => props.show, (newVal) => {
 const handleSubmit = () => {
   emit('submit', formData.value);
 };
+
+const handleKeydown = (e) => {
+  if (e.key === 'Escape' && props.show) {
+    emit('close');
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <style scoped>
