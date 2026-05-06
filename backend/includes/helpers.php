@@ -43,7 +43,8 @@ function jsonResponse($data, $statusCode = 200) {
  */
 function getInput() {
     $input = file_get_contents('php://input');
-    return json_decode($input, true) ?? [];
+    $decoded = json_decode($input, true);
+    return is_array($decoded) ? $decoded : [];
 }
 
 /**
