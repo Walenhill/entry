@@ -18,17 +18,13 @@ export const useSlotsStore = defineStore('slots', {
 
         if (response.data.success) {
           this.slots = response.data.data.map(slot => {
-            // Safari compatibility fix
-            const startDate = new Date(slot.start_time.replace(' ', 'T'));
-            const endDate = new Date(slot.end_time.replace(' ', 'T'));
-
-            const padZero = (num) => num.toString().padStart(2, '0');
-
+            // Performance optimization: Using string slicing instead of Date instantiation
+            // reduces processing time significantly, as the DB returns strict YYYY-MM-DD HH:MM:SS format
             return {
               id: slot.id,
-              date: `${startDate.getFullYear()}-${padZero(startDate.getMonth() + 1)}-${padZero(startDate.getDate())}`,
-              start_time: `${padZero(startDate.getHours())}:${padZero(startDate.getMinutes())}`,
-              end_time: `${padZero(endDate.getHours())}:${padZero(endDate.getMinutes())}`,
+              date: slot.start_time.substring(0, 10),
+              start_time: slot.start_time.substring(11, 16),
+              end_time: slot.end_time.substring(11, 16),
               description: slot.description,
               is_booked: slot.status === 'booked',
               booked_by: slot.client_name,
