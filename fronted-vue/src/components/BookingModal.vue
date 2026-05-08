@@ -17,6 +17,7 @@
           <input
             type="text"
             id="clientName"
+            ref="nameInput"
             v-model="formData.name"
             required
             autocomplete="name"
@@ -48,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
 
 const props = defineProps({
   show: Boolean,
@@ -63,10 +64,16 @@ const formData = ref({
   phone: ''
 });
 
+const nameInput = ref(null);
+
 // Reset form when modal opens
-watch(() => props.show, (newVal) => {
+watch(() => props.show, async (newVal) => {
   if (newVal) {
     formData.value = { name: '', phone: '' };
+    await nextTick();
+    if (nameInput.value) {
+      nameInput.value.focus();
+    }
   }
 });
 
