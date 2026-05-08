@@ -5,3 +5,7 @@
 ## 2026-05-04 - Modal Keyboard Navigation and Autofill Optimization
 **Learning:** Found that custom modals (like `BookingModal.vue`) lacked keyboard navigation support, trapping keyboard users or making it difficult to close without a mouse. Also learned that `type="tel"` inputs lacking autocomplete significantly degraded mobile user experience since the numeric keypad isn't prioritized for plain text inputs.
 **Action:** Always add a global `keydown` event listener to close modal components via the `Escape` key. Use `autocomplete` attributes consistently on standard fields (like `name` and `tel`) and ensure phone fields utilize `type="tel"` to trigger optimized mobile keyboards.
+
+## 2026-05-07 - Minimum Touch Target Sizes for Mobile UX
+**Learning:** Found that interactive elements (inputs, textareas, selects, buttons, and close/icon buttons) lacked a minimum height, making them difficult to tap on mobile devices.
+**Action:** Implemented a global `min-height: 48px` for standard form elements and buttons in `style.css` to adhere to Google's mobile-first guidelines. Also updated specific utility classes (`.btn-icon`, `.close-btn`) in Vue components to ensure a 48x48px touch target area.
