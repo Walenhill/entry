@@ -6,6 +6,3 @@
 **Learning:** Found that custom modals (like `BookingModal.vue`) lacked keyboard navigation support, trapping keyboard users or making it difficult to close without a mouse. Also learned that `type="tel"` inputs lacking autocomplete significantly degraded mobile user experience since the numeric keypad isn't prioritized for plain text inputs.
 **Action:** Always add a global `keydown` event listener to close modal components via the `Escape` key. Use `autocomplete` attributes consistently on standard fields (like `name` and `tel`) and ensure phone fields utilize `type="tel"` to trigger optimized mobile keyboards.
 
-## 2026-05-04 - Actionable Empty States
-**Learning:** Empty states without a clear call-to-action (CTA) leave users confused about what to do next. A text suggestion like 'Create a new slot' is not enough; users need a direct way to initiate that action from the empty state itself.
-**Action:** Always include a primary action button (e.g., '+ Создать слот') directly within empty states to reduce cognitive load and provide immediate next steps.

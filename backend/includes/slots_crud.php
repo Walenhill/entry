@@ -99,8 +99,9 @@ function createSlot($data) {
     $stmt->bind_param("sss", $data['start_time'], $data['end_time'], $description);
     
     if (!$stmt->execute()) {
+        error_log('Failed to create slot: ' . $conn->error);
         $stmt->close();
-        return ['error' => 'Failed to create slot: ' . $conn->error];
+        return ['error' => 'Failed to create slot.'];
     }
     
     $newId = $conn->insert_id;
@@ -229,8 +230,9 @@ function bookSlot($id, $clientData) {
     $stmt->bind_param("ssi", $clientName, $clientPhone, $id);
     
     if (!$stmt->execute()) {
+        error_log('Failed to book slot: ' . $conn->error);
         $stmt->close();
-        return ['error' => 'Failed to book slot: ' . $conn->error];
+        return ['error' => 'Failed to book slot.'];
     }
     
     $stmt->close();
@@ -259,8 +261,9 @@ function cancelBooking($id) {
     $stmt->bind_param("i", $id);
     
     if (!$stmt->execute()) {
+        error_log('Failed to cancel booking: ' . $conn->error);
         $stmt->close();
-        return ['error' => 'Failed to cancel booking: ' . $conn->error];
+        return ['error' => 'Failed to cancel booking.'];
     }
     
     $stmt->close();

@@ -158,7 +158,8 @@ const statusText = computed(() => props.slot.is_booked ? 'Забронирова
 
 .btn-icon {
   padding: 0.625rem;
-  width: 2.5rem;
+  width: 48px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;

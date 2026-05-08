@@ -109,6 +109,11 @@ onUnmounted(() => {
   font-size: 1.5rem;
   cursor: pointer;
   line-height: 1;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-btn:hover {
