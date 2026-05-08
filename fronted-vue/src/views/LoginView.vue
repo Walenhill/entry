@@ -23,7 +23,7 @@
           {{ isLoading ? 'Вход...' : 'Войти' }}
         </button>
 
-        <div v-if="error" class="error-message mt-3 text-center">
+        <div v-if="error" class="error-message mt-3 text-center" role="alert" aria-live="assertive">
           {{ error }}
         </div>
       </form>
