@@ -42,8 +42,26 @@ export const useSlotsStore = defineStore('slots', {
 
     async createSlot(slotData) {
       try {
-        await slotsApi.createSlot(slotData);
-        await this.fetchSlots();
+        const response = await slotsApi.createSlot(slotData);
+        if (response.data.success && response.data.slot) {
+          const slot = response.data.slot;
+          this.slots.push({
+            id: slot.id,
+            date: slot.start_time.substring(0, 10),
+            start_time: slot.start_time.substring(11, 16),
+            end_time: slot.end_time.substring(11, 16),
+            description: slot.description,
+            is_booked: slot.status === 'booked',
+            booked_by: slot.client_name,
+            booking_comment: slot.client_phone
+          });
+          // Sort slots by start_time ascending as backend does
+          this.slots.sort((a, b) => {
+             const datetimeA = a.date + ' ' + a.start_time;
+             const datetimeB = b.date + ' ' + b.start_time;
+             return datetimeA.localeCompare(datetimeB);
+          });
+        }
       } catch (error) {
         console.error('Error creating slot:', error);
         throw error;
@@ -52,8 +70,15 @@ export const useSlotsStore = defineStore('slots', {
 
     async bookSlot(id, bookingData) {
       try {
-        await slotsApi.bookSlot(id, bookingData);
-        await this.fetchSlots();
+        const response = await slotsApi.bookSlot(id, bookingData);
+        if (response.data.success && response.data.slot) {
+          const slotIndex = this.slots.findIndex(s => s.id === id);
+          if (slotIndex !== -1) {
+            this.slots[slotIndex].is_booked = true;
+            this.slots[slotIndex].booked_by = response.data.slot.client_name;
+            this.slots[slotIndex].booking_comment = response.data.slot.client_phone;
+          }
+        }
       } catch (error) {
         console.error('Error booking slot:', error);
         throw error;
@@ -62,8 +87,15 @@ export const useSlotsStore = defineStore('slots', {
 
     async cancelBooking(id) {
       try {
-        await slotsApi.cancelBooking(id);
-        await this.fetchSlots();
+        const response = await slotsApi.cancelBooking(id);
+        if (response.data.success && response.data.slot) {
+          const slotIndex = this.slots.findIndex(s => s.id === id);
+          if (slotIndex !== -1) {
+            this.slots[slotIndex].is_booked = false;
+            this.slots[slotIndex].booked_by = null;
+            this.slots[slotIndex].booking_comment = null;
+          }
+        }
       } catch (error) {
         console.error('Error canceling booking:', error);
         throw error;
@@ -73,7 +105,7 @@ export const useSlotsStore = defineStore('slots', {
     async deleteSlot(id) {
       try {
         await slotsApi.deleteSlot(id);
-        await this.fetchSlots();
+        this.slots = this.slots.filter(s => s.id !== id);
       } catch (error) {
         console.error('Error deleting slot:', error);
         throw error;

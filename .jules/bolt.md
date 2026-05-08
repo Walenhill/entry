@@ -9,3 +9,6 @@
 ## 2026-05-06 - Avoid Date Object Instantiation in Frontend Loops
 **Learning:** Instantiating `new Date()` objects within a `.map()` loop (e.g., `response.data.map(slot => new Date(slot.start_time))`) introduces unnecessary memory allocation and processing overhead, making it significantly slower compared to parsing strings directly.
 **Action:** When mapping database timestamps returned in a strict format like `YYYY-MM-DD HH:MM:SS`, use string slicing (`substring()`) to extract date and time components instead of heavy Date object parsing.
+## 2024-06-03 - Avoid global re-fetches for single item CRUD operations
+**Learning:** The frontend state management was reloading the entire slots list via `await this.fetchSlots()` after every `createSlot`, `bookSlot`, `cancelBooking`, and `deleteSlot` action. This caused an unnecessary network request, extra load on the database, and full UI re-renders, creating a sluggish perceived performance.
+**Action:** When implementing CRUD operations in the global store, directly mutate the local array using the returned object or known ID instead of blindly re-fetching the entire dataset from the API. Ensure the data structure mapped locally precisely matches the one originally mapped from `fetch`.
