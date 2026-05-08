@@ -28,7 +28,25 @@ describe('handleApiError', () => {
     global.alert = originalAlert;
   });
 
-  test('uses error.response.data.message when available', () => {
+  test('uses error.response.data.error when available', () => {
+    const error = {
+      response: {
+        data: {
+          error: 'Backend specific error'
+        }
+      }
+    };
+
+    handleApiError(error, 'Log message', 'Alert Prefix');
+
+    assert.strictEqual(consoleErrorCalls.length, 1);
+    assert.deepStrictEqual(consoleErrorCalls[0], ['Log message', error]);
+
+    assert.strictEqual(alertCalls.length, 1);
+    assert.strictEqual(alertCalls[0], 'Alert Prefix: Backend specific error');
+  });
+
+  test('uses error.response.data.message when error field is unavailable', () => {
     const error = {
       response: {
         data: {

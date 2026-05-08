@@ -65,6 +65,7 @@ import { useSlotsStore } from '../store/slots';
 import SlotCard from '../components/SlotCard.vue';
 import CreateSlotForm from '../components/CreateSlotForm.vue';
 import BookingModal from '../components/BookingModal.vue';
+import { handleApiError } from '../utils/errorHandler';
 
 const slotsStore = useSlotsStore();
 
@@ -90,7 +91,7 @@ const handleCreateSlot = async (formData) => {
 
     showCreateForm.value = false;
   } catch (error) {
-    alert('Ошибка при создании слота');
+    handleApiError(error, 'Error creating slot', 'Ошибка при создании слота');
   } finally {
     isCreating.value = false;
   }
@@ -117,7 +118,7 @@ const handleBookSlot = async (formData) => {
     });
     closeBookingModal();
   } catch (error) {
-    alert('Ошибка при бронировании');
+    handleApiError(error, 'Error booking slot', 'Ошибка при бронировании');
   } finally {
     isBooking.value = false;
   }
@@ -128,7 +129,7 @@ const handleCancelBooking = async (slotId) => {
   try {
     await slotsStore.cancelBooking(slotId);
   } catch (error) {
-    alert('Ошибка при отмене брони');
+    handleApiError(error, 'Error canceling booking', 'Ошибка при отмене брони');
   }
 };
 
@@ -137,7 +138,7 @@ const handleDeleteSlot = async (slotId) => {
   try {
     await slotsStore.deleteSlot(slotId);
   } catch (error) {
-    alert('Ошибка при удалении слота');
+    handleApiError(error, 'Error deleting slot', 'Ошибка при удалении слота');
   }
 };
 
