@@ -41,10 +41,9 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     $stmt->execute();
     $result = $stmt->get_result();
     
-    $slots = [];
-    while ($row = $result->fetch_assoc()) {
-        $slots[] = $row;
-    }
+    // Performance optimization: Using fetch_all(MYSQLI_ASSOC) instead of a while loop with fetch_assoc()
+    // pushes the array construction down to the C layer, avoiding slow user-land PHP iteration
+    $slots = $result->fetch_all(MYSQLI_ASSOC);
     
     $stmt->close();
     return $slots;
@@ -331,10 +330,9 @@ function getStatistics() {
         GROUP BY client_phone, client_name 
         ORDER BY visits DESC 
         LIMIT 5");
-    $topClients = [];
-    while ($row = $result->fetch_assoc()) {
-        $topClients[] = $row;
-    }
+    // Performance optimization: Using fetch_all(MYSQLI_ASSOC) instead of a while loop with fetch_assoc()
+    // pushes the array construction down to the C layer, avoiding slow user-land PHP iteration
+    $topClients = $result->fetch_all(MYSQLI_ASSOC);
     
     return [
         'summary' => $summary,
