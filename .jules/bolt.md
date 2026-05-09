@@ -9,3 +9,7 @@
 ## 2026-05-06 - Avoid Date Object Instantiation in Frontend Loops
 **Learning:** Instantiating `new Date()` objects within a `.map()` loop (e.g., `response.data.map(slot => new Date(slot.start_time))`) introduces unnecessary memory allocation and processing overhead, making it significantly slower compared to parsing strings directly.
 **Action:** When mapping database timestamps returned in a strict format like `YYYY-MM-DD HH:MM:SS`, use string slicing (`substring()`) to extract date and time components instead of heavy Date object parsing.
+
+## 2024-05-09 - Faster Array Construction from DB Results
+**Learning:** In PHP `mysqli` database operations, iterating through `$result->fetch_assoc()` in a user-land `while` loop to construct an array introduces unnecessary performance overhead.
+**Action:** Always use `$result->fetch_all(MYSQLI_ASSOC)` when fetching entire result sets to optimize performance by pushing array construction down to the underlying, highly optimized C layer.
