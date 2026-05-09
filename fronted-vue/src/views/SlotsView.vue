@@ -34,7 +34,9 @@
       <div class="empty-icon" aria-hidden="true">📅</div>
       <h3 class="mt-3">Нет доступных слотов</h3>
       <p class="text-muted">Создайте новый слот, чтобы он появился здесь.</p>
-
+      <button class="btn btn-primary mt-3" @click="showCreateForm = true">
+        + Создать слот
+      </button>
     </div>
 
     <!-- Сетка слотов -->
