@@ -6,3 +6,7 @@
 **Learning:** Found that custom modals (like `BookingModal.vue`) lacked keyboard navigation support, trapping keyboard users or making it difficult to close without a mouse. Also learned that `type="tel"` inputs lacking autocomplete significantly degraded mobile user experience since the numeric keypad isn't prioritized for plain text inputs.
 **Action:** Always add a global `keydown` event listener to close modal components via the `Escape` key. Use `autocomplete` attributes consistently on standard fields (like `name` and `tel`) and ensure phone fields utilize `type="tel"` to trigger optimized mobile keyboards.
 
+
+## 2026-05-12 - Empty State CTA Buttons
+**Learning:** Found that the empty state in the slots view required users to hunt for the global "Create" button at the top of the page, adding friction to the primary user journey.
+**Action:** Always ensure empty states include an immediate, contextual Call-to-Action (CTA) button to improve usability and reduce user friction.
