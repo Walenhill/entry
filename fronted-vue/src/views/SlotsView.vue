@@ -33,8 +33,10 @@
     <div v-else-if="slotsStore.slots.length === 0" class="state-container empty-state">
       <div class="empty-icon" aria-hidden="true">📅</div>
       <h3 class="mt-3">Нет доступных слотов</h3>
-      <p class="text-muted">Создайте новый слот, чтобы он появился здесь.</p>
-
+      <p class="text-muted mb-4">Создайте новый слот, чтобы он появился здесь.</p>
+      <button class="btn btn-primary" @click="showCreateForm = true" v-if="!showCreateForm">
+        + Создать слот
+      </button>
     </div>
 
     <!-- Сетка слотов -->
