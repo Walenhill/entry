@@ -87,11 +87,76 @@ function testHasTimeOverlap() {
     return true;
 }
 
+function testGetRequestPath() {
+    echo "Testing getRequestPath... ";
+
+    $cases = [
+        ['/api/slots', 'slots', 'Basic endpoint with api prefix'],
+        ['/api/slots/123/book', 'slots/123/book', 'Nested endpoint with api prefix'],
+        ['/slots', '/slots', 'Endpoint without api prefix'],
+        ['/api', '/api', 'Exact /api path'],
+        ['/api/', '', 'Exact /api/ path'],
+        ['/', '/', 'Root path'],
+        ['/api/slots?date=2023-10-27', 'slots', 'Path with query parameters'],
+        ['', '/', 'Empty URI']
+    ];
+
+    foreach ($cases as [$uri, $expected, $label]) {
+        if ($uri === '') {
+            unset($_SERVER['REQUEST_URI']);
+        } else {
+            $_SERVER['REQUEST_URI'] = $uri;
+        }
+
+        $result = getRequestPath();
+        if ($result !== $expected) {
+            echo "\nFAIL: $label failed for input '$uri'. Expected " . var_export($expected, true) . ", got " . var_export($result, true) . "\n";
+            return false;
+        }
+    }
+
+    echo "PASS\n";
+    return true;
+}
+
+function testGetQueryParams() {
+    echo "Testing getQueryParams... ";
+
+    $cases = [
+        ['/api/slots?date=2023-10-27&role=admin', ['date' => '2023-10-27', 'role' => 'admin'], 'Multiple query params'],
+        ['/api/slots?date=2023-10-27', ['date' => '2023-10-27'], 'Single query param'],
+        ['/api/slots', [], 'No query params'],
+        ['/api/slots?empty=&param2=val', ['empty' => '', 'param2' => 'val'], 'Empty query param'],
+        ['', [], 'Empty URI']
+    ];
+
+    foreach ($cases as [$uri, $expected, $label]) {
+        if ($uri === '') {
+            unset($_SERVER['REQUEST_URI']);
+        } else {
+            $_SERVER['REQUEST_URI'] = $uri;
+        }
+
+        $result = getQueryParams();
+
+        // Use == for array comparison to ignore key order, though keys should match here
+        if ($result != $expected) {
+            echo "\nFAIL: $label failed for input '$uri'. Expected " . var_export($expected, true) . ", got " . var_export($result, true) . "\n";
+            return false;
+        }
+    }
+
+    echo "PASS\n";
+    return true;
+}
+
 // Run tests
 $tests = [
     'testValidateDateTime',
     'testSanitizeInput',
-    'testHasTimeOverlap'
+    'testHasTimeOverlap',
+    'testGetRequestPath',
+    'testGetQueryParams'
 ];
 
 $passedCount = 0;
