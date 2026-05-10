@@ -21,10 +21,20 @@ $allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
 ];
+
+// Add dynamic frontend URL if defined in environment
+$frontendUrl = getenv('FRONTEND_URL');
+if ($frontendUrl) {
+    $allowedOrigins[] = rtrim($frontendUrl, '/');
+}
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
+// Find exact match to avoid reflecting arbitrary user input directly
+$matchedKey = array_search($origin, $allowedOrigins, true);
+
+if ($matchedKey !== false) {
+    header("Access-Control-Allow-Origin: " . $allowedOrigins[$matchedKey]);
     header("Access-Control-Allow-Credentials: true");
 }
 
