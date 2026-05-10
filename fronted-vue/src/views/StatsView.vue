@@ -5,12 +5,12 @@
       <p class="text-muted">Обзор загруженности и активности клиентов</p>
     </div>
 
-    <div v-if="slotsStore.statsLoading" class="state-container">
+    <div v-if="slotsStore.statsLoading" class="state-container" role="status" aria-live="polite">
       <div class="loader"></div>
       <p class="mt-3 text-muted">Загрузка статистики...</p>
     </div>
 
-    <div v-else-if="slotsStore.statsError" class="state-container error-state">
+    <div v-else-if="slotsStore.statsError" class="state-container error-state" role="alert" aria-live="assertive">
       <p class="text-danger">{{ slotsStore.statsError }}</p>
       <button class="btn btn-outline mt-3" @click="slotsStore.fetchStats()">Повторить попытку</button>
     </div>
@@ -19,7 +19,7 @@
       <!-- Cards -->
       <div class="stats-cards mb-4">
         <div class="card stat-card">
-          <div class="stat-icon info">📋</div>
+          <div class="stat-icon info" aria-hidden="true">📋</div>
           <div class="stat-details">
             <span class="stat-value">{{ slotsStore.stats.summary.total }}</span>
             <span class="stat-label">Всего слотов</span>
@@ -27,7 +27,7 @@
         </div>
 
         <div class="card stat-card">
-          <div class="stat-icon success">✓</div>
+          <div class="stat-icon success" aria-hidden="true">✓</div>
           <div class="stat-details">
             <span class="stat-value text-success">{{ slotsStore.stats.summary.booked }}</span>
             <span class="stat-label">Забронировано</span>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="card stat-card">
-          <div class="stat-icon primary">⏳</div>
+          <div class="stat-icon primary" aria-hidden="true">⏳</div>
           <div class="stat-details">
             <span class="stat-value" style="color: var(--accent-secondary)">{{ slotsStore.stats.summary.available }}</span>
             <span class="stat-label">Свободно</span>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="card stat-card">
-          <div class="stat-icon danger">✕</div>
+          <div class="stat-icon danger" aria-hidden="true">✕</div>
           <div class="stat-details">
             <span class="stat-value text-danger">{{ slotsStore.stats.summary.cancelled }}</span>
             <span class="stat-label">Отменено</span>
@@ -55,10 +55,17 @@
       <div class="card mb-4">
         <h3 class="mb-3">Загруженность расписания</h3>
         <div class="progress-wrapper">
-          <div class="progress-bar">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            :aria-valuenow="slotsStore.stats.occupancy_rate"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-label="Загруженность расписания"
+          >
             <div class="progress-fill" :style="{ width: `${slotsStore.stats.occupancy_rate}%` }"></div>
           </div>
-          <span class="progress-text">{{ slotsStore.stats.occupancy_rate }}% заполнено</span>
+          <span class="progress-text" aria-hidden="true">{{ slotsStore.stats.occupancy_rate }}% заполнено</span>
         </div>
       </div>
 
