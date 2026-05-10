@@ -149,23 +149,33 @@ function generateSlotsFromTemplate($template) {
     
     // Prepare the insertion statement once outside the loop
     $insertStmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
-    // Prepare overlap check once outside the loop to avoid N+1 compilation overhead
-    $overlapStmt = $conn->prepare("SELECT id FROM slots WHERE status != 'cancelled' AND (start_time < ? AND end_time > ?) LIMIT 1");
-
     $loopStartTimeStr = "";
     $loopEndTimeStr = "";
     $insertStmt->bind_param("sss", $loopStartTimeStr, $loopEndTimeStr, $description);
-    $overlapStmt->bind_param("ss", $loopEndTimeStr, $loopStartTimeStr);
+
+    $batchStartTimeStr = date('Y-m-d H:i:s', $currentTime);
+    $batchEndTimeStr = date('Y-m-d H:i:s', $endTime);
+
+    // Pre-fetch all non-cancelled slots that could overlap with any slot in this template generation
+    $existingSlotsStmt = $conn->prepare("SELECT start_time, end_time FROM slots WHERE status != 'cancelled' AND (start_time < ? AND end_time > ?)");
+    $existingSlotsStmt->bind_param("ss", $batchEndTimeStr, $batchStartTimeStr);
+    $existingSlotsStmt->execute();
+    $existingSlotsResult = $existingSlotsStmt->get_result();
+    $existingSlots = $existingSlotsResult->fetch_all(MYSQLI_ASSOC);
+    $existingSlotsStmt->close();
 
     while ($currentTime + ($duration * 60) <= $endTime) {
         $loopStartTimeStr = date('Y-m-d H:i:s', $currentTime);
         $loopEndTimeStr = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
         
-        // Check for overlaps
-        $overlapStmt->execute();
-        $overlapResult = $overlapStmt->get_result();
-        $hasOverlap = $overlapResult->num_rows > 0;
-        $overlapResult->free();
+        // Check for overlaps in memory
+        $hasOverlap = false;
+        foreach ($existingSlots as $existingSlot) {
+            if ($existingSlot['start_time'] < $loopEndTimeStr && $existingSlot['end_time'] > $loopStartTimeStr) {
+                $hasOverlap = true;
+                break;
+            }
+        }
 
         if ($hasOverlap) {
             $skippedCount++;
@@ -190,7 +200,6 @@ function generateSlotsFromTemplate($template) {
     }
     
     $insertStmt->close();
-    $overlapStmt->close();
 
     return [
         'created_count' => $createdCount,

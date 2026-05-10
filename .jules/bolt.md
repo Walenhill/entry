@@ -13,3 +13,7 @@
 ## 2024-05-07 - Use fetch_all for Faster Database Reads
 **Learning:** Iterating over MySQL result sets using a `while ($row = $result->fetch_assoc())` loop executes the array construction in user-land PHP, which is less efficient than using the native `$result->fetch_all(MYSQLI_ASSOC)` method that performs this operation directly in the C layer (mysqlnd).
 **Action:** Replace `while` loops that manually append `fetch_assoc()` results to an array with a single `$result->fetch_all(MYSQLI_ASSOC)` call.
+
+## 2024-05-10 - Avoiding N+1 Queries in Bulk Generation
+**Learning:** In the `generateSlotsFromTemplate` function, checking for overlapping slots inside the `while` loop generated a separate SQL query for each slot being created. For a large number of slots, this creates a severe N+1 problem and slows down generation significantly, even with a prepared statement.
+**Action:** When performing high-frequency database checks within a loop (like slot overlap detection), pre-fetch the relevant dataset for the entire scope (e.g., the full date range) into a PHP array using a single query before the loop begins. Perform the validation logic entirely in-memory to reduce database roundtrips from N to 1.
