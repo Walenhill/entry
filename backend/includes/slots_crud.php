@@ -234,7 +234,7 @@ function bookSlot($id, $clientData) {
         return ['error' => 'Client name and phone are required'];
     }
     
-    $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ? AND status = 'available'");
     $stmt->bind_param("ssi", $clientName, $clientPhone, $id);
     
     if (!$stmt->execute()) {
@@ -243,6 +243,11 @@ function bookSlot($id, $clientData) {
         return ['error' => 'Failed to book slot.'];
     }
     
+    if ($stmt->affected_rows === 0) {
+        $stmt->close();
+        return ['error' => 'Slot is no longer available'];
+    }
+
     $stmt->close();
     return getSlotById($id);
 }
@@ -265,7 +270,7 @@ function cancelBooking($id) {
         return ['error' => 'Slot is not booked'];
     }
     
-    $stmt = $conn->prepare("UPDATE slots SET status = 'cancelled', client_name = NULL, client_phone = NULL WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE slots SET status = 'cancelled', client_name = NULL, client_phone = NULL WHERE id = ? AND status = 'booked'");
     $stmt->bind_param("i", $id);
     
     if (!$stmt->execute()) {
@@ -274,6 +279,11 @@ function cancelBooking($id) {
         return ['error' => 'Failed to cancel booking.'];
     }
     
+    if ($stmt->affected_rows === 0) {
+        $stmt->close();
+        return ['error' => 'Failed to cancel booking: Slot is no longer booked'];
+    }
+
     $stmt->close();
     return getSlotById($id);
 }

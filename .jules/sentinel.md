@@ -7,3 +7,8 @@
 **Vulnerability:** Raw database errors (`$conn->error`) were directly returned to the client in HTTP responses during slot creation, booking, and cancellation operations in `backend/includes/slots_crud.php`.
 **Learning:** Returning raw database errors exposes internal database structure, table names, query details, and potentially sensitive database versions to end-users, aiding attackers in formulating targeted SQL injection or other attacks.
 **Prevention:** Catch and log raw exceptions/errors securely on the server side using `error_log()`, and always return generic, user-friendly error messages (e.g., "An internal error occurred" or "Failed to create slot") to the client.
+
+## 2024-05-10 - [TOCTOU Race Condition in Slot Booking/Cancellation]
+**Vulnerability:** A Time-of-Check to Time-of-Use (TOCTOU) vulnerability existed in `bookSlot` and `cancelBooking` where the database query relied on the slot's current status checked outside the update query, meaning two concurrent requests could double-book or mis-cancel the same slot.
+**Learning:** Checking a condition in PHP and then executing an `UPDATE` query without enforcing the condition in the `UPDATE`'s `WHERE` clause is inherently vulnerable to race conditions under high concurrent load.
+**Prevention:** Always bundle state requirements into the `WHERE` clause of the SQL `UPDATE` statement (e.g., `WHERE id = ? AND status = 'available'`) and check `$stmt->affected_rows` to verify atomic state transitions.
