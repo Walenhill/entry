@@ -24,17 +24,19 @@ $allowedOrigins = [
 
 // Add dynamic frontend URL if defined in environment
 $frontendUrl = getenv('FRONTEND_URL');
-if ($frontendUrl) {
+if ($frontendUrl && !in_array($frontendUrl, $allowedOrigins)) {
     $allowedOrigins[] = rtrim($frontendUrl, '/');
 }
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-// Find exact match to avoid reflecting arbitrary user input directly
-$matchedKey = array_search($origin, $allowedOrigins, true);
+// Use strict matching to prevent type juggling bypasses
+$matchedIndex = array_search($origin, $allowedOrigins, true);
 
-if ($matchedKey !== false) {
-    header("Access-Control-Allow-Origin: " . $allowedOrigins[$matchedKey]);
+if ($matchedIndex !== false) {
+    // Reflect the strictly matched origin from our whitelist, not the client's input
+    $safeOrigin = $allowedOrigins[$matchedIndex];
+    header("Access-Control-Allow-Origin: $safeOrigin");
     header("Access-Control-Allow-Credentials: true");
 }
 
