@@ -21,10 +21,22 @@ $allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
 ];
+
+// Add frontend URL from environment if it exists
+$frontendUrl = getenv('FRONTEND_URL');
+if ($frontendUrl && !in_array($frontendUrl, $allowedOrigins)) {
+    $allowedOrigins[] = $frontendUrl;
+}
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
+// Use strict matching to prevent type juggling bypasses
+$matchedIndex = array_search($origin, $allowedOrigins, true);
+
+if ($matchedIndex !== false) {
+    // Reflect the strictly matched origin from our whitelist, not the client's input
+    $safeOrigin = $allowedOrigins[$matchedIndex];
+    header("Access-Control-Allow-Origin: $safeOrigin");
     header("Access-Control-Allow-Credentials: true");
 }
 
