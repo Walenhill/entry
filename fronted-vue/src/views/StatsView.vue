@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="slotsStore.statsLoading" class="state-container" role="status" aria-live="polite">
-      <div class="loader"></div>
+      <div class="loader" aria-hidden="true"></div>
       <p class="mt-3 text-muted">Загрузка статистики...</p>
     </div>
 
