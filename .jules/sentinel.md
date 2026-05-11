@@ -12,3 +12,8 @@
 **Vulnerability:** A Time-of-Check to Time-of-Use (TOCTOU) vulnerability existed in `bookSlot` and `cancelBooking` where the database query relied on the slot's current status checked outside the update query, meaning two concurrent requests could double-book or mis-cancel the same slot.
 **Learning:** Checking a condition in PHP and then executing an `UPDATE` query without enforcing the condition in the `UPDATE`'s `WHERE` clause is inherently vulnerable to race conditions under high concurrent load.
 **Prevention:** Always bundle state requirements into the `WHERE` clause of the SQL `UPDATE` statement (e.g., `WHERE id = ? AND status = 'available'`) and check `$stmt->affected_rows` to verify atomic state transitions.
+
+## 2026-05-10 - Overly Permissive CORS Origin Reflection
+**Vulnerability:** The `backend/main.php` file directly echoed the user-provided `$_SERVER['HTTP_ORIGIN']` in the `Access-Control-Allow-Origin` header if it passed an `in_array` check.
+**Learning:** Reflecting user input directly into security headers, even if loosely validated, is an anti-pattern. If the validation is bypassed or flawed, attackers can inject arbitrary origins, enabling cross-origin attacks or confusing static analysis tools into flagging it as a vulnerability.
+**Prevention:** Instead of reflecting the input, always use strict matching (e.g., `array_search($origin, $allowedOrigins, true)`) and output the exact predefined string from the allowed whitelist.
