@@ -17,3 +17,7 @@
 ## 2024-05-10 - Avoiding N+1 Queries in Bulk Generation
 **Learning:** In the `generateSlotsFromTemplate` function, checking for overlapping slots inside the `while` loop generated a separate SQL query for each slot being created. For a large number of slots, this creates a severe N+1 problem and slows down generation significantly, even with a prepared statement.
 **Action:** When performing high-frequency database checks within a loop (like slot overlap detection), pre-fetch the relevant dataset for the entire scope (e.g., the full date range) into a PHP array using a single query before the loop begins. Perform the validation logic entirely in-memory to reduce database roundtrips from N to 1.
+
+## 2026-05-11 - Avoiding Global Re-fetches for Pinia CRUD Operations
+**Learning:** In the frontend Vue application, dispatching a global re-fetch (e.g., `await this.fetchSlots()`) after every single-item CRUD operation (like create, update, or delete) creates an unnecessary performance bottleneck by triggering redundant network requests and full state recreations.
+**Action:** Optimize Pinia stores by mutating the local array state directly using the successful API response (e.g., `this.slots.push(...)` or `this.slots[index] = ...`) instead of re-fetching the entire dataset from the backend API.
