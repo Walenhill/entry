@@ -13,3 +13,6 @@
 ## 2026-05-10 - Mapping Custom Visual Components to ARIA Roles
 **Learning:** Found that custom visual components acting as progress bars (e.g., using `div` widths for percentages) lack semantic meaning for screen readers. Additionally, decorative emojis in stat cards read out confusingly, and visual percentage text duplicates information when ARIA attributes are introduced.
 **Action:** Always map custom visual indicators (like load bars) to their semantic equivalents using `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`. Use `aria-hidden="true"` generously on decorative text (like emojis) and visual text that duplicates ARIA information to reduce screen reader noise.
+## 2024-05-11 - Dynamic ARIA Context in Card Actions
+**Learning:** Screen reader users lose context when navigating through multiple identical actions (e.g., "Забронировать") in a list of cards if the actions don't reference the card's specific data (like date and time). Emoji icons next to or inside these buttons (like "🗑") often produce redundant or confusing readout if not explicitly hidden.
+**Action:** Always include item-specific data (e.g., `${slot.date}`, `${slot.start_time}`) within the `:aria-label` of generic action buttons inside loops/cards, and wrap decorative text or emoji icons in `<span aria-hidden="true">`.
