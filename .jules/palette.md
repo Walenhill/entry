@@ -16,3 +16,7 @@
 ## 2024-05-11 - Dynamic ARIA Context in Card Actions
 **Learning:** Screen reader users lose context when navigating through multiple identical actions (e.g., "Забронировать") in a list of cards if the actions don't reference the card's specific data (like date and time). Emoji icons next to or inside these buttons (like "🗑") often produce redundant or confusing readout if not explicitly hidden.
 **Action:** Always include item-specific data (e.g., `${slot.date}`, `${slot.start_time}`) within the `:aria-label` of generic action buttons inside loops/cards, and wrap decorative text or emoji icons in `<span aria-hidden="true">`.
+
+## 2025-05-12 - Prevent Past Dates and Enhance Accessibility in Create Slot Form
+**Learning:** Native `<input type="date">` elements do not restrict past dates by default, which can lead to accidental bookings in the past. Additionally, dynamically inserted forms lack initial focus, hampering keyboard navigation.
+**Action:** Always add a dynamic `min` attribute (e.g., `min="today"`) to date inputs for future-oriented data (like bookings), and use `ref` with `onMounted` to explicitly focus the first input when a component mounts to establish an immediate keyboard interaction context.

@@ -5,7 +5,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="date">Дата <span class="text-danger">*</span></label>
-          <input type="date" id="date" v-model="form.date" required />
+          <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required />
         </div>
         <div class="form-group">
           <label for="start_time">Начало <span class="text-danger">*</span></label>
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const props = defineProps({
   isSubmitting: Boolean
@@ -45,6 +45,16 @@ const emit = defineEmits(['submit', 'cancel']);
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 const defaultDate = tomorrow.toISOString().split('T')[0];
+
+const today = new Date().toISOString().split('T')[0];
+
+const dateInput = ref(null);
+
+onMounted(() => {
+  if (dateInput.value) {
+    dateInput.value.focus();
+  }
+});
 
 const form = ref({
   date: defaultDate,
