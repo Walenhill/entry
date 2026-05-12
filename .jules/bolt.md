@@ -21,3 +21,7 @@
 ## 2026-05-11 - Avoiding Global Re-fetches for Pinia CRUD Operations
 **Learning:** In the frontend Vue application, dispatching a global re-fetch (e.g., `await this.fetchSlots()`) after every single-item CRUD operation (like create, update, or delete) creates an unnecessary performance bottleneck by triggering redundant network requests and full state recreations.
 **Action:** Optimize Pinia stores by mutating the local array state directly using the successful API response (e.g., `this.slots.push(...)` or `this.slots[index] = ...`) instead of re-fetching the entire dataset from the backend API.
+
+## 2024-05-12 - Replacing localeCompare for String Dates
+**Learning:** Using `localeCompare` to sort arrays of ISO-like date strings (e.g. `YYYY-MM-DD HH:MM:SS`) adds unnecessary overhead because these strings are strictly formatted and do not require locale-aware sorting logic.
+**Action:** Replace `localeCompare` with standard string comparison operators (`<`, `>`) when sorting strictly formatted date or time strings to improve sorting performance.
