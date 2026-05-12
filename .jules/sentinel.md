@@ -21,3 +21,8 @@
 **Vulnerability:** The `backend/main.php` file directly echoed the user-provided `$_SERVER['HTTP_ORIGIN']` in the `Access-Control-Allow-Origin` header if it passed an `in_array` check.
 **Learning:** Reflecting user input directly into security headers, even if loosely validated, is an anti-pattern. If the validation is bypassed or flawed, attackers can inject arbitrary origins, enabling cross-origin attacks or confusing static analysis tools into flagging it as a vulnerability.
 **Prevention:** Instead of reflecting the input, always use strict matching (e.g., `array_search($origin, $allowedOrigins, true)`) and output the exact predefined string from the allowed whitelist.
+
+## 2024-05-12 - Architectural DoS via Reverse Proxy Rate Limiting
+**Vulnerability:** The application used `$_SERVER['REMOTE_ADDR']` for IP-based rate limiting on the admin login endpoint. In a Docker/Reverse Proxy environment, this resolves to the proxy's internal IP (e.g., Nginx) rather than the real client IP.
+**Learning:** If a reverse proxy is in front of the application, all requests will appear to come from the proxy's IP. This means a single malicious actor failing logins will block the proxy's IP, effectively denying access to all legitimate users (a Denial of Service).
+**Prevention:** If `REMOTE_ADDR` is determined to be a private/internal IP (indicating a local proxy), securely extract the real client IP from the `X-Forwarded-For` header. Always validate the extracted IP to prevent spoofing if the application is ever exposed directly.
