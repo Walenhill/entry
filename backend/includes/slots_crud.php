@@ -193,6 +193,8 @@ function generateSlotsFromTemplate($template) {
                     'client_phone' => null
                 ];
                 $createdCount++;
+            } else {
+                error_log('Failed to execute template insert: ' . $insertStmt->error);
             }
         }
         
@@ -300,6 +302,10 @@ function deleteSlot($id) {
     $stmt->bind_param("i", $id);
     
     $success = $stmt->execute();
+    if (!$success) {
+        error_log('Failed to delete slot: ' . $conn->error);
+    }
+
     $stmt->close();
     
     return $success;
