@@ -55,7 +55,9 @@ export const useSlotsStore = defineStore('slots', {
           this.slots.sort((a, b) => {
             const timeA = a.date + ' ' + a.start_time;
             const timeB = b.date + ' ' + b.start_time;
-            return timeA.localeCompare(timeB);
+            // Performance optimization: Using standard string comparison operators instead of localeCompare
+            // is significantly faster for simple, strictly formatted ISO-like date strings.
+            return timeA < timeB ? -1 : (timeA > timeB ? 1 : 0);
           });
         } else {
           await this.fetchSlots();
