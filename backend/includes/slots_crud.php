@@ -272,7 +272,7 @@ function cancelBooking($id) {
         return ['error' => 'Slot is not booked'];
     }
     
-    $stmt = $conn->prepare("UPDATE slots SET status = 'cancelled', client_name = NULL, client_phone = NULL WHERE id = ? AND status = 'booked'");
+    $stmt = $conn->prepare("UPDATE slots SET status = 'available', client_name = NULL, client_phone = NULL WHERE id = ? AND status = 'booked'");
     $stmt->bind_param("i", $id);
     
     if (!$stmt->execute()) {
