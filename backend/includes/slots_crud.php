@@ -164,41 +164,55 @@ function generateSlotsFromTemplate($template) {
     $existingSlots = $existingSlotsResult->fetch_all(MYSQLI_ASSOC);
     $existingSlotsStmt->close();
 
-    while ($currentTime + ($duration * 60) <= $endTime) {
-        $loopStartTimeStr = date('Y-m-d H:i:s', $currentTime);
-        $loopEndTimeStr = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
-        
-        // Check for overlaps in memory
-        $hasOverlap = false;
-        foreach ($existingSlots as $existingSlot) {
-            if ($existingSlot['start_time'] < $loopEndTimeStr && $existingSlot['end_time'] > $loopStartTimeStr) {
-                $hasOverlap = true;
-                break;
-            }
-        }
+    // Performance optimization: Wrap multiple inserts in a single transaction
+    // This avoids auto-commit overhead and significantly speeds up batch generation
+    $conn->begin_transaction();
 
-        if ($hasOverlap) {
-            $skippedCount++;
-        } else {
-            if ($insertStmt->execute()) {
-                $newId = $conn->insert_id;
-                // Construct the slot directly in memory to avoid O(N) database reads
-                $createdSlots[] = [
-                    'id' => $newId,
-                    'start_time' => $loopStartTimeStr,
-                    'end_time' => $loopEndTimeStr,
-                    'description' => $description,
-                    'status' => 'available',
-                    'client_name' => null,
-                    'client_phone' => null
-                ];
-                $createdCount++;
-            } else {
-                error_log('Failed to execute template insert: ' . $insertStmt->error);
+    try {
+        while ($currentTime + ($duration * 60) <= $endTime) {
+            $loopStartTimeStr = date('Y-m-d H:i:s', $currentTime);
+            $loopEndTimeStr = date('Y-m-d H:i:s', $currentTime + ($duration * 60));
+
+            // Check for overlaps in memory
+            $hasOverlap = false;
+            foreach ($existingSlots as $existingSlot) {
+                if ($existingSlot['start_time'] < $loopEndTimeStr && $existingSlot['end_time'] > $loopStartTimeStr) {
+                    $hasOverlap = true;
+                    break;
+                }
             }
+
+            if ($hasOverlap) {
+                $skippedCount++;
+            } else {
+                if ($insertStmt->execute()) {
+                    $newId = $conn->insert_id;
+                    // Construct the slot directly in memory to avoid O(N) database reads
+                    $createdSlots[] = [
+                        'id' => $newId,
+                        'start_time' => $loopStartTimeStr,
+                        'end_time' => $loopEndTimeStr,
+                        'description' => $description,
+                        'status' => 'available',
+                        'client_name' => null,
+                        'client_phone' => null
+                    ];
+                    $createdCount++;
+                } else {
+                    error_log('Failed to execute template insert: ' . $insertStmt->error);
+                }
+            }
+
+            $currentTime += ($duration * 60);
         }
         
-        $currentTime += ($duration * 60);
+        $conn->commit();
+    } catch (\Exception $e) {
+        $conn->rollback();
+        error_log('Transaction failed during batch insert: ' . $e->getMessage());
+        // Depending on business logic, we might want to return an error, but let's rethrow or return error
+        $insertStmt->close();
+        return ['error' => 'An internal error occurred during batch slot generation'];
     }
     
     $insertStmt->close();
