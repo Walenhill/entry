@@ -26,3 +26,7 @@
 **Vulnerability:** The application used `$_SERVER['REMOTE_ADDR']` for IP-based rate limiting on the admin login endpoint. In a Docker/Reverse Proxy environment, this resolves to the proxy's internal IP (e.g., Nginx) rather than the real client IP.
 **Learning:** If a reverse proxy is in front of the application, all requests will appear to come from the proxy's IP. This means a single malicious actor failing logins will block the proxy's IP, effectively denying access to all legitimate users (a Denial of Service).
 **Prevention:** If `REMOTE_ADDR` is determined to be a private/internal IP (indicating a local proxy), securely extract the real client IP from the `X-Forwarded-For` header. Always validate the extracted IP to prevent spoofing if the application is ever exposed directly.
+## 2024-05-13 - [Missing Security Headers]
+**Vulnerability:** API responses lacked standard security headers, making the application more susceptible to MIME-sniffing, clickjacking, and XSS.
+**Learning:** Security headers are not automatically applied in vanilla PHP APIs unless explicitly configured.
+**Prevention:** Ensure standard security headers (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options) are set at the main entry point for all API responses.
