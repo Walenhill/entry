@@ -1,8 +1,8 @@
 <template>
   <div v-if="show" class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-content">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
-        <h3>Бронирование слота</h3>
+        <h3 id="booking-modal-title">Бронирование слота</h3>
         <button class="close-btn" @click="$emit('close')" aria-label="Закрыть">×</button>
       </div>
 
