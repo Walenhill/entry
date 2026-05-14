@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS slots (
     status ENUM('available', 'booked', 'cancelled') DEFAULT 'available',
     client_name VARCHAR(100),
     client_phone VARCHAR(20),
+    client_tg_id VARCHAR(50) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_start_time (start_time),
     INDEX idx_status (status)

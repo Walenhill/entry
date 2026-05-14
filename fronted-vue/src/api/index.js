@@ -68,6 +68,11 @@ export const authApi = {
     return apiClient.post('/auth/login', { password });
   },
 
+  // Авторизация через Telegram
+  telegramLogin(initData) {
+    return apiClient.post('/auth/telegram', { initData });
+  },
+
   // Выйти из системы
   logout() {
     localStorage.removeItem('is_logged_in');

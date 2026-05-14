@@ -97,3 +97,46 @@ function getQueryParams() {
     
     return $queryParams;
 }
+
+/**
+ * Send a message via Telegram Bot API
+ */
+function sendTelegramMessage($chatId, $message) {
+    $botToken = getenv('BOT_TOKEN');
+    if (!$botToken || !$chatId) {
+        return false;
+    }
+
+    $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
+
+    $data = [
+        'chat_id' => (string)$chatId,
+        'text' => $message,
+        'parse_mode' => 'HTML'
+    ];
+
+    $options = [
+        'http' => [
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => json_encode($data),
+            'ignore_errors' => true // Prevent file_get_contents from returning false on 400/500 errors
+        ]
+    ];
+
+    $context  = stream_context_create($options);
+    $result = file_get_contents($url, false, $context);
+
+    if ($result === false) {
+        error_log("Telegram API request failed.");
+        return false;
+    }
+
+    $response = json_decode($result, true);
+    if (!$response['ok']) {
+        error_log("Telegram API Error: " . ($response['description'] ?? 'Unknown error'));
+        return false;
+    }
+
+    return true;
+}

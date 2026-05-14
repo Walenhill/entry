@@ -37,7 +37,7 @@
           />
         </div>
 
-        <div class="modal-actions">
+        <div class="modal-actions" v-if="!isTelegramEnv">
           <button type="button" class="btn btn-outline" @click="$emit('close')">Отмена</button>
           <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
             {{ isSubmitting ? 'Сохранение...' : 'Подтвердить бронь' }}
@@ -50,12 +50,15 @@
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { isTMA, showMainButton, hideMainButton, getUser } from '../utils/telegram';
 
 const props = defineProps({
   show: Boolean,
   slot: Object,
   isSubmitting: Boolean
 });
+
+const isTelegramEnv = isTMA();
 
 const emit = defineEmits(['close', 'submit']);
 
@@ -70,16 +73,42 @@ const nameInput = ref(null);
 watch(() => props.show, async (newVal) => {
   if (newVal) {
     formData.value = { name: '', phone: '' };
+
+    if (isTelegramEnv) {
+        const tgUser = getUser();
+        if (tgUser && tgUser.first_name) {
+            formData.value.name = tgUser.last_name ? `${tgUser.first_name} ${tgUser.last_name}` : tgUser.first_name;
+        }
+        showMainButton('Забронировать', handleTelegramSubmit);
+    }
+
     await nextTick();
-    if (nameInput.value) {
+    if (nameInput.value && !isTelegramEnv) {
       nameInput.value.focus();
+    }
+  } else {
+    if (isTelegramEnv) {
+        hideMainButton(handleTelegramSubmit);
     }
   }
 });
 
 const handleSubmit = () => {
+  if (isTelegramEnv) {
+      // Prevent double submit if triggered by enter key
+      return;
+  }
   emit('submit', formData.value);
 };
+
+const handleTelegramSubmit = () => {
+    // Basic validation before submitting via TG button
+    if (!formData.value.name || !formData.value.phone) {
+        alert("Пожалуйста, заполните имя и телефон");
+        return;
+    }
+    emit('submit', formData.value);
+}
 
 const handleKeydown = (e) => {
   if (e.key === 'Escape' && props.show) {
