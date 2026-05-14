@@ -20,3 +20,7 @@
 ## 2025-05-12 - Prevent Past Dates and Enhance Accessibility in Create Slot Form
 **Learning:** Native `<input type="date">` elements do not restrict past dates by default, which can lead to accidental bookings in the past. Additionally, dynamically inserted forms lack initial focus, hampering keyboard navigation.
 **Action:** Always add a dynamic `min` attribute (e.g., `min="today"`) to date inputs for future-oriented data (like bookings), and use `ref` with `onMounted` to explicitly focus the first input when a component mounts to establish an immediate keyboard interaction context.
+
+## 2026-05-13 - Modal ARIA Semantics and Screen Reader Context
+**Learning:** Found that custom modal implementations (like `BookingModal.vue`) visually behave like dialogs but lack the necessary HTML semantics. Without `role="dialog"` and `aria-modal="true"`, screen readers do not recognize them as distinct dialogs and do not trap virtual focus, causing users to accidentally read content underneath the modal.
+**Action:** Always add `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` (pointing to the modal's title ID) to the container of any custom modal component to ensure proper screen reader behavior.
