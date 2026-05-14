@@ -4,6 +4,11 @@
  * All requests are routed through this file
  */
 
+// Enable gzip compression for API responses to reduce payload size
+if (extension_loaded('zlib')) {
+    ini_set('zlib.output_compression', 'On');
+}
+
 // Load environment variables from .env file
 $envFile = __DIR__ . '/.env';
 if (file_exists($envFile)) {
