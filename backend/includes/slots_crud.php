@@ -250,8 +250,10 @@ function bookSlot($id, $clientData) {
         return ['error' => 'Client name and phone are required'];
     }
     
-    $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ? AND status = 'available'");
-    $stmt->bind_param("ssi", $clientName, $clientPhone, $id);
+    $clientTgId = isset($clientData['client_tg_id']) ? sanitizeInput($clientData['client_tg_id']) : null;
+
+    $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ?, client_tg_id = ? WHERE id = ? AND status = 'available'");
+    $stmt->bind_param("sssi", $clientName, $clientPhone, $clientTgId, $id);
     
     if (!$stmt->execute()) {
         error_log('Failed to book slot: ' . $conn->error);
@@ -265,7 +267,21 @@ function bookSlot($id, $clientData) {
     }
 
     $stmt->close();
-    return getSlotById($id);
+    $updatedSlot = getSlotById($id);
+
+    // Send Telegram Notification if client has TG ID
+    if ($clientTgId) {
+        $message = "✅ <b>Успешное бронирование!</b>\n\n";
+        $message .= "Вы записаны на <b>" . htmlspecialchars($updatedSlot['start_time']) . "</b>.\n";
+        if (!empty($updatedSlot['description'])) {
+            $message .= "Детали: " . htmlspecialchars($updatedSlot['description']) . "\n";
+        }
+        $message .= "\nЖдем вас!";
+
+        sendTelegramMessage($clientTgId, $message);
+    }
+
+    return $updatedSlot;
 }
 
 /**

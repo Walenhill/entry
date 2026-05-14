@@ -114,6 +114,17 @@ function handlePostRequest($path) {
         return;
     }
     
+    // POST /auth/telegram - Telegram authentication
+    if ($path === 'auth/telegram') {
+        $result = loginTelegram($data['initData'] ?? '');
+        if ($result['success']) {
+            jsonResponse($result);
+        } else {
+            jsonResponse(['error' => $result['error']], 401);
+        }
+        return;
+    }
+
     // POST /auth/logout - Admin logout
     if ($path === 'auth/logout') {
         checkAdminAuth();

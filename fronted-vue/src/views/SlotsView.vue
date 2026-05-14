@@ -110,6 +110,8 @@ const closeBookingModal = () => {
   selectedSlot.value = null;
 };
 
+import { hapticFeedback, getUserId } from '../utils/telegram';
+
 const handleBookSlot = async (formData) => {
   if (!selectedSlot.value) return;
 
@@ -117,10 +119,13 @@ const handleBookSlot = async (formData) => {
   try {
     await slotsStore.bookSlot(selectedSlot.value.id, {
       client_name: formData.name,
-      client_phone: formData.phone
+      client_phone: formData.phone,
+      client_tg_id: getUserId()
     });
+    hapticFeedback.success();
     closeBookingModal();
   } catch (error) {
+    hapticFeedback.error();
     handleApiError(error, 'Error booking slot', 'Ошибка при бронировании');
   } finally {
     isBooking.value = false;

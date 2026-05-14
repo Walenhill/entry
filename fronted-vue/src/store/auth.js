@@ -24,6 +24,22 @@ export const useAuthStore = defineStore('auth', {
         };
       }
     },
+    async telegramLogin(initData) {
+      try {
+        const response = await authApi.telegramLogin(initData);
+        if (response.data.success && response.data.isAdmin) {
+          localStorage.setItem('is_logged_in', 'true');
+          this.isAuthenticated = true;
+        }
+        return response.data;
+      } catch (err) {
+        console.error('Telegram login error:', err);
+        return {
+          success: false,
+          error: err.response?.data?.error || 'Ошибка входа через Telegram'
+        };
+      }
+    },
     async logout() {
       try {
         await authApi.logout();

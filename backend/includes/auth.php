@@ -221,6 +221,83 @@ function loginAdmin($password) {
 }
 
 /**
+ * Авторизация через Telegram
+ */
+function loginTelegram($initData) {
+    if (empty($initData)) {
+        return ['success' => false, 'error' => 'No initData provided'];
+    }
+
+    $botToken = getenv('BOT_TOKEN');
+    if (!$botToken) {
+        return ['success' => false, 'error' => 'Server configuration error: BOT_TOKEN is not set'];
+    }
+
+    // Парсим initData
+    parse_str($initData, $parsedData);
+    if (!isset($parsedData['hash'])) {
+        return ['success' => false, 'error' => 'Invalid initData format'];
+    }
+
+    $hash = $parsedData['hash'];
+    unset($parsedData['hash']);
+
+    // Сортируем ключи в алфавитном порядке
+    ksort($parsedData);
+
+    // Формируем строку данных
+    $dataCheckString = [];
+    foreach ($parsedData as $key => $value) {
+        $dataCheckString[] = "$key=$value";
+    }
+    $dataCheckString = implode("\n", $dataCheckString);
+
+    // Вычисляем секретный ключ (HMAC-SHA256 токена бота с ключом "WebAppData")
+    $secretKey = hash_hmac('sha256', $botToken, 'WebAppData', true);
+
+    // Вычисляем подпись данных
+    $calculatedHash = hash_hmac('sha256', $dataCheckString, $secretKey);
+
+    // Сравниваем хеши
+    if (!hash_equals($hash, $calculatedHash)) {
+        return ['success' => false, 'error' => 'Data is NOT from Telegram'];
+    }
+
+    // Проверка актуальности данных (не старше 24 часов)
+    if (isset($parsedData['auth_date']) && (time() - $parsedData['auth_date'] > 86400)) {
+         return ['success' => false, 'error' => 'Data is outdated'];
+    }
+
+    // Данные подлинные. Извлекаем инфо пользователя
+    $user = json_decode($parsedData['user'] ?? '{}', true);
+    $userId = $user['id'] ?? null;
+
+    if (!$userId) {
+         return ['success' => false, 'error' => 'No user ID found in initData'];
+    }
+
+    // Проверяем, является ли пользователь админом
+    $adminIdsStr = getenv('ADMIN_TG_IDS') ?: '';
+    $adminIds = array_map('trim', explode(',', $adminIdsStr));
+
+    $isAdmin = in_array((string)$userId, $adminIds, true);
+
+    if ($isAdmin) {
+        initSecureSession();
+        // Регенерация ID сессии
+        session_regenerate_id(true);
+        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['last_activity'] = time();
+    }
+
+    return [
+        'success' => true,
+        'isAdmin' => $isAdmin,
+        'user' => $user
+    ];
+}
+
+/**
  * Выход админа
  */
 function logoutAdmin() {
