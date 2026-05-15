@@ -160,6 +160,10 @@ function checkAdminAuth() {
  * Вход админа
  */
 function loginAdmin($password) {
+    if (is_string($password) && strlen($password) > 255) {
+        return ['success' => false, 'error' => 'Invalid password'];
+    }
+
     initSecureSession();
     
     $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';

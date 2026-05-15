@@ -30,3 +30,8 @@
 **Vulnerability:** API responses lacked standard security headers, making the application more susceptible to MIME-sniffing, clickjacking, and XSS.
 **Learning:** Security headers are not automatically applied in vanilla PHP APIs unless explicitly configured.
 **Prevention:** Ensure standard security headers (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options) are set at the main entry point for all API responses.
+
+## 2024-05-25 - Denial of Service via Large Payload / Long Input Processing
+**Vulnerability:** The application was vulnerable to Application-layer Denial of Service (DoS). The `$password` field for admin login and the `php://input` stream in `getInput` were read and processed without length bounds, potentially allowing an attacker to cause memory exhaustion or CPU exhaustion during password hashing operations. Database limits were also only enforced at the DB level, potentially leading to query rejection rather than safe validation failures.
+**Learning:** `file_get_contents` defaults to reading the entire stream into memory, making it dangerous for raw request payloads if no server-level limits are configured. Password hashing algorithms (like Argon2id) have intentionally high CPU/memory costs, making them prime targets for DoS if exceptionally long inputs are provided.
+**Prevention:** Explicitly limit the number of bytes read from input streams (e.g., using the `length` parameter on `file_get_contents`). Always enforce strict application-layer string length validation via `strlen()` before executing computationally expensive operations or database queries.
