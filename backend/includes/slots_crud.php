@@ -82,6 +82,10 @@ function createSlot($data) {
     if (!validateDateTime($data['start_time']) || !validateDateTime($data['end_time'])) {
         return ['error' => 'Invalid datetime format. Use YYYY-MM-DD HH:MM:SS'];
     }
+
+    if (isset($data['description']) && strlen((string)$data['description']) > 255) {
+        return ['error' => 'Description exceeds maximum length of 255 characters'];
+    }
     
     // Check start < end
     if ($data['start_time'] >= $data['end_time']) {
@@ -126,6 +130,10 @@ function generateSlotsFromTemplate($template) {
     // Validate inputs
     if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
         return ['error' => 'Invalid date format. Use YYYY-MM-DD'];
+    }
+
+    if (strlen((string)$description) > 255) {
+        return ['error' => 'Description exceeds maximum length of 255 characters'];
     }
     
     if ($startHour < 0 || $startHour > 23 || $endHour < 1 || $endHour > 24) {
@@ -248,6 +256,14 @@ function bookSlot($id, $clientData) {
     
     if (empty($clientName) || empty($clientPhone)) {
         return ['error' => 'Client name and phone are required'];
+    }
+
+    if (strlen($clientName) > 100) {
+        return ['error' => 'Client name exceeds maximum length of 100 characters'];
+    }
+
+    if (strlen($clientPhone) > 20) {
+        return ['error' => 'Client phone exceeds maximum length of 20 characters'];
     }
     
     $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ? AND status = 'available'");

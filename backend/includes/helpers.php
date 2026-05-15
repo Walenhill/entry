@@ -42,7 +42,8 @@ function jsonResponse($data, $statusCode = 200) {
  * Get JSON input from request
  */
 function getInput() {
-    $input = file_get_contents('php://input');
+    // Read up to 1MB to prevent memory exhaustion attacks
+    $input = file_get_contents('php://input', false, null, 0, 1048576);
     $decoded = json_decode($input, true);
     return is_array($decoded) ? $decoded : [];
 }
