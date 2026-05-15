@@ -28,3 +28,6 @@
 ## 2026-05-14 - Optimize bulk insert performance in PHP with MySQLi transaction
 **Learning:** In the booking system API, batch generating slots executed N independent `INSERT` queries within a `while` loop with auto-commit enabled by default. This incurred significant disk I/O and transaction commit overhead for each single row (e.g., generating a full day of 1-minute slots took ~0.64s).
 **Action:** When performing high-frequency, non-interdependent bulk database inserts in a loop, wrap the operation in a single database transaction using `$conn->begin_transaction()`, `$conn->commit()`, and `$conn->rollback()` to batch disk syncs, drastically improving performance (reduced insertion time by ~70%).
+## 2024-05-15 - Optimize API routing with minimal decomposition
+**Learning:** In PHP backend routing, placing dynamic regex checks (`preg_match`) before exact string matches or extracting every request method into a separate handler function introduces unnecessary O(N) evaluation and function call overhead for static endpoints.
+**Action:** Implement minimal decomposition routing using `switch` statements for `$method` and exact `$path` matches first, reserving regex evaluations (`preg_match`) for the `default` blocks to handle dynamic routes. This provides O(1) time complexity for static endpoints.
