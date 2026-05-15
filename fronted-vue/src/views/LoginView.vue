@@ -9,14 +9,26 @@
       <form @submit.prevent="handleLogin">
         <div class="form-group mb-4">
           <label for="password">Пароль <span class="text-danger">*</span></label>
-          <input
-            type="password"
-            id="password"
-            v-model="password"
-            required
-            placeholder="••••••••"
-            autocomplete="current-password"
-          />
+          <div class="password-input-wrapper">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="password"
+              v-model="password"
+              required
+              placeholder="••••••••"
+              autocomplete="current-password"
+              class="password-input"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              @click="showPassword = !showPassword"
+              :aria-label="showPassword ? 'Скрыть пароль' : 'Показать пароль'"
+              :title="showPassword ? 'Скрыть пароль' : 'Показать пароль'"
+            >
+              <span aria-hidden="true">{{ showPassword ? '👁‍🗨' : '👁' }}</span>
+            </button>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
@@ -42,6 +54,7 @@ const authStore = useAuthStore();
 const password = ref('');
 const isLoading = ref(false);
 const error = ref('');
+const showPassword = ref(false);
 
 const handleLogin = async () => {
   isLoading.value = true;
@@ -101,5 +114,41 @@ const handleLogin = async () => {
   padding: 0.75rem;
   border-radius: var(--border-radius-sm);
   font-size: 0.875rem;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 3rem; /* Make room for the toggle button */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  font-size: 1.25rem;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.password-toggle:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-hover);
+}
+
+.password-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-secondary);
 }
 </style>
