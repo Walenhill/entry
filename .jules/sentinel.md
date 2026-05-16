@@ -30,3 +30,8 @@
 **Vulnerability:** API responses lacked standard security headers, making the application more susceptible to MIME-sniffing, clickjacking, and XSS.
 **Learning:** Security headers are not automatically applied in vanilla PHP APIs unless explicitly configured.
 **Prevention:** Ensure standard security headers (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options) are set at the main entry point for all API responses.
+
+## 2024-05-16 - Input Validation Missing String Length Constraints
+**Vulnerability:** Core API and CRUD functions (`createSlot`, `bookSlot`, `loginAdmin`) did not enforce maximum string lengths for parameters like `client_name`, `client_phone`, `description`, and `password`.
+**Learning:** Without explicit string length limits, inputs exceeding database column limits (e.g., `VARCHAR(100)`) can cause SQL errors or silent truncation depending on database strict mode. Additionally, excessively long strings passed to hashing functions (like Argon2id) can cause CPU exhaustion and Denial of Service.
+**Prevention:** Always validate maximum string lengths for all inputs, ideally checking length via `mb_strlen()` before further processing or database insertion.
