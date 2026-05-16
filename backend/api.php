@@ -99,70 +99,68 @@ function handleGetRequest($path, $queryParams) {
 function handlePostRequest($path) {
     $data = getInput();
     
-    // POST /auth/login - Admin login
-    if ($path === 'auth/login') {
-        $result = loginAdmin($data['password'] ?? '');
-        
-        if ($result['success']) {
+    switch ($path) {
+        // POST /auth/login - Admin login
+        case 'auth/login':
+            $result = loginAdmin($data['password'] ?? '');
+
+            if ($result['success']) {
+                jsonResponse([
+                    'success' => true,
+                    'message' => 'Login successful'
+                ]);
+            } else {
+                jsonResponse(['error' => $result['error']], 401);
+            }
+            return;
+
+        // POST /auth/logout - Admin logout
+        case 'auth/logout':
+            checkAdminAuth();
+            $result = logoutAdmin();
+            jsonResponse($result);
+            return;
+
+        // POST /slots/generate - Generate slots from template (admin only)
+        case 'slots/generate':
+            checkAdminAuth();
+
+            $result = generateSlotsFromTemplate($data);
+
+            if (isset($result['error'])) {
+                jsonResponse(['error' => $result['error']], 400);
+            }
+
             jsonResponse([
                 'success' => true,
-                'message' => 'Login successful'
-            ]);
-        } else {
-            jsonResponse(['error' => $result['error']], 401);
-        }
-        return;
-    }
-    
-    // POST /auth/logout - Admin logout
-    if ($path === 'auth/logout') {
-        checkAdminAuth();
-        $result = logoutAdmin();
-        jsonResponse($result);
-        return;
-    }
-    
-    // POST /slots/generate - Generate slots from template (admin only)
-    if ($path === 'slots/generate') {
-        checkAdminAuth();
-        
-        $result = generateSlotsFromTemplate($data);
-        
-        if (isset($result['error'])) {
-            jsonResponse(['error' => $result['error']], 400);
-        }
-        
-        jsonResponse([
-            'success' => true,
-            'message' => "Created {$result['created_count']} slots",
-            'count' => $result['created_count'],
-            'skipped' => $result['skipped_count'],
-            'slots' => $result['slots']
-        ], 201);
-        return;
-    }
-    
-    // POST /slots - Create single slot (admin only)
-    if ($path === 'slots') {
-        checkAdminAuth();
-        
-        // Validate required fields
-        if (empty($data['start_time']) || empty($data['end_time'])) {
-            jsonResponse(['error' => 'start_time and end_time are required'], 400);
-        }
-        
-        $result = createSlot($data);
-        
-        if (isset($result['error'])) {
-            $statusCode = strpos($result['error'], 'overlaps') !== false ? 409 : 400;
-            jsonResponse(['error' => $result['error']], $statusCode);
-        }
-        
-        jsonResponse([
-            'success' => true,
-            'slot' => $result
-        ], 201);
-        return;
+                'message' => "Created {$result['created_count']} slots",
+                'count' => $result['created_count'],
+                'skipped' => $result['skipped_count'],
+                'slots' => $result['slots']
+            ], 201);
+            return;
+
+        // POST /slots - Create single slot (admin only)
+        case 'slots':
+            checkAdminAuth();
+
+            // Validate required fields
+            if (empty($data['start_time']) || empty($data['end_time'])) {
+                jsonResponse(['error' => 'start_time and end_time are required'], 400);
+            }
+
+            $result = createSlot($data);
+
+            if (isset($result['error'])) {
+                $statusCode = strpos($result['error'], 'overlaps') !== false ? 409 : 400;
+                jsonResponse(['error' => $result['error']], $statusCode);
+            }
+
+            jsonResponse([
+                'success' => true,
+                'slot' => $result
+            ], 201);
+            return;
     }
     
     // POST /slots/{id}/book - Book a slot (client)
