@@ -12,6 +12,7 @@
           <input
             type="password"
             id="password"
+            ref="passwordInput"
             v-model="password"
             required
             placeholder="••••••••"
@@ -32,16 +33,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 
 const router = useRouter();
 const authStore = useAuthStore();
 
+const passwordInput = ref(null);
 const password = ref('');
 const isLoading = ref(false);
 const error = ref('');
+
+onMounted(() => {
+  nextTick(() => {
+    if (passwordInput.value) {
+      passwordInput.value.focus();
+    }
+  });
+});
 
 const handleLogin = async () => {
   isLoading.value = true;
@@ -53,6 +63,12 @@ const handleLogin = async () => {
     router.push('/');
   } else {
     error.value = result.message;
+    password.value = '';
+    nextTick(() => {
+      if (passwordInput.value) {
+        passwordInput.value.focus();
+      }
+    });
   }
 
   isLoading.value = false;
