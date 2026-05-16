@@ -22,6 +22,7 @@
             required
             autocomplete="name"
             placeholder="Введите имя"
+            maxlength="100"
           />
         </div>
 
@@ -34,6 +35,7 @@
             required
             autocomplete="tel"
             placeholder="Введите номер телефона"
+            maxlength="20"
           />
         </div>
 

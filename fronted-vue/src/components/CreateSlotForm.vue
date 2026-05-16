@@ -19,7 +19,17 @@
 
       <div class="form-group mb-3 mt-3">
         <label for="description">Описание (опционально)</label>
-        <textarea id="description" v-model="form.description" rows="2" placeholder="Например: Стрижка бороды"></textarea>
+        <textarea
+          id="description"
+          v-model="form.description"
+          rows="2"
+          placeholder="Например: Стрижка бороды"
+          maxlength="255"
+          aria-describedby="desc-counter"
+        ></textarea>
+        <div id="desc-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
+          {{ form.description.length }} / 255
+        </div>
       </div>
 
       <div class="form-actions justify-end">
