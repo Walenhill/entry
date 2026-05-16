@@ -30,3 +30,8 @@
 **Vulnerability:** API responses lacked standard security headers, making the application more susceptible to MIME-sniffing, clickjacking, and XSS.
 **Learning:** Security headers are not automatically applied in vanilla PHP APIs unless explicitly configured.
 **Prevention:** Ensure standard security headers (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options) are set at the main entry point for all API responses.
+
+## 2026-05-16 - Prevent Memory Exhaustion DoS in JSON parsing
+**Vulnerability:** Unrestricted `file_get_contents('php://input')` when reading request bodies for JSON decoding allows attackers to send arbitrarily large payloads, exhausting server memory and causing Denial of Service.
+**Learning:** Default PHP stream reading does not cap size. Even if a web server has upload limits, memory limits can be hit during string allocation and JSON parsing of massive payloads if not explicitly restricted at the application layer.
+**Prevention:** Always specify a maximum read length (e.g., `, false, null, 0, 1048576` for 1MB) when parsing raw JSON inputs via `file_get_contents('php://input')` to proactively defend against memory exhaustion attacks.
