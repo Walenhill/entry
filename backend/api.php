@@ -228,8 +228,12 @@ function handleUpdateRequest($path) {
         
         // Only update description for now
         if (isset($data['description'])) {
-            $conn = getDbConnection();
             $description = sanitizeInput($data['description']);
+            if (mb_strlen($description) > 255) {
+                jsonResponse(['error' => 'Description must be at most 255 characters'], 400);
+            }
+
+            $conn = getDbConnection();
             $stmt = $conn->prepare("UPDATE slots SET description = ? WHERE id = ?");
             $stmt->bind_param("si", $description, $slotId);
             
