@@ -349,13 +349,23 @@ function getStatistics() {
     $conn = getDbConnection();
     
     // Total slots by status
-    $result = $conn->query("SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN status = 'booked' THEN 1 ELSE 0 END) as booked,
-        SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) as available,
-        SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled
-        FROM slots");
-    $summary = $result->fetch_assoc();
+    // Performance optimization: Using GROUP BY allows MySQL to utilize the idx_status index via an index scan.
+    // The previous SUM(CASE WHEN ...) forced a full table scan because it evaluated every row.
+    $result = $conn->query("SELECT status, COUNT(*) as count FROM slots GROUP BY status");
+
+    $summary = [
+        'total' => 0,
+        'booked' => 0,
+        'available' => 0,
+        'cancelled' => 0
+    ];
+
+    while ($row = $result->fetch_assoc()) {
+        $status = $row['status'];
+        $count = (int)$row['count'];
+        $summary[$status] = $count;
+        $summary['total'] += $count;
+    }
     
     // Occupancy rate
     $total = (int)$summary['total'];
