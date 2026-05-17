@@ -162,6 +162,11 @@ function checkAdminAuth() {
 function loginAdmin($password) {
     initSecureSession();
     
+    // Prevent DoS attacks on Argon2id by restricting maximum password length
+    if (is_string($password) && strlen($password) > 255) {
+        return ['success' => false, 'error' => 'Password is too long'];
+    }
+
     $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     
     // Если REMOTE_ADDR - это локальный/частный IP (например, Docker-прокси),
