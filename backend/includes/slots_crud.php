@@ -93,8 +93,12 @@ function createSlot($data) {
         return ['error' => 'Time slot overlaps with existing booking'];
     }
     
-    $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
     $description = sanitizeInput($data['description'] ?? '');
+    if (mb_strlen($description) > 255) {
+        return ['error' => 'Description must not exceed 255 characters'];
+    }
+
+    $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
     $stmt->bind_param("sss", $data['start_time'], $data['end_time'], $description);
     
     if (!$stmt->execute()) {
@@ -124,6 +128,9 @@ function generateSlotsFromTemplate($template) {
     $description = sanitizeInput($template['description'] ?? 'Appointment');
     
     // Validate inputs
+    if (mb_strlen($description) > 255) {
+        return ['error' => 'Description must not exceed 255 characters'];
+    }
     if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
         return ['error' => 'Invalid date format. Use YYYY-MM-DD'];
     }
@@ -248,6 +255,13 @@ function bookSlot($id, $clientData) {
     
     if (empty($clientName) || empty($clientPhone)) {
         return ['error' => 'Client name and phone are required'];
+    }
+
+    if (mb_strlen($clientName) > 100) {
+        return ['error' => 'Client name must not exceed 100 characters'];
+    }
+    if (mb_strlen($clientPhone) > 20) {
+        return ['error' => 'Client phone must not exceed 20 characters'];
     }
     
     $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ? AND status = 'available'");
