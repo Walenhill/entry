@@ -93,8 +93,13 @@ function createSlot($data) {
         return ['error' => 'Time slot overlaps with existing booking'];
     }
     
-    $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
     $description = sanitizeInput($data['description'] ?? '');
+
+    if (mb_strlen($description) > 255) {
+        return ['error' => 'Description must be 255 characters or less'];
+    }
+
+    $stmt = $conn->prepare("INSERT INTO slots (start_time, end_time, description, status) VALUES (?, ?, ?, 'available')");
     $stmt->bind_param("sss", $data['start_time'], $data['end_time'], $description);
     
     if (!$stmt->execute()) {
@@ -140,6 +145,10 @@ function generateSlotsFromTemplate($template) {
         return ['error' => 'Start hour must be before end hour'];
     }
     
+    if (mb_strlen($description) > 255) {
+        return ['error' => 'Description must be 255 characters or less'];
+    }
+
     $createdCount = 0;
     $skippedCount = 0;
     $createdSlots = [];
@@ -250,6 +259,14 @@ function bookSlot($id, $clientData) {
         return ['error' => 'Client name and phone are required'];
     }
     
+    if (mb_strlen($clientName) > 100) {
+        return ['error' => 'Client name must be 100 characters or less'];
+    }
+
+    if (mb_strlen($clientPhone) > 20) {
+        return ['error' => 'Client phone must be 20 characters or less'];
+    }
+
     $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ? AND status = 'available'");
     $stmt->bind_param("ssi", $clientName, $clientPhone, $id);
     
