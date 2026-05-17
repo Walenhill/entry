@@ -23,7 +23,11 @@
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
+            aria-describedby="name-counter"
           />
+          <div id="name-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
+            {{ formData.name.length }} / 100
+          </div>
         </div>
 
         <div class="form-group mb-4">
@@ -36,7 +40,11 @@
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
+            aria-describedby="phone-counter"
           />
+          <div id="phone-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
+            {{ formData.phone.length }} / 20
+          </div>
         </div>
 
         <div class="modal-actions">
