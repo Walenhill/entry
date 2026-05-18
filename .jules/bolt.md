@@ -31,3 +31,6 @@
 ## 2026-05-16 - Replacing SUM(CASE) with GROUP BY for Indexed Columns
 **Learning:** Using `SUM(CASE WHEN status = ... THEN 1 ELSE 0 END)` to aggregate counts by status forces MySQL to perform a full table scan because it must evaluate the expression for every single row. If the column has an index (e.g., `idx_status`), this index is completely ignored.
 **Action:** Replace `SUM(CASE)` expressions with `GROUP BY status` queries when summarizing data. This allows the database engine to utilize the index via an index scan (often avoiding a table scan entirely for simple counts) and significantly speeds up aggregations, particularly on large tables. The final summary structure can be reconstructed in the application layer.
+## 2024-05-18 - Eliminating Filesort with Composite Indexes
+**Learning:** When a query filters by one column (e.g., `status = 'available'`) and sorts by another (`ORDER BY start_time ASC`), single-column indexes force MySQL to perform an expensive `filesort` operation on the filtered results.
+**Action:** Add a composite index on both columns (e.g., `(status, start_time)`) so the database engine can both filter and traverse the index in sorted order, completely eliminating filesort overhead.

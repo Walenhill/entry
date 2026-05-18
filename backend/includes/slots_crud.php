@@ -30,6 +30,8 @@ function getSlots($isAdmin = false, $dateFilter = null) {
         $sql .= " WHERE " . implode(' AND ', $conditions);
     }
     
+    // Performance optimization: The ORDER BY start_time ASC combined with the status = 'available'
+    // condition for clients utilizes the idx_status_start_time composite index to eliminate filesort overhead.
     $sql .= " ORDER BY start_time ASC";
     
     $stmt = $conn->prepare($sql);
