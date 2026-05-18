@@ -21,6 +21,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
+          <span v-if="isLoading" class="spinner-small" aria-hidden="true"></span>
           {{ isLoading ? 'Вход...' : 'Войти' }}
         </button>
 
