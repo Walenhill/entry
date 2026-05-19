@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS slots (
     client_phone VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_start_time (start_time),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_status_start_time (status, start_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Таблица попыток входа (для защиты от брутфорса)
