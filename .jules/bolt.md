@@ -31,3 +31,6 @@
 ## 2026-05-16 - Replacing SUM(CASE) with GROUP BY for Indexed Columns
 **Learning:** Using `SUM(CASE WHEN status = ... THEN 1 ELSE 0 END)` to aggregate counts by status forces MySQL to perform a full table scan because it must evaluate the expression for every single row. If the column has an index (e.g., `idx_status`), this index is completely ignored.
 **Action:** Replace `SUM(CASE)` expressions with `GROUP BY status` queries when summarizing data. This allows the database engine to utilize the index via an index scan (often avoiding a table scan entirely for simple counts) and significantly speeds up aggregations, particularly on large tables. The final summary structure can be reconstructed in the application layer.
+## 2024-06-12 - Debugging and Scratchpad Scripts
+**Learning:** Leaving temporary debugging or scratchpad scripts (like testing filesorts or index performance) in the repository root can expose sensitive database connection details or create security vulnerabilities if deployed to a web-accessible environment. It also clutters the codebase and fails code review.
+**Action:** Always strictly delete any temporary files or scripts created for testing logic or performance before submitting a PR.
