@@ -39,7 +39,9 @@ function testSanitizeInput() {
         ['O\'Connor', 'O\'Connor', 'Preserve single quotes'],
         ['"Hello"', '"Hello"', 'Preserve double quotes'],
         ['', '', 'Empty string'],
-        ['  ', '', 'Whitespace only string']
+        ['  ', '', 'Whitespace only string'],
+        ['<p>hello</p>', 'hello', 'Strip basic HTML tags'],
+        ['<script>alert(1)</script>', 'alert(1)', 'Strip script tags']
     ];
 
     foreach ($cases as [$input, $expected, $label]) {
