@@ -16,10 +16,6 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     $sql = "SELECT * FROM slots";
     $conditions = [];
     
-    if (!$isAdmin) {
-        $conditions[] = "status = 'available'";
-    }
-    
     if ($dateFilter) {
         // Use a range query instead of DATE(start_time) = ? to make the query SARGable
         // and allow MySQL to use the idx_start_time index.
@@ -48,6 +44,14 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     $slots = $result->fetch_all(MYSQLI_ASSOC);
     
     $stmt->close();
+
+    if (!$isAdmin) {
+        foreach ($slots as &$slot) {
+            unset($slot['client_name']);
+            unset($slot['client_phone']);
+        }
+    }
+
     return $slots;
 }
 
