@@ -34,3 +34,6 @@
 ## 2024-05-18 - Eliminating Filesort with Composite Indexes
 **Learning:** When a query filters by one column (e.g., `status = 'available'`) and sorts by another (`ORDER BY start_time ASC`), single-column indexes force MySQL to perform an expensive `filesort` operation on the filtered results.
 **Action:** Add a composite index on both columns (e.g., `(status, start_time)`) so the database engine can both filter and traverse the index in sorted order, completely eliminating filesort overhead.
+## 2024-05-21 - Avoiding O(N) Array Iteration with Database Native Filtering
+**Learning:** Using `SELECT *` and then running a user-land `foreach` loop to `unset()` sensitive fields (like PII) for non-admin users is computationally expensive and introduces unnecessary memory allocation and database transfer overhead for columns that are never used.
+**Action:** Replace `SELECT *` with explicitly defined columns via a ternary check (`$columns = $isAdmin ? "*" : "id, start_time, end_time..."`) in the SQL query itself. This pushes the filtering down to the database engine, reducing I/O and entirely eliminating the need for `O(N)` loop iteration in PHP.
