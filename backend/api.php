@@ -168,7 +168,7 @@ function handlePostRequest($path) {
         $slotId = (int)$matches[1];
         
         // Validate required fields
-        if (empty($data['client_name']) || empty($data['client_phone'])) {
+        if (!isset($data['client_name']) || trim($data['client_name']) === '' || !isset($data['client_phone']) || trim($data['client_phone']) === '') {
             jsonResponse(['error' => 'client_name and client_phone are required'], 400);
         }
         
