@@ -40,3 +40,7 @@
 **Vulnerability:** The API endpoint `GET /slots` conditionally hid booked slots from non-admin users by appending a `status = 'available'` SQL filter, breaking the frontend's ability to show the complete schedule while simultaneously preventing PII exposure.
 **Learning:** Over-filtering at the database level to solve an authorization issue can cause functional regressions on the frontend (clients need to see that a slot exists, just not who booked it).
 **Prevention:** Remove restrictive database filters and instead handle data sanitization at the application layer by explicitly unsetting sensitive PII fields (`client_name`, `client_phone`) from the response payload before sending it to unauthorized clients.
+## 2024-05-21 - Fix PII exposure risk via SQL column selectivity
+**Vulnerability:** A query in `slots_crud.php` used `SELECT *` combined with an O(N) `unset()` loop at the PHP application layer to strip PII (`client_name`, `client_phone`) for non-admin requests.
+**Learning:** This approach exposes sensitive data to the application layer and slows down responses by iterating through large arrays in PHP space. Database operations are optimized to filter this directly via explicit queries.
+**Prevention:** Instead of fetching all columns and filtering them post-retrieval, conditionally define the `SELECT` query fields explicitly so only authorized data is requested and returned from the database directly.

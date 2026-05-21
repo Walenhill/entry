@@ -13,7 +13,13 @@ require_once __DIR__ . '/helpers.php';
 function getSlots($isAdmin = false, $dateFilter = null) {
     $conn = getDbConnection();
     
-    $sql = "SELECT * FROM slots";
+    // Explicitly define columns to prevent PII exposure and avoid unnecessary array iteration
+    if ($isAdmin) {
+        $sql = "SELECT id, start_time, end_time, description, status, client_name, client_phone, created_at FROM slots";
+    } else {
+        $sql = "SELECT id, start_time, end_time, description, status, created_at FROM slots";
+    }
+
     $conditions = [];
     
     if ($dateFilter) {
@@ -44,13 +50,6 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     $slots = $result->fetch_all(MYSQLI_ASSOC);
     
     $stmt->close();
-
-    if (!$isAdmin) {
-        foreach ($slots as &$slot) {
-            unset($slot['client_name']);
-            unset($slot['client_phone']);
-        }
-    }
 
     return $slots;
 }
