@@ -13,7 +13,9 @@ require_once __DIR__ . '/helpers.php';
 function getSlots($isAdmin = false, $dateFilter = null) {
     $conn = getDbConnection();
     
-    $sql = "SELECT * FROM slots";
+    // Performance optimization: Avoid O(N) loop to unset sensitive fields in PHP by selectively querying columns.
+    $columns = $isAdmin ? "*" : "id, start_time, end_time, description, status, created_at";
+    $sql = "SELECT $columns FROM slots";
     $conditions = [];
     
     if ($dateFilter) {
@@ -44,13 +46,6 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     $slots = $result->fetch_all(MYSQLI_ASSOC);
     
     $stmt->close();
-
-    if (!$isAdmin) {
-        foreach ($slots as &$slot) {
-            unset($slot['client_name']);
-            unset($slot['client_phone']);
-        }
-    }
 
     return $slots;
 }
