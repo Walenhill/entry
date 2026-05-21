@@ -5,3 +5,7 @@
 ## 2025-05-18 - [Button Async State Feedback]
 **Learning:** Adding a small, animated spinner inside async submission buttons provides critical, immediate visual feedback that the application is processing the request, as relying purely on the `disabled` state and changing the text (e.g., "Сохранение...") is often not prominent enough to assure users that progress is occurring, preventing multiple click attempts and frustration.
 **Action:** Always include a visual loading indicator (like `.spinner-small`) paired with an `aria-hidden="true"` attribute alongside the text change inside primary action buttons during asynchronous tasks.
+
+## 2024-05-21 - [Password Visibility Toggle]
+**Learning:** Adding a password visibility toggle on login forms significantly reduces user frustration and entry errors, particularly on mobile devices. Using standard unicode emoji combined with `aria-hidden="true"` and dynamic `aria-label`/`title` provides an accessible, dependency-free solution without needing new icons or SVGs.
+**Action:** When adding password inputs, wrap the input and a toggle button in a flex container. Use a reactive variable to toggle the input `type` between `password` and `text`, and update the button's accessibility labels dynamically to reflect the current state.

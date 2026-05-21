@@ -9,15 +9,26 @@
       <form @submit.prevent="handleLogin">
         <div class="form-group mb-4">
           <label for="password">Пароль <span class="text-danger">*</span></label>
-          <input
-            type="password"
-            id="password"
-            ref="passwordInput"
-            v-model="password"
-            required
-            placeholder="••••••••"
-            autocomplete="current-password"
-          />
+          <div class="flex gap-2">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="password"
+              ref="passwordInput"
+              v-model="password"
+              required
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="btn btn-outline btn-icon"
+              @click="showPassword = !showPassword"
+              :aria-label="showPassword ? 'Скрыть пароль' : 'Показать пароль'"
+              :title="showPassword ? 'Скрыть пароль' : 'Показать пароль'"
+            >
+              <span aria-hidden="true">{{ showPassword ? '👁️‍🗨️' : '👁️' }}</span>
+            </button>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
@@ -43,6 +54,7 @@ const authStore = useAuthStore();
 
 const passwordInput = ref(null);
 const password = ref('');
+const showPassword = ref(false);
 const isLoading = ref(false);
 const error = ref('');
 
