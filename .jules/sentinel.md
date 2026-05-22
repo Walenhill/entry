@@ -40,3 +40,7 @@
 **Vulnerability:** The API endpoint `GET /slots` conditionally hid booked slots from non-admin users by appending a `status = 'available'` SQL filter, breaking the frontend's ability to show the complete schedule while simultaneously preventing PII exposure.
 **Learning:** Over-filtering at the database level to solve an authorization issue can cause functional regressions on the frontend (clients need to see that a slot exists, just not who booked it).
 **Prevention:** Remove restrictive database filters and instead handle data sanitization at the application layer by explicitly unsetting sensitive PII fields (`client_name`, `client_phone`) from the response payload before sending it to unauthorized clients.
+## 2026-05-22 - Input Validation TypeErrors (DoS Prevention)
+**Vulnerability:** Unhandled PHP `TypeError` exceptions from passing arrays in JSON payloads to native string functions like `trim()`.
+**Learning:** PHP 8+ throws fatal errors (TypeErrors) when built-in string functions receive arrays instead of strings. Attackers can intentionally trigger these errors to cause application-level DoS or fill error logs, potentially leaking stack traces. This was specifically vulnerable in the POST `/slots/{id}/book` endpoint.
+**Prevention:** Always explicitly validate input types using `is_string()` before passing user-controlled variables from JSON payloads or query parameters to native string functions.

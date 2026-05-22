@@ -167,9 +167,10 @@ function handlePostRequest($path) {
     if (preg_match('#^slots/(\d+)/book$#', $path, $matches)) {
         $slotId = (int)$matches[1];
         
-        // Validate required fields
-        if (!isset($data['client_name']) || trim($data['client_name']) === '' || !isset($data['client_phone']) || trim($data['client_phone']) === '') {
-            jsonResponse(['error' => 'client_name and client_phone are required'], 400);
+        // Validate required fields and prevent DoS from TypeErrors by enforcing string type
+        if (!isset($data['client_name']) || !is_string($data['client_name']) || trim($data['client_name']) === '' ||
+            !isset($data['client_phone']) || !is_string($data['client_phone']) || trim($data['client_phone']) === '') {
+            jsonResponse(['error' => 'client_name and client_phone are required and must be strings'], 400);
         }
         
         $result = bookSlot($slotId, $data);
