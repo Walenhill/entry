@@ -18,6 +18,8 @@
             required
             placeholder="••••••••"
             autocomplete="current-password"
+            :aria-invalid="!!error"
+            :aria-describedby="error ? 'login-error' : null"
             />
             <button
               type="button"
@@ -37,7 +39,7 @@
           {{ isLoading ? 'Вход...' : 'Войти' }}
         </button>
 
-        <div v-if="error" class="error-message mt-3 text-center" role="alert" aria-live="assertive">
+        <div v-if="error" id="login-error" class="error-message mt-3 text-center" role="alert" aria-live="assertive">
           {{ error }}
         </div>
       </form>
