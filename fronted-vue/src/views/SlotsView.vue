@@ -45,6 +45,8 @@
         v-for="slot in slotsStore.slots"
         :key="slot.id"
         :slot="slot"
+        :is-canceling="cancelingSlotId === slot.id"
+        :is-deleting="deletingSlotId === slot.id"
         @book="openBookingModal"
         @cancel="handleCancelBooking"
         @delete="handleDeleteSlot"
@@ -78,6 +80,8 @@ const showBookingModal = ref(false);
 const selectedSlot = ref(null);
 const isCreating = ref(false);
 const isBooking = ref(false);
+const cancelingSlotId = ref(null);
+const deletingSlotId = ref(null);
 
 // Actions
 const handleCreateSlot = async (formData) => {
@@ -129,19 +133,25 @@ const handleBookSlot = async (formData) => {
 
 const handleCancelBooking = async (slotId) => {
   if (!confirm('Вы уверены, что хотите отменить бронь?')) return;
+  cancelingSlotId.value = slotId;
   try {
     await slotsStore.cancelBooking(slotId);
   } catch (error) {
     handleApiError(error, 'Error canceling booking', 'Ошибка при отмене брони');
+  } finally {
+    cancelingSlotId.value = null;
   }
 };
 
 const handleDeleteSlot = async (slotId) => {
   if (!confirm('Вы уверены, что хотите удалить этот слот?')) return;
+  deletingSlotId.value = slotId;
   try {
     await slotsStore.deleteSlot(slotId);
   } catch (error) {
     handleApiError(error, 'Error deleting slot', 'Ошибка при удалении слота');
+  } finally {
+    deletingSlotId.value = null;
   }
 };
 

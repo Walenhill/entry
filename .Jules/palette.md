@@ -9,3 +9,7 @@
 ## 2025-05-20 - [Password Visibility Toggle]
 **Learning:** Adding a password visibility toggle button significantly reduces user frustration, especially on mobile devices where typing errors are common. A simple toggle allows users to verify their password before submitting, preventing repeated login failures. When implementing, it's critical to ensure the toggle button is accessible by updating the `aria-label` and `title` dynamically (e.g., "Скрыть пароль" vs "Показать пароль") to inform screen reader users of the current state and action.
 **Action:** When adding password inputs, always include a visibility toggle feature with appropriate `aria-label` updates to ensure accessibility and better user experience.
+
+## 2024-05-23 - [Button Async State Feedback - Refined]
+**Learning:** Adding a small, animated spinner inside async submission buttons provides critical, immediate visual feedback that the application is processing the request, as relying purely on the `disabled` state and changing the text (e.g., "Отмена...") is often not prominent enough to assure users that progress is occurring, preventing multiple click attempts and frustration.
+**Action:** Always include a visual loading indicator (like `.spinner-small`) paired with an `aria-hidden="true"` attribute alongside the text change inside primary action buttons during asynchronous tasks.
