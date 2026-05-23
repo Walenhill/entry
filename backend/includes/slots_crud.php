@@ -111,7 +111,16 @@ function createSlot($data) {
     $newId = $conn->insert_id;
     $stmt->close();
     
-    return getSlotById($newId);
+    return [
+        'id' => $newId,
+        'start_time' => $data['start_time'],
+        'end_time' => $data['end_time'],
+        'description' => $description,
+        'status' => 'available',
+        'client_name' => null,
+        'client_phone' => null,
+        'created_at' => date('Y-m-d H:i:s')
+    ];
 }
 
 /**
@@ -280,7 +289,10 @@ function bookSlot($id, $clientData) {
     }
 
     $stmt->close();
-    return getSlotById($id);
+    $slot['status'] = 'booked';
+    $slot['client_name'] = $clientName;
+    $slot['client_phone'] = $clientPhone;
+    return $slot;
 }
 
 /**
@@ -316,7 +328,10 @@ function cancelBooking($id) {
     }
 
     $stmt->close();
-    return getSlotById($id);
+    $slot['status'] = 'available';
+    $slot['client_name'] = null;
+    $slot['client_phone'] = null;
+    return $slot;
 }
 
 /**
