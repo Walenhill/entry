@@ -254,7 +254,7 @@ function bookSlot($id, $clientData) {
     $clientName = sanitizeInput($clientData['client_name'] ?? '');
     $clientPhone = sanitizeInput($clientData['client_phone'] ?? '');
     
-    if (empty($clientName) || empty($clientPhone)) {
+    if (trim($clientName) === '' || trim($clientPhone) === '') {
         return ['error' => 'Client name and phone are required'];
     }
 
