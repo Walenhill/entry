@@ -237,10 +237,10 @@ function handleUpdateRequest($path) {
             $stmt->bind_param("si", $description, $slotId);
             
             if ($stmt->execute()) {
-                $updatedSlot = getSlotById($slotId);
+                $slot['description'] = $description;
                 jsonResponse([
                     'success' => true,
-                    'slot' => $updatedSlot
+                    'slot' => $slot
                 ]);
             } else {
                 jsonResponse(['error' => 'Failed to update slot'], 500);
