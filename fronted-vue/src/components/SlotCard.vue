@@ -28,10 +28,14 @@
         <button @click="$emit('book', slot)" class="btn btn-primary flex-1" :aria-label="`Забронировать слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`">Забронировать</button>
       </template>
       <template v-else>
-        <button @click="$emit('cancel', slot.id)" class="btn btn-warning flex-1" :aria-label="`Отменить бронь на ${slot.date} с ${slot.start_time} до ${slot.end_time}`">Отменить бронь</button>
+        <button @click="$emit('cancel', slot.id)" class="btn btn-warning flex-1" :aria-label="`Отменить бронь на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling">
+          <span v-if="isCanceling" class="spinner-small" aria-hidden="true"></span>
+          {{ isCanceling ? 'Отмена...' : 'Отменить бронь' }}
+        </button>
       </template>
-      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`">
-        <span aria-hidden="true">🗑</span>
+      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isDeleting">
+        <span v-if="isDeleting" class="spinner-small" aria-hidden="true"></span>
+        <span v-else aria-hidden="true">🗑</span>
       </button>
     </div>
   </div>
@@ -44,6 +48,14 @@ const props = defineProps({
   slot: {
     type: Object,
     required: true
+  },
+  isCanceling: {
+    type: Boolean,
+    default: false
+  },
+  isDeleting: {
+    type: Boolean,
+    default: false
   }
 });
 
