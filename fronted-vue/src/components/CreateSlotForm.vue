@@ -37,7 +37,7 @@
       </div>
 
       <div class="form-actions justify-end">
-        <button type="button" class="btn btn-outline mr-2" @click="$emit('cancel')">Отмена</button>
+        <button type="button" class="btn btn-outline mr-2" @click="$emit('cancel')" :disabled="isSubmitting">Отмена</button>
         <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
           <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
           {{ isSubmitting ? 'Создание...' : 'Добавить слот' }}

@@ -13,3 +13,7 @@
 ## 2024-05-23 - [Button Async State Feedback - Refined]
 **Learning:** Adding a small, animated spinner inside async submission buttons provides critical, immediate visual feedback that the application is processing the request, as relying purely on the `disabled` state and changing the text (e.g., "Отмена...") is often not prominent enough to assure users that progress is occurring, preventing multiple click attempts and frustration.
 **Action:** Always include a visual loading indicator (like `.spinner-small`) paired with an `aria-hidden="true"` attribute alongside the text change inside primary action buttons during asynchronous tasks.
+
+## 2025-05-24 - [Modal Asynchronous State Locking]
+**Learning:** During asynchronous form submissions within modals, it is critical to disable not only the primary submit button, but also all secondary exit actions (such as the "Cancel" button, the top "×" close button, the Escape key listener, and the background overlay click handler). Failing to do so allows users to accidentally close the modal while a backend request is still in-flight, which can lead to missing validation feedback, orphaned requests, or confusing state desynchronization in the UI.
+**Action:** Always bind the `isSubmitting` (or equivalent) loading state to the `disabled` attribute of all buttons within the modal, and explicitly check `!isSubmitting` in the Escape keydown and overlay click handlers to ensure the modal remains firmly locked until the asynchronous operation completes or errors out.
