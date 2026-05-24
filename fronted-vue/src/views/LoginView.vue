@@ -127,13 +127,6 @@ const handleLogin = async () => {
   font-size: 1rem;
 }
 
-.error-message {
-  color: var(--status-danger);
-  background-color: var(--status-danger-bg);
-  padding: 0.75rem;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.875rem;
-}
 .password-input-wrapper {
   position: relative;
   display: flex;

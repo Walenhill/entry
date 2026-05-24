@@ -9,12 +9,16 @@
         </div>
         <div class="form-group">
           <label for="start_time">Начало <span class="text-danger">*</span></label>
-          <input type="time" id="start_time" v-model="form.start_time" required />
+          <input type="time" id="start_time" v-model="form.start_time" required :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" />
         </div>
         <div class="form-group">
           <label for="end_time">Конец <span class="text-danger">*</span></label>
-          <input type="time" id="end_time" v-model="form.end_time" required />
+          <input type="time" id="end_time" v-model="form.end_time" required :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" />
         </div>
+      </div>
+
+      <div v-if="timeError" id="time-error" class="error-message mb-3 mt-2" role="alert" aria-live="assertive">
+        {{ timeError }}
       </div>
 
       <div class="form-group mb-3 mt-3">
@@ -74,7 +78,14 @@ const form = ref({
   description: ''
 });
 
+const timeError = ref('');
+
 const handleSubmit = () => {
+  timeError.value = '';
+  if (form.value.start_time >= form.value.end_time) {
+    timeError.value = 'Время начала должно быть раньше времени окончания';
+    return;
+  }
   emit('submit', form.value);
 };
 </script>
