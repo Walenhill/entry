@@ -1,9 +1,9 @@
 <template>
-  <div v-if="show" class="modal-overlay" @click.self="$emit('close')">
+  <div v-if="show" class="modal-overlay" @click.self="!isSubmitting && $emit('close')">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
-        <button class="close-btn" @click="$emit('close')" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">×</button>
+        <button class="close-btn" @click="$emit('close')" :disabled="isSubmitting" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">×</button>
       </div>
 
       <div v-if="slot" class="modal-info mb-4">
@@ -48,7 +48,7 @@
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn btn-outline" @click="$emit('close')">Отмена</button>
+          <button type="button" class="btn btn-outline" @click="$emit('close')" :disabled="isSubmitting">Отмена</button>
           <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
             <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
             {{ isSubmitting ? 'Сохранение...' : 'Подтвердить бронь' }}
@@ -93,7 +93,7 @@ const handleSubmit = () => {
 };
 
 const handleKeydown = (e) => {
-  if (e.key === 'Escape' && props.show) {
+  if (e.key === 'Escape' && props.show && !props.isSubmitting) {
     emit('close');
   }
 };
