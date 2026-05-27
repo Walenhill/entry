@@ -3,8 +3,8 @@
     <div class="page-header flex justify-between items-center mb-4">
       <h1>Управление слотами</h1>
       <button
-        v-if="!showCreateForm"
-        @click="showCreateForm = true"
+        v-show="!showCreateForm"
+        @click="openCreateForm"
         class="btn btn-primary"
       >
         + Создать слот
@@ -16,7 +16,7 @@
       v-if="showCreateForm"
       :is-submitting="isCreating"
       @submit="handleCreateSlot"
-      @cancel="showCreateForm = false"
+      @cancel="closeCreateForm"
     />
 
     <!-- Фильтр (опционально, пока просто заголовок) -->
@@ -34,7 +34,7 @@
       <div class="empty-icon" aria-hidden="true">📅</div>
       <h3 class="mt-3">Нет доступных слотов</h3>
       <p class="text-muted mb-4">Создайте новый слот, чтобы он появился здесь.</p>
-      <button class="btn btn-primary" @click="showCreateForm = true" v-if="!showCreateForm">
+      <button class="btn btn-primary" @click="openCreateForm" v-show="!showCreateForm">
         + Создать слот
       </button>
     </div>
@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import { useSlotsStore } from '../store/slots';
 import SlotCard from '../components/SlotCard.vue';
 import CreateSlotForm from '../components/CreateSlotForm.vue';
@@ -86,6 +86,8 @@ const isBooking = ref(false);
 const cancelingSlotId = ref(null);
 const deletingSlotId = ref(null);
 
+const activeElementBeforeAction = ref(null);
+
 // Actions
 const handleCreateSlot = async (formData) => {
   isCreating.value = true;
@@ -99,7 +101,7 @@ const handleCreateSlot = async (formData) => {
       description: formData.description
     });
 
-    showCreateForm.value = false;
+    closeCreateForm();
   } catch (error) {
     handleApiError(error, 'Error creating slot', 'Ошибка при создании слота');
   } finally {
@@ -107,14 +109,34 @@ const handleCreateSlot = async (formData) => {
   }
 };
 
+const openCreateForm = () => {
+  activeElementBeforeAction.value = document.activeElement;
+  showCreateForm.value = true;
+};
+
+const closeCreateForm = async () => {
+  showCreateForm.value = false;
+  await nextTick();
+  if (activeElementBeforeAction.value) {
+    activeElementBeforeAction.value.focus();
+    activeElementBeforeAction.value = null;
+  }
+};
+
 const openBookingModal = (slot) => {
+  activeElementBeforeAction.value = document.activeElement;
   selectedSlot.value = slot;
   showBookingModal.value = true;
 };
 
-const closeBookingModal = () => {
+const closeBookingModal = async () => {
   showBookingModal.value = false;
   selectedSlot.value = null;
+  await nextTick();
+  if (activeElementBeforeAction.value) {
+    activeElementBeforeAction.value.focus();
+    activeElementBeforeAction.value = null;
+  }
 };
 
 const handleBookSlot = async (formData) => {
