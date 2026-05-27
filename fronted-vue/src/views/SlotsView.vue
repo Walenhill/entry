@@ -41,9 +41,11 @@
 
     <!-- Сетка слотов -->
     <div v-else class="slots-grid">
+      <!-- ⚡ Bolt: Prevent O(N) re-renders when parent state changes -->
       <SlotCard
         v-for="slot in slotsStore.slots"
         :key="slot.id"
+        v-memo="[slot.is_booked, slot.description, slot.booked_by, slot.booking_comment, cancelingSlotId === slot.id, deletingSlotId === slot.id]"
         :slot="slot"
         :is-canceling="cancelingSlotId === slot.id"
         :is-deleting="deletingSlotId === slot.id"
