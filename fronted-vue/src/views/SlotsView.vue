@@ -41,7 +41,8 @@
 
     <!-- Сетка слотов -->
     <div v-else class="slots-grid">
-      <!-- ⚡ Bolt: Prevent O(N) re-renders when parent state changes -->
+      <!-- Performance optimization: use v-memo to prevent O(N) re-renders
+           when unrelated parent state changes (e.g. cancelingSlotId) -->
       <SlotCard
         v-for="slot in slotsStore.slots"
         :key="slot.id"
