@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 
 const props = defineProps({
   isSubmitting: Boolean
@@ -65,10 +65,21 @@ const today = new Date().toISOString().split('T')[0];
 
 const dateInput = ref(null);
 
+const handleKeydown = (e) => {
+  if (e.key === 'Escape' && !props.isSubmitting) {
+    emit('cancel');
+  }
+};
+
 onMounted(() => {
   if (dateInput.value) {
     dateInput.value.focus();
   }
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
 });
 
 const form = ref({
@@ -79,6 +90,18 @@ const form = ref({
 });
 
 const timeError = ref('');
+
+watch(() => form.value.start_time, (newStartTime) => {
+  if (newStartTime && form.value.end_time) {
+    if (newStartTime >= form.value.end_time) {
+      const [hours, minutes] = newStartTime.split(':').map(Number);
+      const newEndDate = new Date();
+      newEndDate.setHours(hours + 1);
+      newEndDate.setMinutes(minutes);
+      form.value.end_time = `${String(newEndDate.getHours()).padStart(2, '0')}:${String(newEndDate.getMinutes()).padStart(2, '0')}`;
+    }
+  }
+});
 
 const handleSubmit = () => {
   timeError.value = '';

@@ -24,3 +24,7 @@
 ## 2026-05-13 - Modal ARIA Semantics and Screen Reader Context
 **Learning:** Found that custom modal implementations (like `BookingModal.vue`) visually behave like dialogs but lack the necessary HTML semantics. Without `role="dialog"` and `aria-modal="true"`, screen readers do not recognize them as distinct dialogs and do not trap virtual focus, causing users to accidentally read content underneath the modal.
 **Action:** Always add `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` (pointing to the modal's title ID) to the container of any custom modal component to ensure proper screen reader behavior.
+
+## 2025-05-27 - [Focus Restoration and Escape Exits in Dynamic Forms]
+**Learning:** Found that closing dynamically inserted UI components (like inline forms or modals) often drops keyboard focus to the `body`, forcing screen-reader and keyboard users to tab through the entire page again to find their previous location. Additionally, inline pseudo-modals lacked standard `Escape` key exit patterns.
+**Action:** Always capture `document.activeElement` before mounting a dynamic form/modal and restore focus to it using `await nextTick()` after unmounting. Additionally, standard exit interactions like the `Escape` key must be universally supported across both full-page modals and inline dynamic form insertions.
