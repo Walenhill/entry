@@ -18,7 +18,7 @@
         </div>
         <div class="detail-item" v-if="slot.booking_comment">
           <span class="label">Телефон:</span>
-          <span class="value">{{ slot.booking_comment }}</span>
+          <a :href="`tel:${slot.booking_comment}`" class="value">{{ slot.booking_comment }}</a>
         </div>
       </div>
     </div>

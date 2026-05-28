@@ -20,3 +20,7 @@
 ## 2024-05-26 - [Document Language and Metadata Accessibility]
 **Learning:** Changing the scaffolded `lang="en"` attribute to accurately reflect the application localization (e.g., `lang="ru"`) is critical. If left as "en", screen readers will mispronounce Russian text using English phonetic rules, making it completely incomprehensible for visually impaired users. Furthermore, default generic scaffold titles (like "Vite + Vue") must be replaced, and basic SEO meta descriptions should be added to immediately provide context for assistive technologies upon page load.
 **Action:** When working on localized applications built with tools like Vite, always verify that the root `index.html` has the correct `lang` attribute, a descriptive `<title>`, and proper document metadata before launch.
+
+## 2025-05-27 - [Clickable Phone Numbers]
+**Learning:** Displaying phone numbers merely as text requires users to manually copy and paste them to make a call, which is a major point of friction, especially on mobile devices. By formatting them as clickable `tel:` links, we bridge the gap between the application and the system's telephony features, creating a seamless and immediate action for the user.
+**Action:** When displaying client phone numbers in the UI (e.g., in admin lists, tables, or slot cards), always wrap them in an `<a href="tel:...">` tag to enable one-click calling functionality.
