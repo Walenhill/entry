@@ -23,6 +23,10 @@ function getSlots($isAdmin = false, $dateFilter = null) {
         // and allow MySQL to use the idx_start_time index.
         $conditions[] = "start_time >= ? AND start_time < ? + INTERVAL 1 DAY";
     }
+
+    if (!$isAdmin) {
+        $conditions[] = "status = 'available'";
+    }
     
     if (!empty($conditions)) {
         $sql .= " WHERE " . implode(' AND ', $conditions);
