@@ -44,3 +44,8 @@
 **Vulnerability:** Unhandled PHP `TypeError` exceptions from passing arrays in JSON payloads to native string functions like `trim()`.
 **Learning:** PHP 8+ throws fatal errors (TypeErrors) when built-in string functions receive arrays instead of strings. Attackers can intentionally trigger these errors to cause application-level DoS or fill error logs, potentially leaking stack traces. This was specifically vulnerable in the POST `/slots/{id}/book` endpoint.
 **Prevention:** Always explicitly validate input types using `is_string()` before passing user-controlled variables from JSON payloads or query parameters to native string functions.
+
+## 2024-05-30 - Information Disclosure in Slot Listing
+**Vulnerability:** Unauthenticated clients were able to see all slots (including booked and cancelled ones), exposing the existence and timings of other clients' appointments, which is a form of information disclosure.
+**Learning:** This occurred because column-level filtering (hiding client details) was present, but row-level access controls (filtering by `status`) were not explicitly applied in the SQL `WHERE` clause for unauthenticated users.
+**Prevention:** Always ensure that row-level access controls are applied explicitly at the database query level (e.g., `WHERE status = 'available'`) based on the user's role/authentication status, in addition to any column-level filtering.
