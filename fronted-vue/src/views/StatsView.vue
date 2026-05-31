@@ -85,7 +85,9 @@
             <tbody>
               <tr v-for="(client, index) in slotsStore.stats.top_clients" :key="index">
                 <td>{{ client.client_name }}</td>
-                <td>{{ client.client_phone }}</td>
+                <td>
+                  <a :href="`tel:${client.client_phone}`" class="phone-link">{{ client.client_phone }}</a>
+                </td>
                 <td><span class="badge badge-info">{{ client.visits }}</span></td>
               </tr>
             </tbody>
@@ -211,6 +213,18 @@ onMounted(() => {
 
 .table tr:last-child td {
   border-bottom: none;
+}
+
+.phone-link {
+  color: var(--accent-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.phone-link:hover {
+  color: var(--accent-secondary-hover);
+  text-decoration: underline;
 }
 
 .badge-info {
