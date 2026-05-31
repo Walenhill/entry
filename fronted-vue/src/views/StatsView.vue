@@ -85,7 +85,9 @@
             <tbody>
               <tr v-for="(client, index) in slotsStore.stats.top_clients" :key="index">
                 <td>{{ client.client_name }}</td>
-                <td>{{ client.client_phone }}</td>
+                <td>
+                  <a :href="`tel:${client.client_phone}`" class="phone-link">{{ client.client_phone }}</a>
+                </td>
                 <td><span class="badge badge-info">{{ client.visits }}</span></td>
               </tr>
             </tbody>
@@ -246,6 +248,17 @@ onMounted(() => {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.phone-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.phone-link:hover {
+  text-decoration: underline;
+  color: var(--accent-secondary);
 }
 
 @media (max-width: 768px) {
