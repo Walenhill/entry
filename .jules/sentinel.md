@@ -44,3 +44,7 @@
 **Vulnerability:** Unhandled PHP `TypeError` exceptions from passing arrays in JSON payloads to native string functions like `trim()`.
 **Learning:** PHP 8+ throws fatal errors (TypeErrors) when built-in string functions receive arrays instead of strings. Attackers can intentionally trigger these errors to cause application-level DoS or fill error logs, potentially leaking stack traces. This was specifically vulnerable in the POST `/slots/{id}/book` endpoint.
 **Prevention:** Always explicitly validate input types using `is_string()` before passing user-controlled variables from JSON payloads or query parameters to native string functions.
+## 2024-05-24 - [Unhandled mysqli Exceptions]
+**Vulnerability:** In PHP 8.1+, `mysqli` throws exceptions by default on connection errors. Uncaught, these trigger fatal errors and expose sensitive stack traces (e.g. hostnames, usernames).
+**Learning:** `helpers.php` relied on legacy `$conn->connect_error` checking, missing the fact that modern PHP exceptions bypass these checks.
+**Prevention:** Always wrap `new mysqli` in a `try...catch` block (specifically catching `\mysqli_sql_exception` or `\Throwable`) to gracefully handle connection failures and return a sanitized JSON 500 error.
