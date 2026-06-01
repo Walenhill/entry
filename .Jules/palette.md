@@ -24,3 +24,7 @@
 ## 2025-05-27 - [Clickable Phone Numbers]
 **Learning:** Displaying phone numbers merely as text requires users to manually copy and paste them to make a call, which is a major point of friction, especially on mobile devices. By formatting them as clickable `tel:` links, we bridge the gap between the application and the system's telephony features, creating a seamless and immediate action for the user.
 **Action:** When displaying client phone numbers in the UI (e.g., in admin lists, tables, or slot cards), always wrap them in an `<a href="tel:...">` tag to enable one-click calling functionality.
+
+## 2025-06-01 - [Table Empty States]
+**Learning:** Using generic placeholder text like "Нет данных" for empty tables provides a poor user experience. Replacing this with a structured empty state containing a visual icon, a clear title, and a helpful description explaining *why* it's empty or *how* to populate it significantly improves clarity and visual polish.
+**Action:** When implementing tables or lists that can be empty, always provide a structured empty state (icon, heading, description) instead of plain generic text.
