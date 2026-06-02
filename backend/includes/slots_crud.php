@@ -23,6 +23,10 @@ function getSlots($isAdmin = false, $dateFilter = null) {
         // and allow MySQL to use the idx_start_time index.
         $conditions[] = "start_time >= ? AND start_time < ? + INTERVAL 1 DAY";
     }
+
+    if (!$isAdmin) {
+        $conditions[] = "status = 'available'";
+    }
     
     if (!empty($conditions)) {
         $sql .= " WHERE " . implode(' AND ', $conditions);
@@ -174,8 +178,7 @@ function generateSlotsFromTemplate($template) {
     $batchEndTimeStr = date('Y-m-d H:i:s', $endTime);
 
     // Pre-fetch all non-cancelled slots that could overlap with any slot in this template generation
-    // Performance optimization: Using an inclusion list IN ('available', 'booked') instead of the inequality operator != 'cancelled'
-    // makes the query SARGable, allowing MySQL to utilize the idx_status or composite indexes efficiently rather than forcing a full scan.
+    // Performance optimization: Use IN ('available', 'booked') instead of != 'cancelled' to allow MySQL to use indexes
     $existingSlotsStmt = $conn->prepare("SELECT start_time, end_time FROM slots WHERE status IN ('available', 'booked') AND (start_time < ? AND end_time > ?)");
     $existingSlotsStmt->bind_param("ss", $batchEndTimeStr, $batchStartTimeStr);
     $existingSlotsStmt->execute();
@@ -363,8 +366,7 @@ function deleteSlot($id) {
 function hasOverlappingSlots($startTime, $endTime) {
     $conn = getDbConnection();
     
-    // Performance optimization: Using an inclusion list IN ('available', 'booked') instead of the inequality operator != 'cancelled'
-    // makes the query SARGable, allowing MySQL to utilize indexes efficiently.
+    // Performance optimization: Use IN ('available', 'booked') instead of != 'cancelled' to allow MySQL to use indexes
     $stmt = $conn->prepare("SELECT id FROM slots WHERE status IN ('available', 'booked') AND (start_time < ? AND end_time > ?) LIMIT 1");
     $stmt->bind_param("ss", $endTime, $startTime);
     $stmt->execute();
