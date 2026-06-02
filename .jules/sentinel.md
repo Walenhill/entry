@@ -44,8 +44,7 @@
 **Vulnerability:** Unhandled PHP `TypeError` exceptions from passing arrays in JSON payloads to native string functions like `trim()`.
 **Learning:** PHP 8+ throws fatal errors (TypeErrors) when built-in string functions receive arrays instead of strings. Attackers can intentionally trigger these errors to cause application-level DoS or fill error logs, potentially leaking stack traces. This was specifically vulnerable in the POST `/slots/{id}/book` endpoint.
 **Prevention:** Always explicitly validate input types using `is_string()` before passing user-controlled variables from JSON payloads or query parameters to native string functions.
-
-## 2024-06-02 - Unhandled MySQL Exceptions Exposed Credentials
-**Vulnerability:** A `mysqli_sql_exception` caused by database connection failure resulted in a fatal error that leaked full stack traces containing `DB_USERNAME` and `DB_PASSWORD`.
-**Learning:** In PHP 8.1+, `mysqli` changed its default error reporting mode to throw exceptions instead of returning an error code. Legacy code checking `if ($conn->connect_error)` without a `try...catch (\Throwable)` block is vulnerable to exposing credentials when connection issues arise.
-**Prevention:** Always wrap `new mysqli` instantiation in a `try...catch (\Throwable)` block, log the exception locally for debugging, and return a sanitized response payload to the client.
+## 2024-06-01 - Missing row-level filtering leads to Information Disclosure
+**Vulnerability:** The API endpoint `GET /slots` returned all slots, including booked and cancelled ones, to unauthenticated users despite an intent to only return available slots.
+**Learning:** Row-level filtering was omitted from the database query when constructing `$conditions` for clients. Even though sensitive columns were excluded, the existence and metadata of booked/cancelled slots were leaked.
+**Prevention:** Always ensure that both column-level AND row-level access controls are explicitly applied when retrieving lists of resources for unauthenticated or restricted users.
