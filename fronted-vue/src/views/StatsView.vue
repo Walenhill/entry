@@ -86,7 +86,8 @@
               <tr v-for="(client, index) in slotsStore.stats.top_clients" :key="index">
                 <td>{{ client.client_name }}</td>
                 <td>
-                  <a :href="`tel:${client.client_phone}`" class="phone-link">{{ client.client_phone }}</a>
+                  <a v-if="client.client_phone" :href="`tel:${client.client_phone}`">{{ client.client_phone }}</a>
+                  <span v-else class="text-muted">-</span>
                 </td>
                 <td><span class="badge badge-info">{{ client.visits }}</span></td>
               </tr>
