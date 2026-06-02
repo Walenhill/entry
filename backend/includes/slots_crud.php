@@ -178,7 +178,8 @@ function generateSlotsFromTemplate($template) {
     $batchEndTimeStr = date('Y-m-d H:i:s', $endTime);
 
     // Pre-fetch all non-cancelled slots that could overlap with any slot in this template generation
-    $existingSlotsStmt = $conn->prepare("SELECT start_time, end_time FROM slots WHERE status != 'cancelled' AND (start_time < ? AND end_time > ?)");
+    // Performance optimization: Use IN ('available', 'booked') instead of != 'cancelled' to allow MySQL to use indexes
+    $existingSlotsStmt = $conn->prepare("SELECT start_time, end_time FROM slots WHERE status IN ('available', 'booked') AND (start_time < ? AND end_time > ?)");
     $existingSlotsStmt->bind_param("ss", $batchEndTimeStr, $batchStartTimeStr);
     $existingSlotsStmt->execute();
     $existingSlotsResult = $existingSlotsStmt->get_result();
@@ -365,7 +366,8 @@ function deleteSlot($id) {
 function hasOverlappingSlots($startTime, $endTime) {
     $conn = getDbConnection();
     
-    $stmt = $conn->prepare("SELECT id FROM slots WHERE status != 'cancelled' AND (start_time < ? AND end_time > ?) LIMIT 1");
+    // Performance optimization: Use IN ('available', 'booked') instead of != 'cancelled' to allow MySQL to use indexes
+    $stmt = $conn->prepare("SELECT id FROM slots WHERE status IN ('available', 'booked') AND (start_time < ? AND end_time > ?) LIMIT 1");
     $stmt->bind_param("ss", $endTime, $startTime);
     $stmt->execute();
     $result = $stmt->get_result();
