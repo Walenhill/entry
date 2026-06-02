@@ -76,14 +76,21 @@ const formData = ref({
 });
 
 const nameInput = ref(null);
+let previousActiveElement = null;
 
 // Reset form when modal opens
 watch(() => props.show, async (newVal) => {
   if (newVal) {
+    previousActiveElement = document.activeElement;
     formData.value = { name: '', phone: '' };
     await nextTick();
     if (nameInput.value) {
       nameInput.value.focus();
+    }
+  } else {
+    await nextTick();
+    if (previousActiveElement) {
+      previousActiveElement.focus();
     }
   }
 });

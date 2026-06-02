@@ -43,6 +43,6 @@
 ## 2026-05-27 - Preventing O(N) re-renders in unpaginated lists with v-memo
 **Learning:** In the `SlotsView` Vue component, parent state updates (such as changing `cancelingSlotId` during an async cancellation operation) trigger a re-render of every single `<SlotCard>` in the `v-for` loop because they share the parent's reactive scope. This introduces an unnecessary O(N) rendering bottleneck, especially when the slots list is large and unpaginated.
 **Action:** Prevent O(N) list re-renders by leveraging the `v-memo` directive on child components inside a `v-for`. Pass a dependency array explicitly declaring the specific reactive properties that require the item to re-render (e.g., `v-memo="[slot.is_booked, cancelingSlotId === slot.id, ...]"`). Ensure to destructure the mutable proxy fields to primitives to guarantee `v-memo`'s shallow equality check works properly.
-## 2024-06-02 - Optimize index utilization for status queries
-**Learning:** Using inequality operators like `!=` in MySQL `WHERE` clauses (e.g., `status != "cancelled"`) forces a full table scan because it cannot use the B-tree index efficiently.
-**Action:** Replace inequality operators with inclusion lists like `IN ("available", "booked")` when querying indexed ENUM columns to enable index scans.
+## 2026-05-30 - Making queries SARGable with IN clauses
+**Learning:** Using negative conditions like `status != 'cancelled'` makes the query non-SARGable, forcing a full table scan and ignoring indexes on the column.
+**Action:** Replace inequality operators with `IN` clauses representing the explicit subset of required states (e.g., `status IN ('available', 'booked')`) to allow MySQL to utilize indexes properly.
