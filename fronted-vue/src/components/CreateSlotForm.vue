@@ -64,6 +64,7 @@ const defaultDate = tomorrow.toISOString().split('T')[0];
 const today = new Date().toISOString().split('T')[0];
 
 const dateInput = ref(null);
+let previousActiveElement = null;
 
 const handleKeydown = (e) => {
   if (e.key === 'Escape' && !props.isSubmitting) {
@@ -72,6 +73,7 @@ const handleKeydown = (e) => {
 };
 
 onMounted(() => {
+  previousActiveElement = document.activeElement;
   if (dateInput.value) {
     dateInput.value.focus();
   }
@@ -80,6 +82,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown);
+  if (previousActiveElement) {
+    previousActiveElement.focus();
+  }
 });
 
 const form = ref({
