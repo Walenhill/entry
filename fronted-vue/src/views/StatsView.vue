@@ -85,13 +85,15 @@
             <tbody>
               <tr v-for="(client, index) in slotsStore.stats.top_clients" :key="index">
                 <td>{{ client.client_name }}</td>
-                <td>{{ client.client_phone }}</td>
+                <td><a :href="`tel:${client.client_phone}`">{{ client.client_phone }}</a></td>
                 <td><span class="badge badge-info">{{ client.visits }}</span></td>
               </tr>
             </tbody>
           </table>
-          <div v-else class="text-center p-4 text-muted">
-            Нет данных о клиентах
+          <div v-else class="state-container empty-state p-4" role="status" aria-live="polite">
+            <div class="empty-icon text-muted" aria-hidden="true" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;">👥</div>
+            <h4 class="mt-2 mb-1" style="color: var(--text-primary)">Нет активных клиентов</h4>
+            <p class="text-muted" style="font-size: 0.875rem; max-width: 300px;">Когда клиенты начнут бронировать слоты, они появятся здесь.</p>
           </div>
         </div>
       </div>
