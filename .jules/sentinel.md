@@ -48,3 +48,8 @@
 **Vulnerability:** The API endpoint `GET /slots` returned all slots, including booked and cancelled ones, to unauthenticated users despite an intent to only return available slots.
 **Learning:** Row-level filtering was omitted from the database query when constructing `$conditions` for clients. Even though sensitive columns were excluded, the existence and metadata of booked/cancelled slots were leaked.
 **Prevention:** Always ensure that both column-level AND row-level access controls are explicitly applied when retrieving lists of resources for unauthenticated or restricted users.
+
+## 2024-06-03 - Dotfiles Exposure via Rewrite Rules
+**Vulnerability:** The `.htaccess` file allowed direct web access to sensitive configuration files like `.env`.
+**Learning:** The `RewriteCond %{REQUEST_FILENAME} !-f` directive tells Apache to serve existing files directly, bypassing the `main.php` router. If there are no explicit rules blocking access to dotfiles, they become publicly accessible if they exist in the web root.
+**Prevention:** Always include a explicit `<FilesMatch "^\.">` block with `Require all denied` in `.htaccess` to ensure dotfiles are protected, regardless of other rewrite conditions.
