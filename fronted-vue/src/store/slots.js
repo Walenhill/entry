@@ -51,14 +51,18 @@ export const useSlotsStore = defineStore('slots', {
         const response = await slotsApi.createSlot(slotData);
         if (response.data.success && response.data.slot) {
           // Performance optimization: Mutate local array instead of re-fetching all slots
-          this.slots.push(this.formatSlot(response.data.slot));
-          this.slots.sort((a, b) => {
-            const timeA = a.date + ' ' + a.start_time;
-            const timeB = b.date + ' ' + b.start_time;
-            // Performance optimization: Using standard string comparison operators instead of localeCompare
-            // is significantly faster for simple, strictly formatted ISO-like date strings.
-            return timeA < timeB ? -1 : (timeA > timeB ? 1 : 0);
-          });
+          const newSlot = this.formatSlot(response.data.slot);
+          // Performance optimization: Using findIndex + splice is O(N) and avoids the O(N log N) overhead
+          // and string concatenations of a full array sort when inserting into an already sorted array.
+          const index = this.slots.findIndex(s =>
+            s.date > newSlot.date ||
+            (s.date === newSlot.date && s.start_time > newSlot.start_time)
+          );
+          if (index === -1) {
+            this.slots.push(newSlot);
+          } else {
+            this.slots.splice(index, 0, newSlot);
+          }
         } else {
           await this.fetchSlots();
         }
