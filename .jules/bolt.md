@@ -46,3 +46,6 @@
 ## 2026-05-30 - Making queries SARGable with IN clauses
 **Learning:** Using negative conditions like `status != 'cancelled'` makes the query non-SARGable, forcing a full table scan and ignoring indexes on the column.
 **Action:** Replace inequality operators with `IN` clauses representing the explicit subset of required states (e.g., `status IN ('available', 'booked')`) to allow MySQL to utilize indexes properly.
+## 2024-06-13 - Avoid Full Array Sort on Single Insertions
+**Learning:** Appending an item to an already sorted array using `push()` followed by a full `sort()` executes in `O(N log N)` time and performs numerous unnecessary string concatenations during comparison. For large lists, this creates an observable performance bottleneck.
+**Action:** When inserting a single element into a list that is guaranteed to be already sorted (e.g., chronological slots), use `findIndex` to perform a linear scan and locate the insertion point, then insert the element using `splice()`. This reduces complexity to `O(N)` and drastically minimizes comparator overhead.
