@@ -24,3 +24,7 @@
 ## 2025-05-27 - [Clickable Phone Numbers]
 **Learning:** Displaying phone numbers merely as text requires users to manually copy and paste them to make a call, which is a major point of friction, especially on mobile devices. By formatting them as clickable `tel:` links, we bridge the gap between the application and the system's telephony features, creating a seamless and immediate action for the user.
 **Action:** When displaying client phone numbers in the UI (e.g., in admin lists, tables, or slot cards), always wrap them in an `<a href="tel:...">` tag to enable one-click calling functionality.
+
+## 2025-05-28 - [Empty State Guidelines]
+**Learning:** The StatsView empty state initially contained only generic text, whereas the app generally requires structured empty states. I replaced 'Нет данных о клиентах' with a structured layout using an icon, heading, and descriptive text.
+**Action:** When implementing tables or lists that can be empty in the Vue frontend, always provide a structured empty state (e.g., an icon with `aria-hidden="true"`, a clear heading, and a descriptive message using utility classes like `.text-muted`) instead of generic placeholder text to improve clarity and user experience.

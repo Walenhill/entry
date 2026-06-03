@@ -93,8 +93,10 @@
               </tr>
             </tbody>
           </table>
-          <div v-else class="text-center p-4 text-muted">
-            Нет данных о клиентах
+          <div v-else class="text-center p-4">
+            <div class="empty-icon mb-3" aria-hidden="true" style="font-size: 2.5rem; opacity: 0.5;">👥</div>
+            <h4 class="mb-2">Нет активных клиентов</h4>
+            <p class="text-muted">Статистика появится, когда клиенты начнут бронировать слоты.</p>
           </div>
         </div>
       </div>
