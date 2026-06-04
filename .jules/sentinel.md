@@ -48,3 +48,7 @@
 **Vulnerability:** The API endpoint `GET /slots` returned all slots, including booked and cancelled ones, to unauthenticated users despite an intent to only return available slots.
 **Learning:** Row-level filtering was omitted from the database query when constructing `$conditions` for clients. Even though sensitive columns were excluded, the existence and metadata of booked/cancelled slots were leaked.
 **Prevention:** Always ensure that both column-level AND row-level access controls are explicitly applied when retrieving lists of resources for unauthenticated or restricted users.
+## 2026-06-04 - Direct access to dotfiles via missing htaccess rule
+**Vulnerability:** The application was serving hidden files (like `.env`) because `backend/.htaccess` did not explicitly deny access to dotfiles.
+**Learning:** Default Apache configuration does not always protect dotfiles. A specific rule must be added to `.htaccess` to ensure sensitive configurations are not exposed.
+**Prevention:** Always include `<FilesMatch "^\."> Require all denied </FilesMatch>` in Apache `.htaccess` files to block web access to dotfiles.
