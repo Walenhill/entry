@@ -46,3 +46,7 @@
 ## 2026-05-30 - Making queries SARGable with IN clauses
 **Learning:** Using negative conditions like `status != 'cancelled'` makes the query non-SARGable, forcing a full table scan and ignoring indexes on the column.
 **Action:** Replace inequality operators with `IN` clauses representing the explicit subset of required states (e.g., `status IN ('available', 'booked')`) to allow MySQL to utilize indexes properly.
+
+## 2026-06-04 - O(N) Array Insertion in Sorted Pinia Stores
+**Learning:** When adding a single item to an already sorted array in Pinia, using `push()` followed by `sort()` forces an O(N log N) operation and executes the comparator function multiple times unnecessarily.
+**Action:** Optimize insertions into sorted arrays by using `findIndex()` to determine the correct insertion point, followed by `splice()`. This reduces the complexity to O(N) and prevents unnecessary sorting overhead.
