@@ -24,3 +24,7 @@
 ## 2025-05-27 - [Clickable Phone Numbers]
 **Learning:** Displaying phone numbers merely as text requires users to manually copy and paste them to make a call, which is a major point of friction, especially on mobile devices. By formatting them as clickable `tel:` links, we bridge the gap between the application and the system's telephony features, creating a seamless and immediate action for the user.
 **Action:** When displaying client phone numbers in the UI (e.g., in admin lists, tables, or slot cards), always wrap them in an `<a href="tel:...">` tag to enable one-click calling functionality.
+
+## 2024-05-18 - [Empty States & Link Interactions in Stats]
+**Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
+**Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
