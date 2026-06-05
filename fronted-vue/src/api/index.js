@@ -15,8 +15,13 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('is_logged_in');
-      // optionally trigger reload or router redirect if using vue-router
-      window.location.reload();
+      // Do not auto-reload if the failure came from a login attempt,
+      // so the user can see validation errors (e.g. "Invalid password").
+      const url = error.config?.url || '';
+      if (!url.includes('/auth/login')) {
+        // optionally trigger reload or router redirect if using vue-router
+        window.location.reload();
+      }
     }
     return Promise.reject(error);
   }
