@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
         console.error('Login error:', err);
         return {
           success: false,
-          message: err.response?.data?.message || 'Ошибка входа. Проверьте пароль.'
+          message: err.response?.data?.error || err.response?.data?.message || 'Ошибка входа. Проверьте пароль.'
         };
       }
     },
