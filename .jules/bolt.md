@@ -50,3 +50,6 @@
 ## 2026-06-04 - O(N) Array Insertion in Sorted Pinia Stores
 **Learning:** When adding a single item to an already sorted array in Pinia, using `push()` followed by `sort()` forces an O(N log N) operation and executes the comparator function multiple times unnecessarily.
 **Action:** Optimize insertions into sorted arrays by using `findIndex()` to determine the correct insertion point, followed by `splice()`. This reduces the complexity to O(N) and prevents unnecessary sorting overhead.
+## 2024-06-25 - Skip deep reactivity for static lists with markRaw
+**Learning:** In Vue, when storing large arrays of static objects in reactive state (e.g. Pinia stores), Vue wraps every nested object with `reactive()` by default. For long lists like slots, this overhead of creating and traversing proxies slows down initialization and memory allocation significantly, despite the object properties themselves rarely needing deep reactivity (we typically replace the object entirely on update rather than mutating deep properties).
+**Action:** Use `markRaw()` to wrap list item objects when adding them to the state. This explicit flag tells Vue to skip deep reactive proxying for these objects, providing a significant performance optimization for large data lists while maintaining reactivity at the array level.
