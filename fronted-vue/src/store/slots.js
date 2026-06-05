@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { markRaw } from 'vue';
 import { slotsApi } from '../api';
 
 export const useSlotsStore = defineStore('slots', {
@@ -13,7 +14,7 @@ export const useSlotsStore = defineStore('slots', {
     formatSlot(slot) {
       // Performance optimization: Using string slicing instead of Date instantiation
       // reduces processing time significantly, as the DB returns strict YYYY-MM-DD HH:MM:SS format
-      return {
+      return markRaw({
         id: slot.id,
         date: slot.start_time.substring(0, 10),
         start_time: slot.start_time.substring(11, 16),
@@ -22,7 +23,7 @@ export const useSlotsStore = defineStore('slots', {
         is_booked: slot.status === 'booked',
         booked_by: slot.client_name,
         booking_comment: slot.client_phone // Use client_phone for the comment field in UI
-      };
+      });
     },
 
     async fetchSlots(date = null) {
