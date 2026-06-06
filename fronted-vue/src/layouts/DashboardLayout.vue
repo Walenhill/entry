@@ -1,16 +1,23 @@
 <template>
   <div class="dashboard-layout">
-    <aside class="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
+    <aside class="sidebar" id="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <h2 class="logo">BookingApp</h2>
-        <button class="close-mobile" @click="isMobileMenuOpen = false" aria-label="Закрыть меню">×</button>
+        <button
+          ref="closeButton"
+          class="close-mobile"
+          @click="closeMenu"
+          aria-label="Закрыть меню (Esc)"
+          aria-controls="sidebar"
+          :aria-expanded="isMobileMenuOpen"
+        >×</button>
       </div>
 
       <nav class="sidebar-nav">
-        <router-link to="/" class="nav-item" @click="isMobileMenuOpen = false">
+        <router-link to="/" class="nav-item" @click="closeMenu">
           Слоты
         </router-link>
-        <router-link to="/stats" class="nav-item" @click="isMobileMenuOpen = false">
+        <router-link to="/stats" class="nav-item" @click="closeMenu">
           Статистика
         </router-link>
       </nav>
@@ -22,7 +29,14 @@
 
     <div class="main-content">
       <header class="topbar">
-        <button class="menu-toggle" @click="isMobileMenuOpen = true" aria-label="Открыть меню">☰</button>
+        <button
+          ref="menuToggle"
+          class="menu-toggle"
+          @click="openMenu"
+          aria-label="Открыть меню"
+          aria-controls="sidebar"
+          :aria-expanded="isMobileMenuOpen"
+        >☰</button>
         <div class="user-info">
           <span>Администратор</span>
         </div>
@@ -36,19 +50,52 @@
     <div
       v-if="isMobileMenuOpen"
       class="mobile-backdrop"
-      @click="isMobileMenuOpen = false"
+      @click="closeMenu"
     ></div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const isMobileMenuOpen = ref(false);
+
+const menuToggle = ref(null);
+const closeButton = ref(null);
+
+const openMenu = async () => {
+  isMobileMenuOpen.value = true;
+  await nextTick();
+  if (closeButton.value) {
+    closeButton.value.focus();
+  }
+};
+
+const closeMenu = async () => {
+  isMobileMenuOpen.value = false;
+  await nextTick();
+  if (menuToggle.value) {
+    menuToggle.value.focus();
+  }
+};
+
+const handleKeydown = (e) => {
+  if (e.key === 'Escape' && isMobileMenuOpen.value) {
+    closeMenu();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
+});
 
 const handleLogout = async () => {
   await authStore.logout();
