@@ -16,6 +16,7 @@ export const useSlotsStore = defineStore('slots', {
       // reduces processing time significantly, as the DB returns strict YYYY-MM-DD HH:MM:SS format
       return markRaw({
         id: slot.id,
+        raw_start_time: slot.start_time, // Retain raw DB string for fast O(1) comparisons
         date: slot.start_time.substring(0, 10),
         start_time: slot.start_time.substring(11, 16),
         end_time: slot.end_time.substring(11, 16),
@@ -53,14 +54,11 @@ export const useSlotsStore = defineStore('slots', {
         if (response.data.success && response.data.slot) {
           // Performance optimization: Mutate local array instead of re-fetching all slots
           const newSlot = this.formatSlot(response.data.slot);
-          const newTime = newSlot.date + ' ' + newSlot.start_time;
 
           // Performance optimization: O(N) insertion using findIndex and splice
-          // avoids O(N log N) overhead of push() followed by sort()
-          const insertIndex = this.slots.findIndex(s => {
-            const time = s.date + ' ' + s.start_time;
-            return time > newTime;
-          });
+          // avoids O(N log N) overhead of push() followed by sort().
+          // Using raw_start_time string comparison eliminates O(N) inner-loop string allocations.
+          const insertIndex = this.slots.findIndex(s => s.raw_start_time > response.data.slot.start_time);
 
           if (insertIndex === -1) {
             this.slots.push(newSlot);
