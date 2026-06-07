@@ -19,6 +19,7 @@ export const useSlotsStore = defineStore('slots', {
         date: slot.start_time.substring(0, 10),
         start_time: slot.start_time.substring(11, 16),
         end_time: slot.end_time.substring(11, 16),
+        raw_start_time: slot.start_time, // Performance optimization: retain raw DB string for O(1) comparisons
         description: slot.description,
         is_booked: slot.status === 'booked',
         booked_by: slot.client_name,
@@ -53,14 +54,11 @@ export const useSlotsStore = defineStore('slots', {
         if (response.data.success && response.data.slot) {
           // Performance optimization: Mutate local array instead of re-fetching all slots
           const newSlot = this.formatSlot(response.data.slot);
-          const newTime = newSlot.date + ' ' + newSlot.start_time;
 
           // Performance optimization: O(N) insertion using findIndex and splice
           // avoids O(N log N) overhead of push() followed by sort()
-          const insertIndex = this.slots.findIndex(s => {
-            const time = s.date + ' ' + s.start_time;
-            return time > newTime;
-          });
+          // We use the raw_start_time property to prevent O(N) string allocation inside the loop
+          const insertIndex = this.slots.findIndex(s => s.raw_start_time > response.data.slot.start_time);
 
           if (insertIndex === -1) {
             this.slots.push(newSlot);

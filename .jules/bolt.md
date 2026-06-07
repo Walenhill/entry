@@ -53,3 +53,6 @@
 ## 2024-06-25 - Skip deep reactivity for static lists with markRaw
 **Learning:** In Vue, when storing large arrays of static objects in reactive state (e.g. Pinia stores), Vue wraps every nested object with `reactive()` by default. For long lists like slots, this overhead of creating and traversing proxies slows down initialization and memory allocation significantly, despite the object properties themselves rarely needing deep reactivity (we typically replace the object entirely on update rather than mutating deep properties).
 **Action:** Use `markRaw()` to wrap list item objects when adding them to the state. This explicit flag tells Vue to skip deep reactive proxying for these objects, providing a significant performance optimization for large data lists while maintaining reactivity at the array level.
+## 2024-06-07 - Preventing O(N) String Allocation in Loop Predicates
+**Learning:** Concatenating strings inside a loop predicate (e.g., `s.date + ' ' + s.start_time` inside `findIndex` or `map`) introduces significant memory allocation and CPU overhead because a new string object is created on every iteration.
+**Action:** Retain the raw database string (e.g., `raw_start_time: slot.start_time`) on the frontend item object during initialization and use it for direct O(1) property comparisons to avoid O(N) string allocation overhead in loops.
