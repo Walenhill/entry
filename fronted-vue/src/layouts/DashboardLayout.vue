@@ -6,7 +6,7 @@
         <button class="close-mobile" @click="isMobileMenuOpen = false" aria-label="Закрыть меню">×</button>
       </div>
 
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" aria-label="Основная навигация">
         <router-link to="/" class="nav-item" @click="isMobileMenuOpen = false">
           Слоты
         </router-link>
@@ -37,6 +37,7 @@
       v-if="isMobileMenuOpen"
       class="mobile-backdrop"
       @click="isMobileMenuOpen = false"
+      aria-hidden="true"
     ></div>
   </div>
 </template>
