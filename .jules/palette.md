@@ -28,3 +28,7 @@
 ## 2025-05-27 - [Focus Restoration and Escape Exits in Dynamic Forms]
 **Learning:** Found that closing dynamically inserted UI components (like inline forms or modals) often drops keyboard focus to the `body`, forcing screen-reader and keyboard users to tab through the entire page again to find their previous location. Additionally, inline pseudo-modals lacked standard `Escape` key exit patterns.
 **Action:** Always capture `document.activeElement` before mounting a dynamic form/modal and restore focus to it using `await nextTick()` after unmounting. Additionally, standard exit interactions like the `Escape` key must be universally supported across both full-page modals and inline dynamic form insertions.
+
+## 2026-06-07 - [Avoiding Scoped CSS for Interactive Utilities]
+**Learning:** Found that a utility class (`.phone-link`) designed for interactive elements (hover states, colors, text-decoration) was scoped to a single view (`StatsView.vue`), which prevented reusability when the same interaction (e.g., clickable phone numbers) was introduced in other components (`SlotCard.vue`).
+**Action:** Always extract interaction-heavy utility classes to global styles (e.g., `style.css`) to ensure visual and interactive consistency for common element types (like `tel:` links) across the entire application.
