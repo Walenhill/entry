@@ -28,3 +28,7 @@
 ## 2025-05-27 - [Focus Restoration and Escape Exits in Dynamic Forms]
 **Learning:** Found that closing dynamically inserted UI components (like inline forms or modals) often drops keyboard focus to the `body`, forcing screen-reader and keyboard users to tab through the entire page again to find their previous location. Additionally, inline pseudo-modals lacked standard `Escape` key exit patterns.
 **Action:** Always capture `document.activeElement` before mounting a dynamic form/modal and restore focus to it using `await nextTick()` after unmounting. Additionally, standard exit interactions like the `Escape` key must be universally supported across both full-page modals and inline dynamic form insertions.
+
+## 2026-05-14 - Mobile Menu Focus Management and ARIA States
+**Learning:** Mobile menu toggle buttons and close buttons lack necessary ARIA attributes (`aria-expanded`, `aria-controls`), making it impossible for screen reader users to understand their purpose or state. Furthermore, opening and closing the menu drops keyboard focus, requiring users to navigate from the start of the page again.
+**Action:** Always add `aria-expanded` and `aria-controls` to mobile menu toggle and close buttons. Implement focus management by capturing the toggle button's reference and restoring focus to it when the menu is closed, and explicitly moving focus to the close button when the menu opens.
