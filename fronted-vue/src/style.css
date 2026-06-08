@@ -223,6 +223,17 @@ a:focus-visible {
   font-size: 0.875rem;
 }
 
+.phone-link {
+  text-decoration: none;
+  color: var(--accent-secondary);
+  transition: color 0.2s;
+}
+
+.phone-link:hover, .phone-link:focus {
+  color: var(--accent-secondary-hover);
+  text-decoration: underline;
+}
+
 /* Utilities */
 .text-center { text-align: center; }
 .text-danger { color: var(--status-danger); }
