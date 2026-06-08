@@ -13,7 +13,7 @@
         >×</button>
       </div>
 
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" aria-label="Основная навигация">
         <router-link to="/" class="nav-item" @click="closeMenu">
           Слоты
         </router-link>
@@ -50,6 +50,7 @@
     <div
       v-if="isMobileMenuOpen"
       class="mobile-backdrop"
+      aria-hidden="true"
       @click="closeMenu"
     ></div>
   </div>
