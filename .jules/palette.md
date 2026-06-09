@@ -32,3 +32,7 @@
 ## 2026-05-14 - Mobile Menu Focus Management and ARIA States
 **Learning:** Mobile menu toggle buttons and close buttons lack necessary ARIA attributes (`aria-expanded`, `aria-controls`), making it impossible for screen reader users to understand their purpose or state. Furthermore, opening and closing the menu drops keyboard focus, requiring users to navigate from the start of the page again.
 **Action:** Always add `aria-expanded` and `aria-controls` to mobile menu toggle and close buttons. Implement focus management by capturing the toggle button's reference and restoring focus to it when the menu is closed, and explicitly moving focus to the close button when the menu opens.
+
+## 2026-05-15 - Sidebar Navigation and Backdrop Semantics
+**Learning:** Found that `<nav>` elements in structural layouts (like sidebars) lacked descriptive `aria-label`s, missing an opportunity to orient screen-reader users. Additionally, purely visual overlay backdrops (like `.mobile-backdrop`) trapped screen-reader focus when visible if they weren't explicitly hidden from the accessibility tree.
+**Action:** Always assign a descriptive `aria-label` (e.g., "Основная навигация" for main menus) to `<nav>` tags. Apply `aria-hidden="true"` to purely visual elements, such as modal or menu backdrops, to prevent screen readers from announcing them or attempting to focus them.
