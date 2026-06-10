@@ -342,22 +342,27 @@ function cancelBooking($id) {
 /**
  * Delete a slot
  * @param int $id - slot ID
- * @return bool
+ * @return int|bool - number of affected rows on success, or false on db error
  */
 function deleteSlot($id) {
     $conn = getDbConnection();
     
+    // Performance optimization: Execute DELETE directly and check affected_rows
+    // instead of executing a redundant SELECT query beforehand to verify existence.
     $stmt = $conn->prepare("DELETE FROM slots WHERE id = ?");
     $stmt->bind_param("i", $id);
     
     $success = $stmt->execute();
     if (!$success) {
         error_log('Failed to delete slot: ' . $conn->error);
+        $stmt->close();
+        return false;
     }
 
+    $affectedRows = $stmt->affected_rows;
     $stmt->close();
     
-    return $success;
+    return $affectedRows;
 }
 
 /**

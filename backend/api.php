@@ -265,12 +265,11 @@ function handleDeleteRequest($path) {
         checkAdminAuth();
         $slotId = (int)$matches[1];
         
-        $slot = getSlotById($slotId);
-        if (!$slot) {
-            jsonResponse(['error' => 'Slot not found'], 404);
-        }
+        $affectedRows = deleteSlot($slotId);
         
-        if (deleteSlot($slotId)) {
+        if ($affectedRows === 0) {
+            jsonResponse(['error' => 'Slot not found'], 404);
+        } elseif ($affectedRows !== false && $affectedRows >= 1) {
             jsonResponse([
                 'success' => true,
                 'message' => 'Slot deleted successfully'
