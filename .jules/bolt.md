@@ -56,3 +56,6 @@
 ## 2026-06-06 - Eliminating O(N) String Concatenation in Array Iteration
 **Learning:** Executing string concatenations (e.g., `s.date + ' ' + s.start_time`) inside a high-frequency array method loop like `findIndex()` creates unnecessary temporary memory allocations and CPU overhead that scales linearly with array size.
 **Action:** When comparing formatted strings against raw backend data during sorted insertions or lookups, attach the raw unformatted string (e.g., `raw_start_time`) to the object during initialization. Use this raw string for direct O(1) comparison in the loop predicate to eliminate O(N) allocation overhead.
+## 2026-06-07 - Eliminating Redundant Database Reads Before Deletion
+**Learning:** In backend CRUD endpoints, it's a common anti-pattern to successfully execute a `SELECT` query (e.g., `getSlotById($id)`) just to verify a record exists before executing a `DELETE` query. This introduces an unnecessary database roundtrip.
+**Action:** When performing a deletion, execute the `DELETE` query directly and check `$stmt->affected_rows`. If it returns 0, the record did not exist; otherwise, it was successfully deleted. This eliminates the redundant `SELECT` query and reduces latency.
