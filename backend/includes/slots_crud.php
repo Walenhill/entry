@@ -342,7 +342,7 @@ function cancelBooking($id) {
 /**
  * Delete a slot
  * @param int $id - slot ID
- * @return bool
+ * @return int|false - affected rows or false on failure
  */
 function deleteSlot($id) {
     $conn = getDbConnection();
@@ -353,11 +353,14 @@ function deleteSlot($id) {
     $success = $stmt->execute();
     if (!$success) {
         error_log('Failed to delete slot: ' . $conn->error);
+        $stmt->close();
+        return false;
     }
 
+    $affected = $stmt->affected_rows;
     $stmt->close();
     
-    return $success;
+    return $affected;
 }
 
 /**
