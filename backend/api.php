@@ -265,16 +265,17 @@ function handleDeleteRequest($path) {
         checkAdminAuth();
         $slotId = (int)$matches[1];
         
-        $slot = getSlotById($slotId);
-        if (!$slot) {
-            jsonResponse(['error' => 'Slot not found'], 404);
-        }
+        // Performance optimization: Avoid redundant SELECT query before DELETE
+        // by executing the mutation directly and checking affected rows.
+        $deleteResult = deleteSlot($slotId);
         
-        if (deleteSlot($slotId)) {
+        if ($deleteResult !== false && $deleteResult > 0) {
             jsonResponse([
                 'success' => true,
                 'message' => 'Slot deleted successfully'
             ]);
+        } elseif ($deleteResult === 0) {
+            jsonResponse(['error' => 'Slot not found'], 404);
         } else {
             jsonResponse(['error' => 'Failed to delete slot'], 500);
         }
