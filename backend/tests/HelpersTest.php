@@ -41,7 +41,12 @@ function testSanitizeInput() {
         ['', '', 'Empty string'],
         ['  ', '', 'Whitespace only string'],
         ['<p>hello</p>', 'hello', 'Strip basic HTML tags'],
-        ['<script>alert(1)</script>', 'alert(1)', 'Strip script tags']
+        ['<script>alert(1)</script>', 'alert(1)', 'Strip script tags'],
+        [12345, '12345', 'Integer value'],
+        [12.34, '12.34', 'Float value'],
+        [true, '1', 'Boolean true value'],
+        [false, '', 'Boolean false value'],
+        [[], '', 'Array value']
     ];
 
     foreach ($cases as [$input, $expected, $label]) {

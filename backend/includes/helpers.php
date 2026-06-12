@@ -60,6 +60,9 @@ function getInput() {
  * Sanitize input string
  */
 function sanitizeInput($input) {
+    if (is_scalar($input)) {
+        $input = (string)$input;
+    }
     if (!is_string($input)) {
         return '';
     }
