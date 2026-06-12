@@ -50,6 +50,7 @@
     <div
       v-if="isMobileMenuOpen"
       class="mobile-backdrop"
+      aria-hidden="true"
       @click="closeMenu"
       aria-hidden="true"
     ></div>
