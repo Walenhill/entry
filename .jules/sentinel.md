@@ -52,3 +52,7 @@
 **Vulnerability:** The application was serving hidden files (like `.env`) because `backend/.htaccess` did not explicitly deny access to dotfiles.
 **Learning:** Default Apache configuration does not always protect dotfiles. A specific rule must be added to `.htaccess` to ensure sensitive configurations are not exposed.
 **Prevention:** Always include `<FilesMatch "^\."> Require all denied </FilesMatch>` in Apache `.htaccess` files to block web access to dotfiles.
+## 2024-10-27 - IDOR / Information Disclosure in Individual Resource Endpoints
+**Vulnerability:** The API endpoint `GET /slots/{id}` returned individual slot details, including the existence and status of booked or cancelled slots, to unauthenticated users. While PII was stripped, the mere existence and metadata of non-available slots were leaked.
+**Learning:** Checking authorization logic on list endpoints (e.g., `GET /slots`) but failing to enforce the exact same row-level access controls on individual resource retrieval endpoints (e.g., `GET /slots/{id}`) creates an Insecure Direct Object Reference (IDOR) or Information Disclosure vulnerability.
+**Prevention:** Always ensure that row-level access controls (like checking `status === 'available'`) are uniformly applied across both list and individual resource retrieval endpoints for unauthenticated or restricted users. Return generic 404s for unauthorized resources to prevent existence leakage.
