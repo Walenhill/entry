@@ -79,8 +79,13 @@ function handleGetRequest($path, $queryParams) {
             $isAdmin = true;
         }
 
-        // Obscure PII if user is not admin
+        // If user is not admin, they should only be able to view available slots
         if (!$isAdmin) {
+            if ($slot['status'] !== 'available') {
+                jsonResponse(['error' => 'Slot not found'], 404);
+            }
+
+            // Obscure PII just in case, though available slots shouldn't have them
             unset($slot['client_name']);
             unset($slot['client_phone']);
         }
