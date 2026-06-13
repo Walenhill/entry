@@ -86,7 +86,7 @@
               <tr v-for="(client, index) in slotsStore.stats.top_clients" :key="index">
                 <td>{{ client.client_name }}</td>
                 <td>
-                  <a v-if="client.client_phone" :href="`tel:${client.client_phone}`" class="phone-link">{{ client.client_phone }}</a>
+                  <a v-if="client.client_phone" :href="`tel:${client.client_phone}`" class="phone-link" :aria-label="`Позвонить клиенту: ${client.client_phone}`">{{ client.client_phone }}</a>
                   <span v-else class="text-muted">-</span>
                 </td>
                 <td><span class="badge badge-info">{{ client.visits }}</span></td>
@@ -95,8 +95,9 @@
           </table>
           <div v-else class="text-center p-4 text-muted">
             <div aria-hidden="true" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;">👥</div>
-            <h4>Нет данных о клиентах</h4>
-            <p>Записи отсутствуют или клиенты еще не совершали бронирований.</p>
+            <h4 class="mb-2">Нет данных о клиентах</h4>
+            <p class="mb-3">Записи отсутствуют или клиенты еще не совершали бронирований.</p>
+            <router-link to="/" class="btn btn-outline">Перейти к расписанию</router-link>
           </div>
         </div>
       </div>
