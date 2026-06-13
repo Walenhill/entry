@@ -36,3 +36,7 @@
 ## 2026-05-15 - ARIA Labels for Layout Containers
 **Learning:** Found that structural layout elements like `<nav>` in `DashboardLayout.vue` and visual overlay backdrops `.mobile-backdrop` lacked standard ARIA semantics, making screen reader navigation confusing.
 **Action:** Always add a descriptive `aria-label` (e.g., "Основная навигация") to primary `<nav>` components and ensure completely visual overlays without content trap `aria-hidden="true"` so screen readers ignore them.
+
+## 2026-05-16 - Screen Reader Context for Telephone Links
+**Learning:** Found that `tel:` links showing only numbers (e.g. `<a href="tel:1234567890">1234567890</a>`) are read by screen readers as arbitrary sequences of digits without explaining what happens when clicked or who the number belongs to. This lacks context for visually impaired users compared to sighted users who infer context from neighboring layout elements.
+**Action:** Always add an explicit `:aria-label` to phone links that includes contextual actions and information, such as `aria-label="Позвонить клиенту: {{ client.phone }}"`, so screen readers can announce the purpose of the link.

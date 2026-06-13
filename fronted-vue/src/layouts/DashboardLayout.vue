@@ -52,7 +52,6 @@
       class="mobile-backdrop"
       aria-hidden="true"
       @click="closeMenu"
-      aria-hidden="true"
     ></div>
   </div>
 </template>
