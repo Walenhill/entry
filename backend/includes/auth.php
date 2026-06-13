@@ -42,8 +42,12 @@ function logLoginAttempt($ipAddress, $success) {
     $stmt->execute();
     $stmt->close();
     
-    // Очистка старых записей (старше 1 часа)
-    $conn->query("DELETE FROM login_attempts WHERE attempt_time < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+    // Performance optimization: Probabilistic garbage collection.
+    // Instead of executing an unindexed DELETE query (full table scan) on every single failed login attempt,
+    // we only execute it 5% of the time. This significantly reduces DB load during brute-force attacks.
+    if (random_int(1, 100) <= 5) {
+        $conn->query("DELETE FROM login_attempts WHERE attempt_time < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+    }
 }
 
 /**
