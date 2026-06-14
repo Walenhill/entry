@@ -62,3 +62,6 @@
 ## 2024-06-26 - Probabilistic Garbage Collection for Database Cleanups
 **Learning:** Running an unindexed `DELETE` query (like clearing old login attempts) on every single request or failure triggers a full table scan and database lock contention. During high-frequency events like a brute-force attack, this can quickly exhaust database connections and CPU, causing a self-inflicted Denial of Service.
 **Action:** When performing routine database garbage collection within a high-frequency code path, execute the cleanup query probabilistically (e.g., `if (random_int(1, 100) <= 5) { ... }`) to drastically reduce database load while still maintaining long-term data hygiene.
+## 2026-06-14 - Removing Computed Properties in Static List Components
+**Learning:** Using `computed()` properties inside child components rendered via `v-for` (e.g., `SlotCard`) creates a significant memory overhead because Vue instantiates a new reactive effect for every single computed property per list item. If the item data is immutable and replaced entirely by the parent upon update, this reactivity is completely redundant.
+**Action:** Remove `computed` properties from list item components and evaluate the logic directly in the template using ternary operators or simple methods. This drastically reduces initialization time and memory consumption for large unpaginated lists.
