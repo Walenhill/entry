@@ -25,15 +25,15 @@
 
     <div class="slot-footer">
       <template v-if="!slot.is_booked">
-        <button @click="$emit('book', slot)" class="btn btn-primary flex-1" :aria-label="`Забронировать слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling || isDeleting">Забронировать</button>
+        <button @click="$emit('book', slot)" class="btn btn-primary flex-1" :aria-label="`Забронировать слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling || isDeleting" :title="(isCanceling || isDeleting) ? 'Подождите, выполняется другая операция' : 'Забронировать слот'">Забронировать</button>
       </template>
       <template v-else>
-        <button @click="$emit('cancel', slot.id)" class="btn btn-warning flex-1" :aria-label="`Отменить бронь на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling || isDeleting">
+        <button @click="$emit('cancel', slot.id)" class="btn btn-warning flex-1" :aria-label="`Отменить бронь на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling || isDeleting" :title="isCanceling ? 'Выполняется отмена брони...' : (isDeleting ? 'Подождите, выполняется удаление' : 'Отменить бронь')">
           <span v-if="isCanceling" class="spinner-small" aria-hidden="true"></span>
           {{ isCanceling ? 'Отмена...' : 'Отменить бронь' }}
         </button>
       </template>
-      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isDeleting || isCanceling">
+      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isDeleting || isCanceling" :title="isDeleting ? 'Выполняется удаление...' : (isCanceling ? 'Подождите, выполняется отмена брони' : 'Удалить слот')">
         <span v-if="isDeleting" class="spinner-small" aria-hidden="true"></span>
         <span v-else aria-hidden="true">🗑</span>
       </button>
