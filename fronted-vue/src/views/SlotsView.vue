@@ -30,6 +30,11 @@
       <p class="mt-3 text-muted">Загрузка слотов...</p>
     </div>
 
+    <div v-else-if="slotsStore.error" class="state-container error-state" role="alert" aria-live="assertive">
+      <p class="text-danger">{{ slotsStore.error }}</p>
+      <button class="btn btn-outline mt-3" @click="slotsStore.fetchSlots()">Повторить попытку</button>
+    </div>
+
     <div v-else-if="slotsStore.slots.length === 0" class="state-container empty-state" role="status" aria-live="polite">
       <div class="empty-icon" aria-hidden="true">📅</div>
       <h3 class="mt-3">Нет доступных слотов</h3>

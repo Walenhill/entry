@@ -36,9 +36,11 @@ describe('Slots Store - Error Handling', () => {
 
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      await expect(store.fetchSlots()).rejects.toThrow('API Error');
+      // fetchSlots does NOT throw the error anymore, it catches and sets error
+      await store.fetchSlots();
 
       expect(consoleSpy).toHaveBeenCalledWith('Error loading slots:', mockError);
+      expect(store.error).toBe('Ошибка при загрузке расписания');
       expect(store.isLoading).toBe(false);
     });
   });

@@ -6,6 +6,7 @@ export const useSlotsStore = defineStore('slots', {
   state: () => ({
     slots: [],
     isLoading: false,
+    error: null,
     stats: null,
     statsLoading: false,
     statsError: null
@@ -29,6 +30,7 @@ export const useSlotsStore = defineStore('slots', {
 
     async fetchSlots(date = null) {
       this.isLoading = true;
+      this.error = null;
       try {
         const role = localStorage.getItem('is_logged_in') === 'true' ? 'admin' : 'client';
         const response = await slotsApi.getAllSlots(date, role);
@@ -42,7 +44,7 @@ export const useSlotsStore = defineStore('slots', {
         }
       } catch (error) {
         console.error('Error loading slots:', error);
-        throw error;
+        this.error = 'Ошибка при загрузке расписания';
       } finally {
         this.isLoading = false;
       }
