@@ -1,11 +1,15 @@
 <template>
-  <div class="card slot-card" :class="`status-${statusClass}`">
+  <!-- Performance optimization: Avoid using computed() properties inside child components rendered via v-for
+       if the item data is immutable and completely replaced by the parent upon update. Using inline ternary
+       expressions prevents the creation of redundant O(N) reactive effects, reducing memory consumption
+       and initialization time for large lists. -->
+  <div class="card slot-card" :class="`status-${slot.is_booked ? 'booked' : 'available'}`">
     <div class="slot-header">
       <div class="time-block">
         <span class="time">{{ slot.start_time }} - {{ slot.end_time }}</span>
         <span class="date">{{ slot.date }}</span>
       </div>
-      <span class="badge" :class="`badge-${statusClass}`">{{ statusText }}</span>
+      <span class="badge" :class="`badge-${slot.is_booked ? 'booked' : 'available'}`">{{ slot.is_booked ? 'Забронировано' : 'Свободно' }}</span>
     </div>
 
     <div class="slot-body">
@@ -42,7 +46,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 
 const props = defineProps({
   slot: {
@@ -60,9 +63,6 @@ const props = defineProps({
 });
 
 defineEmits(['book', 'cancel', 'delete']);
-
-const statusClass = computed(() => props.slot.is_booked ? 'booked' : 'available');
-const statusText = computed(() => props.slot.is_booked ? 'Забронировано' : 'Свободно');
 </script>
 
 <style scoped>
