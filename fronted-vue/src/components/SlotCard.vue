@@ -1,11 +1,13 @@
 <template>
-  <div class="card slot-card" :class="`status-${statusClass}`">
+  <!-- Performance optimization: For child components inside v-for whose props are replaced rather than deep mutated,
+       avoiding computed() saves O(N) memory and initialization time by skipping redundant reactive effect generation -->
+  <div class="card slot-card" :class="slot.is_booked ? 'status-booked' : 'status-available'">
     <div class="slot-header">
       <div class="time-block">
         <span class="time">{{ slot.start_time }} - {{ slot.end_time }}</span>
         <span class="date">{{ slot.date }}</span>
       </div>
-      <span class="badge" :class="`badge-${statusClass}`">{{ statusText }}</span>
+      <span class="badge" :class="slot.is_booked ? 'badge-booked' : 'badge-available'">{{ slot.is_booked ? 'Забронировано' : 'Свободно' }}</span>
     </div>
 
     <div class="slot-body">
@@ -42,8 +44,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
 const props = defineProps({
   slot: {
     type: Object,
@@ -60,9 +60,6 @@ const props = defineProps({
 });
 
 defineEmits(['book', 'cancel', 'delete']);
-
-const statusClass = computed(() => props.slot.is_booked ? 'booked' : 'available');
-const statusText = computed(() => props.slot.is_booked ? 'Забронировано' : 'Свободно');
 </script>
 
 <style scoped>
