@@ -254,17 +254,6 @@ onMounted(() => {
   100% { transform: rotate(360deg); }
 }
 
-.phone-link {
-  color: var(--text-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.phone-link:hover {
-  text-decoration: underline;
-  color: var(--accent-secondary);
-}
-
 @media (max-width: 768px) {
   .progress-wrapper {
     flex-direction: column;
