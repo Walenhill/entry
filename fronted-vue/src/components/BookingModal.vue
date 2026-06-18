@@ -3,7 +3,7 @@
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
-        <button class="close-btn" @click="$emit('close')" :disabled="isSubmitting" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">×</button>
+        <button class="close-btn" @click="$emit('close')" :disabled="isSubmitting" aria-label="Закрыть (Esc)" :title="isSubmitting ? 'Действие недоступно во время загрузки' : 'Закрыть (Esc)'">×</button>
       </div>
 
       <div v-if="slot" class="modal-info mb-4">
