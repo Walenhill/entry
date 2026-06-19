@@ -7,7 +7,10 @@ function getDbConnection() {
     static $conn = null;
     
     if ($conn === null) {
-        $host = getenv('DB_HOST') ?: 'localhost';
+        // Performance optimization: Prefixing the host with 'p:' enables persistent connections in mysqli (via mysqlnd).
+        // This simulates connection pooling by allowing PHP processes to reuse open database connections across requests,
+        // drastically reducing the overhead and latency of TCP handshakes and MySQL authentication.
+        $host = 'p:' . (getenv('DB_HOST') ?: 'localhost');
         $user = getenv('DB_USERNAME') ?: 'root';
         $pass = getenv('DB_PASSWORD') ?: '';
         $name = getenv('DB_NAME') ?: 'booking_system';
