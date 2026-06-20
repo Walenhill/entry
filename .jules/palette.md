@@ -40,3 +40,7 @@
 ## 2026-05-16 - Screen Reader Context for Telephone Links
 **Learning:** Found that `tel:` links showing only numbers (e.g. `<a href="tel:1234567890">1234567890</a>`) are read by screen readers as arbitrary sequences of digits without explaining what happens when clicked or who the number belongs to. This lacks context for visually impaired users compared to sighted users who infer context from neighboring layout elements.
 **Action:** Always add an explicit `:aria-label` to phone links that includes contextual actions and information, such as `aria-label="Позвонить клиенту: {{ client.phone }}"`, so screen readers can announce the purpose of the link.
+
+## 2026-05-17 - Disabled Action Buttons Tooltips and Context
+**Learning:** Found that when action buttons (like icon-only modal close buttons or card delete buttons) are disabled during async operations, browsers natively drop `title` tooltips, and static `aria-label`s fail to explain *why* the action is unavailable. Screen-reader and sighted users lose context on inert elements.
+**Action:** When disabling icon-only action buttons during loading states, always wrap the disabled `<button>` in a `<span>` to hold the `title` attribute, and dynamically append the blocked state reason (e.g., `" - Действие недоступно во время загрузки"`) to the original `aria-label` to preserve context and accessibility.
