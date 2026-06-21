@@ -172,6 +172,43 @@ function handlePostRequest($path) {
     if (preg_match('#^slots/(\d+)/book$#', $path, $matches)) {
         $slotId = (int)$matches[1];
         
+        // Rate Limiting: Prevent DoS via mass bookings
+        $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $rightmostIp = trim(end($ips));
+                if (filter_var($rightmostIp, FILTER_VALIDATE_IP)) {
+                    $ipAddress = $rightmostIp;
+                }
+            }
+        }
+
+        $conn = getDbConnection();
+        $blockDuration = 15; // minutes
+        $maxAttempts = 5;
+
+        $stmt = $conn->prepare("SELECT COUNT(*) as attempts FROM booking_attempts WHERE ip_address = ? AND attempt_time > DATE_SUB(NOW(), INTERVAL ? MINUTE)");
+        $stmt->bind_param("si", $ipAddress, $blockDuration);
+        $stmt->execute();
+        $rateLimitResult = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if ($rateLimitResult['attempts'] >= $maxAttempts) {
+            jsonResponse(['error' => 'Too many booking attempts. Please try again later.'], 429);
+        }
+
+        // Log attempt
+        $stmt = $conn->prepare("INSERT INTO booking_attempts (ip_address, attempt_time) VALUES (?, NOW())");
+        $stmt->bind_param("s", $ipAddress);
+        $stmt->execute();
+        $stmt->close();
+
+        // Garbage collection for booking attempts (5% probability)
+        if (random_int(1, 100) <= 5) {
+            $conn->query("DELETE FROM booking_attempts WHERE attempt_time < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+        }
+
         // Validate required fields and prevent DoS from TypeErrors by enforcing string or int type
         if (!isset($data['client_name']) || !(is_string($data['client_name']) || is_int($data['client_name'])) || trim((string)$data['client_name']) === '' ||
             !isset($data['client_phone']) || !(is_string($data['client_phone']) || is_int($data['client_phone'])) || trim((string)$data['client_phone']) === '') {
