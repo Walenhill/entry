@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2024-05-28 - [Disabled Button Tooltips & Action Context]
+**Learning:** Native disabled buttons (like `<button disabled>`) do not consistently trigger mouse hover events in all browsers, which means applying a `title` attribute directly to the `<button>` will often prevent the tooltip from appearing just when the user needs it most (to understand *why* the action is disabled). Furthermore, simply disabling an icon-only button without updating its `aria-label` leaves screen-reader users without context regarding the asynchronous blockage.
+**Action:** Always wrap dynamically disabled buttons in a `<span>` to hold the `title` attribute (e.g. `style="display: inline-flex;"` to preserve layout) and append the blocked state to the button's `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to ensure both sighted and assistive technology users receive the loading context.
