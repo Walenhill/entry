@@ -3,7 +3,14 @@
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
-        <button class="close-btn" @click="$emit('close')" :disabled="isSubmitting" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">×</button>
+        <template v-if="isSubmitting">
+          <span title="Закрыть (Esc) - Действие недоступно во время загрузки" style="display: inline-flex;">
+            <button class="close-btn" disabled aria-label="Закрыть (Esc) - Действие недоступно во время загрузки">×</button>
+          </span>
+        </template>
+        <template v-else>
+          <button class="close-btn" @click="$emit('close')" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">×</button>
+        </template>
       </div>
 
       <div v-if="slot" class="modal-info mb-4">

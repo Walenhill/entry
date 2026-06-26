@@ -33,10 +33,19 @@
           {{ isCanceling ? 'Отмена...' : 'Отменить бронь' }}
         </button>
       </template>
-      <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isDeleting || isCanceling">
-        <span v-if="isDeleting" class="spinner-small" aria-hidden="true"></span>
-        <span v-else aria-hidden="true">🗑</span>
-      </button>
+      <template v-if="isDeleting || isCanceling">
+        <span title="Действие недоступно во время загрузки" style="display: inline-flex;">
+          <button disabled class="btn btn-outline btn-icon" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time} - Действие недоступно во время загрузки`">
+            <span v-if="isDeleting" class="spinner-small" aria-hidden="true"></span>
+            <span v-else aria-hidden="true">🗑</span>
+          </button>
+        </span>
+      </template>
+      <template v-else>
+        <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" title="Удалить слот" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`">
+          <span aria-hidden="true">🗑</span>
+        </button>
+      </template>
     </div>
   </div>
 </template>
