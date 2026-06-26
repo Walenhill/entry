@@ -56,3 +56,7 @@
 **Vulnerability:** The API endpoint `GET /slots/{id}` returned individual slot details, including the existence and status of booked or cancelled slots, to unauthenticated users. While PII was stripped, the mere existence and metadata of non-available slots were leaked.
 **Learning:** Checking authorization logic on list endpoints (e.g., `GET /slots`) but failing to enforce the exact same row-level access controls on individual resource retrieval endpoints (e.g., `GET /slots/{id}`) creates an Insecure Direct Object Reference (IDOR) or Information Disclosure vulnerability.
 **Prevention:** Always ensure that row-level access controls (like checking `status === 'available'`) are uniformly applied across both list and individual resource retrieval endpoints for unauthenticated or restricted users. Return generic 404s for unauthorized resources to prevent existence leakage.
+## 2026-06-26 - Missing Rate Limiting on Booking API
+**Vulnerability:** The client-facing POST `/slots/{id}/book` endpoint lacked any rate limiting or throttling mechanism. A malicious user or script could rapidly book all available slots, leading to a Denial of Service.
+**Learning:** Rate limiting was implemented on the admin `/auth/login` endpoint via the `login_attempts` table, but sensitive unauthenticated mutations (like bookings) were overlooked.
+**Prevention:** Implement defense-in-depth measures like session-based or IP-based rate limiting on all public-facing endpoints that allow resource mutations.

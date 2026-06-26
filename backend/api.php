@@ -172,6 +172,16 @@ function handlePostRequest($path) {
     if (preg_match('#^slots/(\d+)/book$#', $path, $matches)) {
         $slotId = (int)$matches[1];
         
+        // Rate limiting to prevent booking spam
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (isset($_SESSION['last_booking_time']) && time() - $_SESSION['last_booking_time'] < 10) {
+            jsonResponse(['error' => 'Too many requests. Please wait a moment before booking another slot.'], 429);
+        }
+        $_SESSION['last_booking_time'] = time();
+
         // Validate required fields and prevent DoS from TypeErrors by enforcing string or int type
         if (!isset($data['client_name']) || !(is_string($data['client_name']) || is_int($data['client_name'])) || trim((string)$data['client_name']) === '' ||
             !isset($data['client_phone']) || !(is_string($data['client_phone']) || is_int($data['client_phone'])) || trim((string)$data['client_phone']) === '') {
