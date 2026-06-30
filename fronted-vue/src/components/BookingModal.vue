@@ -26,6 +26,7 @@
             placeholder="Введите имя"
             maxlength="100"
             aria-describedby="name-counter"
+            :disabled="isSubmitting"
           />
           <div id="name-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
             {{ formData.name.length }} / 100
@@ -43,6 +44,7 @@
             placeholder="Введите номер телефона"
             maxlength="20"
             aria-describedby="phone-counter"
+            :disabled="isSubmitting"
           />
           <div id="phone-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
             {{ formData.phone.length }} / 20
