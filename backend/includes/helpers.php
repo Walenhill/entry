@@ -42,6 +42,9 @@ function getDbConnection() {
 function jsonResponse($data, $statusCode = 200) {
     http_response_code($statusCode);
     header('Content-Type: application/json');
+    // Prevent Information Disclosure via browser cache for sensitive API responses
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
     echo json_encode($data);
     exit;
 }
