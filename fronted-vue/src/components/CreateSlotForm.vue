@@ -5,15 +5,15 @@
       <div class="form-row">
         <div class="form-group">
           <label for="date">Дата <span class="text-danger">*</span></label>
-          <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required />
+          <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required :disabled="isSubmitting" />
         </div>
         <div class="form-group">
           <label for="start_time">Начало <span class="text-danger">*</span></label>
-          <input type="time" id="start_time" v-model="form.start_time" required :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" />
+          <input type="time" id="start_time" v-model="form.start_time" required :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" :disabled="isSubmitting" />
         </div>
         <div class="form-group">
           <label for="end_time">Конец <span class="text-danger">*</span></label>
-          <input type="time" id="end_time" v-model="form.end_time" required :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" />
+          <input type="time" id="end_time" v-model="form.end_time" required :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" :disabled="isSubmitting" />
         </div>
       </div>
 
@@ -30,6 +30,7 @@
           placeholder="Например: Стрижка бороды"
           maxlength="255"
           aria-describedby="desc-counter"
+          :disabled="isSubmitting"
         ></textarea>
         <div id="desc-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
           {{ form.description.length }} / 255
