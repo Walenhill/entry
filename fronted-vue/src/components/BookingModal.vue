@@ -22,6 +22,7 @@
             ref="nameInput"
             v-model="formData.name"
             required
+            :disabled="isSubmitting"
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
@@ -39,6 +40,7 @@
             id="clientPhone"
             v-model="formData.phone"
             required
+            :disabled="isSubmitting"
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
