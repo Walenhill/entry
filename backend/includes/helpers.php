@@ -12,6 +12,12 @@ function getDbConnection() {
         $pass = getenv('DB_PASSWORD') ?: '';
         $name = getenv('DB_NAME') ?: 'booking_system';
         
+        // Performance optimization: Prefix host with 'p:' to enable persistent connections (connection pooling)
+        // This avoids TCP handshake and authentication latency on every request
+        if (strpos($host, 'p:') !== 0) {
+            $host = 'p:' . $host;
+        }
+
         try {
             $conn = new mysqli($host, $user, $pass, $name);
             $conn->set_charset("utf8mb4");

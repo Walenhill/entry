@@ -62,3 +62,11 @@
 ## 2024-06-26 - Probabilistic Garbage Collection for Database Cleanups
 **Learning:** Running an unindexed `DELETE` query (like clearing old login attempts) on every single request or failure triggers a full table scan and database lock contention. During high-frequency events like a brute-force attack, this can quickly exhaust database connections and CPU, causing a self-inflicted Denial of Service.
 **Action:** When performing routine database garbage collection within a high-frequency code path, execute the cleanup query probabilistically (e.g., `if (random_int(1, 100) <= 5) { ... }`) to drastically reduce database load while still maintaining long-term data hygiene.
+
+## 2026-07-04 - Simulating database connection pooling in PHP
+**Learning:** In PHP backend systems without a dedicated connection pooler (like PgBouncer for PostgreSQL), establishing a new TCP connection and performing the MySQL authentication handshake on every single request introduces significant latency. Using  with persistent connections by prefixing the host with  allows PHP to reuse connections, simulating a pool and greatly improving performance for high-throughput APIs.
+**Action:** Prefix the database host with  in the  connection helper when performance is critical and a true connection pool is unavailable.
+
+## 2024-07-04 - Simulating database connection pooling in PHP
+**Learning:** In PHP backend systems without a dedicated connection pooler (like PgBouncer for PostgreSQL), establishing a new TCP connection and performing the MySQL authentication handshake on every single request introduces significant latency. Using `mysqli` with persistent connections by prefixing the host with `p:` allows PHP to reuse connections, simulating a pool and greatly improving performance for high-throughput APIs.
+**Action:** Prefix the database host with `p:` in the `mysqli` connection helper when performance is critical and a true connection pool is unavailable.
