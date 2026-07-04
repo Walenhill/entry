@@ -56,3 +56,8 @@
 **Vulnerability:** The API endpoint `GET /slots/{id}` returned individual slot details, including the existence and status of booked or cancelled slots, to unauthenticated users. While PII was stripped, the mere existence and metadata of non-available slots were leaked.
 **Learning:** Checking authorization logic on list endpoints (e.g., `GET /slots`) but failing to enforce the exact same row-level access controls on individual resource retrieval endpoints (e.g., `GET /slots/{id}`) creates an Insecure Direct Object Reference (IDOR) or Information Disclosure vulnerability.
 **Prevention:** Always ensure that row-level access controls (like checking `status === 'available'`) are uniformly applied across both list and individual resource retrieval endpoints for unauthenticated or restricted users. Return generic 404s for unauthorized resources to prevent existence leakage.
+
+## 2024-05-24 - Information Disclosure via Browser Cache
+**Vulnerability:** Dynamic API endpoints returning sensitive data (e.g., PII in bookings, admin statistics) were potentially cached by browsers because explicit anti-caching headers were missing.
+**Learning:** If an API endpoint doesn't explicitly send anti-caching headers, the browser or intermediate proxies might cache the JSON response. If an attacker gains access to the client device, they could extract sensitive information from the local browser cache.
+**Prevention:** Always ensure that strict anti-caching headers (`Cache-Control: no-store, no-cache, must-revalidate, max-age=0` and `Pragma: no-cache`) are set globally on the main entry point for API responses to prevent accidental caching of sensitive data.
