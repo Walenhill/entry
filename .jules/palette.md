@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2024-07-05 - Fully disable forms during async submission
+**Learning:** We need to fully disable forms during async submission to avoid confusing behavior where custom buttons look disabled but inputs are still interactable, creating usability confusion and duplicate submissions.
+**Action:** Bind loading state (e.g. `isSubmitting` or `isLoading`) to all inputs in forms. For custom non-standard icon buttons, the `:disabled` attribute must be accompanied by custom `:disabled` pseudo-class CSS (`opacity: 0.5; cursor: not-allowed;`) to make sure they look inert too.
