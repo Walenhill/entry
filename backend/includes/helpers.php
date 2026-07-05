@@ -12,8 +12,11 @@ function getDbConnection() {
         $pass = getenv('DB_PASSWORD') ?: '';
         $name = getenv('DB_NAME') ?: 'booking_system';
         
+        // Performance optimization: Prefix host with p: for persistent connections
+        $persistentHost = (strpos($host, 'p:') === 0) ? $host : "p:$host";
+
         try {
-            $conn = new mysqli($host, $user, $pass, $name);
+            $conn = new mysqli($persistentHost, $user, $pass, $name);
             $conn->set_charset("utf8mb4");
         } catch (\Throwable $e) {
             // Log the actual error for debugging, but don't expose it to the user
