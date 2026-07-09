@@ -8,6 +8,7 @@
           class="close-mobile"
           @click="closeMenu"
           aria-label="Закрыть меню (Esc)"
+          title="Закрыть меню (Esc)"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
         >×</button>
@@ -34,6 +35,7 @@
           class="menu-toggle"
           @click="openMenu"
           aria-label="Открыть меню"
+          title="Открыть меню"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
         >☰</button>

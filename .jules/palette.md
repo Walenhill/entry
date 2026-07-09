@@ -44,3 +44,6 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+## 2026-07-09 - Add tooltips to active icon-only layout buttons
+**Learning:** While `aria-label` helps screen readers, active icon-only layout buttons (like menu toggles and close buttons) must also include a `title` attribute so sighted users can discover their function via hover tooltips.
+**Action:** Always pair `aria-label` with a corresponding `title` attribute on custom, non-standard icon-only layout buttons that lack accompanying text.
