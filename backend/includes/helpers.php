@@ -13,7 +13,11 @@ function getDbConnection() {
         $name = getenv('DB_NAME') ?: 'booking_system';
         
         try {
-            $conn = new mysqli($host, $user, $pass, $name);
+            // Performance optimization: Prepend 'p:' to the host to use persistent connections.
+            // This acts as a connection pool, drastically reducing TCP handshake and authentication
+            // overhead for every single API request.
+            $persistentHost = (strpos($host, 'p:') === 0) ? $host : 'p:' . $host;
+            $conn = new mysqli($persistentHost, $user, $pass, $name);
             $conn->set_charset("utf8mb4");
         } catch (\Throwable $e) {
             // Log the actual error for debugging, but don't expose it to the user
