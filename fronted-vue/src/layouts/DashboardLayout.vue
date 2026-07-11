@@ -23,7 +23,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn btn-outline w-100">Выйти</button>
+        <button @click="handleLogout" class="btn btn-outline" style="width: 100%;">Выйти</button>
       </div>
     </aside>
 
@@ -174,10 +174,6 @@ const handleLogout = async () => {
 .sidebar-footer {
   padding: 1.5rem;
   border-top: 1px solid var(--border-color);
-}
-
-.w-100 {
-  width: 100%;
 }
 
 .main-content {
