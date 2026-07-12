@@ -8,6 +8,7 @@
           class="close-mobile"
           @click="closeMenu"
           aria-label="Закрыть меню (Esc)"
+          title="Закрыть меню (Esc)"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
         >×</button>
@@ -23,7 +24,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn btn-outline w-100">Выйти</button>
+        <button @click="handleLogout" class="btn btn-outline" style="width: 100%;">Выйти</button>
       </div>
     </aside>
 
@@ -34,6 +35,7 @@
           class="menu-toggle"
           @click="openMenu"
           aria-label="Открыть меню"
+          title="Открыть меню"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
         >☰</button>
@@ -174,10 +176,6 @@ const handleLogout = async () => {
 .sidebar-footer {
   padding: 1.5rem;
   border-top: 1px solid var(--border-color);
-}
-
-.w-100 {
-  width: 100%;
 }
 
 .main-content {
