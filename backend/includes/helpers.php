@@ -8,6 +8,12 @@ function getDbConnection() {
     
     if ($conn === null) {
         $host = getenv('DB_HOST') ?: 'localhost';
+
+        // Performance optimization: Simulate connection pooling by using persistent connections.
+        // This avoids TCP handshake and authentication overhead on every API request.
+        if (strpos($host, 'p:') !== 0) {
+            $host = 'p:' . $host;
+        }
         $user = getenv('DB_USERNAME') ?: 'root';
         $pass = getenv('DB_PASSWORD') ?: '';
         $name = getenv('DB_NAME') ?: 'booking_system';
