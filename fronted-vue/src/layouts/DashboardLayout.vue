@@ -3,14 +3,16 @@
     <aside class="sidebar" id="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <h2 class="logo">BookingApp</h2>
-        <button
-          ref="closeButton"
-          class="close-mobile"
-          @click="closeMenu"
-          aria-label="Закрыть меню (Esc)"
-          aria-controls="sidebar"
-          :aria-expanded="isMobileMenuOpen"
-        >×</button>
+        <span title="Закрыть меню (Esc)" style="display: inline-flex;">
+          <button
+            ref="closeButton"
+            class="close-mobile"
+            @click="closeMenu"
+            aria-label="Закрыть меню (Esc)"
+            aria-controls="sidebar"
+            :aria-expanded="isMobileMenuOpen"
+          ><span aria-hidden="true">×</span></button>
+        </span>
       </div>
 
       <nav class="sidebar-nav" aria-label="Основная навигация">
@@ -29,14 +31,16 @@
 
     <div class="main-content">
       <header class="topbar">
-        <button
-          ref="menuToggle"
-          class="menu-toggle"
-          @click="openMenu"
-          aria-label="Открыть меню"
-          aria-controls="sidebar"
-          :aria-expanded="isMobileMenuOpen"
-        >☰</button>
+        <span title="Открыть меню" style="display: inline-flex;">
+          <button
+            ref="menuToggle"
+            class="menu-toggle"
+            @click="openMenu"
+            aria-label="Открыть меню"
+            aria-controls="sidebar"
+            :aria-expanded="isMobileMenuOpen"
+          ><span aria-hidden="true">☰</span></button>
+        </span>
         <div class="user-info">
           <span>Администратор</span>
         </div>
