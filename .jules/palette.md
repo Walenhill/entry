@@ -44,3 +44,6 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+## 2026-05-17 - Hiding decorative characters from Screen Readers
+**Learning:** Found that literal visual characters acting as icons (like `×` for close buttons or `☰` for hamburger menus) inside interactive elements with `aria-label` were being redundantly read by screen readers.
+**Action:** Always wrap raw literal text characters used for icons inside `<span aria-hidden="true">` when inside interactive elements to prevent screen reader noise, and add a `title` attribute wrapper if natively supported tooltip is needed for sighted users.
