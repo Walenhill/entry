@@ -4,7 +4,9 @@
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
         <span :title="isSubmitting ? 'Закрыть (Esc) - Действие недоступно во время загрузки' : 'Закрыть (Esc)'" style="display: inline-flex;">
-          <button class="close-btn" @click="$emit('close')" :disabled="isSubmitting" :aria-label="isSubmitting ? 'Закрыть (Esc) - Действие недоступно во время загрузки' : 'Закрыть (Esc)'">×</button>
+          <button class="close-btn" @click="$emit('close')" :disabled="isSubmitting" :aria-label="isSubmitting ? 'Закрыть (Esc) - Действие недоступно во время загрузки' : 'Закрыть (Esc)'">
+            <span aria-hidden="true">×</span>
+          </button>
         </span>
       </div>
 
