@@ -8,9 +8,10 @@
           class="close-mobile"
           @click="closeMenu"
           aria-label="Закрыть меню (Esc)"
+          title="Закрыть меню (Esc)"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
-        >×</button>
+        ><span aria-hidden="true">×</span></button>
       </div>
 
       <nav class="sidebar-nav" aria-label="Основная навигация">
@@ -34,9 +35,10 @@
           class="menu-toggle"
           @click="openMenu"
           aria-label="Открыть меню"
+          title="Открыть меню"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
-        >☰</button>
+        ><span aria-hidden="true">☰</span></button>
         <div class="user-info">
           <span>Администратор</span>
         </div>
