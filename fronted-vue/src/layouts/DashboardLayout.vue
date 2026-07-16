@@ -10,7 +10,7 @@
           aria-label="Закрыть меню (Esc)"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
-        >×</button>
+        ><span aria-hidden="true">×</span></button>
       </div>
 
       <nav class="sidebar-nav" aria-label="Основная навигация">
@@ -36,7 +36,7 @@
           aria-label="Открыть меню"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
-        >☰</button>
+        ><span aria-hidden="true">☰</span></button>
         <div class="user-info">
           <span>Администратор</span>
         </div>
