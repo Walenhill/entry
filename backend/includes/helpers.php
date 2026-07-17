@@ -45,8 +45,15 @@ function getDbConnection() {
  */
 function jsonResponse($data, $statusCode = 200) {
     http_response_code($statusCode);
+
+    // Prevent Information Disclosure via browser cache for dynamic API endpoints
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
     header('Content-Type: application/json');
-    echo json_encode($data);
+
+    // Use JSON_UNESCAPED_UNICODE to prevent unnecessary escaping of multibyte characters (like Cyrillic)
+    // saving network bandwidth without measurable CPU overhead
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
