@@ -66,3 +66,7 @@
 ## 2024-07-14 - Reducing TCP Handshake Latency with Persistent Connections
 **Learning:** For high-frequency, short-lived API requests in PHP, creating a new database connection on every request introduces significant overhead from repeated TCP handshakes and authentication.
 **Action:** Use persistent database connections by prepending `p:` to the hostname when creating a new `mysqli` instance to simulate database connection pooling.
+
+## 2024-07-17 - Reducing JSON Payload Size with JSON_UNESCAPED_UNICODE
+**Learning:** Using `json_encode` without flags causes multibyte characters (like Cyrillic text in Russian-language apps) to be unnecessarily escaped into `\uXXXX` sequences. This significantly inflates JSON payload sizes, wasting network bandwidth without any measurable CPU benefit.
+**Action:** Always apply the `JSON_UNESCAPED_UNICODE` flag to `json_encode` calls when returning API payloads containing multibyte text to reduce network transfer size and improve serialization efficiency.
