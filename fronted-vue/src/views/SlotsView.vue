@@ -25,12 +25,12 @@
     </div>
 
     <!-- Состояния -->
-    <div v-if="slotsStore.isLoading" class="state-container" role="status" aria-live="polite">
+    <div v-if="slotsStore.isLoading && slotsStore.slots.length === 0" class="state-container" role="status" aria-live="polite">
       <div class="loader" aria-hidden="true"></div>
       <p class="mt-3 text-muted">Загрузка слотов...</p>
     </div>
 
-    <div v-else-if="slotsStore.slots.length === 0" class="state-container empty-state" role="status" aria-live="polite">
+    <div v-else-if="!slotsStore.isLoading && slotsStore.slots.length === 0" class="state-container empty-state" role="status" aria-live="polite">
       <div class="empty-icon" aria-hidden="true">📅</div>
       <h3 class="mt-3">Нет доступных слотов</h3>
       <p class="text-muted mb-4">Создайте новый слот, чтобы он появился здесь.</p>
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Сетка слотов -->
-    <div v-else class="slots-grid">
+    <div v-else class="slots-grid" :style="slotsStore.isLoading ? 'opacity: 0.6; pointer-events: none;' : ''">
       <!-- Performance optimization: use v-memo to prevent O(N) re-renders
            when unrelated parent state changes (e.g. cancelingSlotId) -->
       <SlotCard

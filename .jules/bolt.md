@@ -66,3 +66,6 @@
 ## 2024-07-14 - Reducing TCP Handshake Latency with Persistent Connections
 **Learning:** For high-frequency, short-lived API requests in PHP, creating a new database connection on every request introduces significant overhead from repeated TCP handshakes and authentication.
 **Action:** Use persistent database connections by prepending `p:` to the hostname when creating a new `mysqli` instance to simulate database connection pooling.
+## 2024-07-20 - Prevent UI Teardown on Refetch (Stale-While-Revalidate)
+**Learning:** In the Vue frontend, replacing the main content grid (e.g., `slots.length > 0`) with a full-page loading spinner during background refetches (like after booking a slot) forces Vue to unmount and destroy all existing DOM nodes, then immediately recreate them when the fetch finishes. This creates unnecessary DOM churn, flickering UI, and drops scroll position, severely degrading perceived performance.
+**Action:** Implement a "stale-while-revalidate" pattern for UI loading states. Only show the full-page loading spinner if `isLoading` is true AND the data array is empty (`slots.length === 0`). If data already exists, keep rendering the existing data but apply a subtle visual indicator (like `opacity: 0.6; pointer-events: none;`) to the container while `isLoading` is true to signal the background update without tearing down the DOM.
