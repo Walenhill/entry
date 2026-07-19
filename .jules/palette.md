@@ -44,3 +44,6 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+## 2026-07-19 - Native Form Validation for Whitespace
+**Learning:** Users can accidentally submit whitespace-only strings in required fields, which passes the HTML5 `required` attribute check but creates bad data. Custom JS validation adds unnecessary complexity.
+**Action:** Consistently apply the `v-model.trim` modifier on text inputs alongside the HTML5 `pattern=".*\S+.*"` attribute and a descriptive `title` attribute to enforce non-whitespace content using native browser validation.
