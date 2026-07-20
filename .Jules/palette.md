@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2024-05-17 - [Preventing Whitespace-Only Submissions with Native Validation]
+**Learning:** Found that required form fields could be submitted with just spaces because standard `required` validation only checks if the field is empty. This breaks UX since users can submit "empty" data without errors, yet it pollutes the system. We can prevent this entirely without writing custom JS validation logic by using Vue's `v-model.trim` modifier in combination with the HTML5 `pattern=".*\S+.*"` attribute and an explanatory `title`.
+**Action:** Always apply the `v-model.trim` modifier on text inputs alongside `pattern=".*\S+.*"` and a descriptive `title` attribute for native browser validation to cleanly and efficiently block whitespace-only submissions.
