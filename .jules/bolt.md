@@ -66,3 +66,7 @@
 ## 2024-07-14 - Reducing TCP Handshake Latency with Persistent Connections
 **Learning:** For high-frequency, short-lived API requests in PHP, creating a new database connection on every request introduces significant overhead from repeated TCP handshakes and authentication.
 **Action:** Use persistent database connections by prepending `p:` to the hostname when creating a new `mysqli` instance to simulate database connection pooling.
+
+## 2024-07-20 - Context-Aware Session Lock Release
+**Learning:** Adding `session_write_close()` directly inside global authentication middleware (e.g., `checkAdminAuth()`) releases the session lock globally but breaks any subsequent logic in the same request that needs to mutate the session (like logout or setting flash messages).
+**Action:** When optimizing concurrent requests by releasing session locks, do so in a context-aware manner. Apply `session_write_close()` explicitly at the controller/route level for strictly read-only endpoints (e.g., GET requests) or right before a long-running external process/batch job begins, ensuring write capabilities are preserved where needed.
