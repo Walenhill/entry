@@ -48,6 +48,8 @@ function handleGetRequest($path, $queryParams) {
         $isAdmin = false;
         if ($role === 'admin') {
             checkAdminAuth(); // Will exit if unauthorized
+            // Performance optimization: release session lock early for read-only requests
+            session_write_close();
             $isAdmin = true;
         }
         
@@ -58,6 +60,8 @@ function handleGetRequest($path, $queryParams) {
     // GET /stats - Get statistics (admin only)
     elseif ($path === 'stats') {
         checkAdminAuth();
+        // Performance optimization: release session lock early for read-only stats request
+        session_write_close();
         $stats = getStatistics();
         jsonResponse(['success' => true, 'data' => $stats]);
     }
@@ -76,6 +80,8 @@ function handleGetRequest($path, $queryParams) {
 
         if ($role === 'admin') {
             checkAdminAuth();
+            // Performance optimization: release session lock early for read-only request
+            session_write_close();
             $isAdmin = true;
         }
 
@@ -129,6 +135,9 @@ function handlePostRequest($path) {
         // POST /slots/generate - Generate slots from template (admin only)
         case 'slots/generate':
             checkAdminAuth();
+
+            // Performance optimization: release session lock before long-running batch insertion
+            session_write_close();
 
             $result = generateSlotsFromTemplate($data);
 
