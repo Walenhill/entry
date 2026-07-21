@@ -1,0 +1,3 @@
+## 2026-07-12 - CSS Class Cleanup and Semantic HTML
+**Learning:** Moving component-level CSS classes into inline styles is generally considered an anti-pattern in modern frontend development because it reduces maintainability, makes styles harder to override, and can theoretically be blocked if the application uses a strict Content Security Policy (CSP).
+**Action:** When refactoring duplicate CSS utility classes in the future, avoid moving them into inline styles (e.g., `style="width: 100%;"`). Instead, prefer using existing global flex utilities (e.g., `class="flex-1"`) or proper semantic CSS classes.
