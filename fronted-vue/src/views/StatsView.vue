@@ -5,7 +5,7 @@
       <p class="text-muted">Обзор загруженности и активности клиентов</p>
     </div>
 
-    <div v-if="slotsStore.statsLoading" class="state-container" role="status" aria-live="polite">
+    <div v-if="slotsStore.statsLoading && !slotsStore.stats" class="state-container" role="status" aria-live="polite">
       <div class="loader" aria-hidden="true"></div>
       <p class="mt-3 text-muted">Загрузка статистики...</p>
     </div>
@@ -15,7 +15,7 @@
       <button class="btn btn-outline mt-3" @click="slotsStore.fetchStats()">Повторить попытку</button>
     </div>
 
-    <div v-else-if="slotsStore.stats" class="stats-content">
+    <div v-else-if="slotsStore.stats" class="stats-content" :style="slotsStore.statsLoading ? 'opacity: 0.6; pointer-events: none;' : ''">
       <!-- Cards -->
       <div class="stats-cards mb-4">
         <div class="card stat-card">
