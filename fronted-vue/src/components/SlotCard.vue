@@ -25,13 +25,17 @@
 
     <div class="slot-footer">
       <template v-if="!slot.is_booked">
-        <button @click="$emit('book', slot)" class="btn btn-primary flex-1" :aria-label="`Забронировать слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling || isDeleting">Забронировать</button>
+        <span class="flex-1" :title="(isCanceling || isDeleting) ? 'Забронировать слот - Действие недоступно во время загрузки' : 'Забронировать слот'" style="display: flex;">
+          <button @click="$emit('book', slot)" class="btn btn-primary" style="width: 100%;" :aria-label="`Забронировать слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}${(isCanceling || isDeleting) ? ' - Действие недоступно во время загрузки' : ''}`" :disabled="isCanceling || isDeleting">Забронировать</button>
+        </span>
       </template>
       <template v-else>
-        <button @click="$emit('cancel', slot.id)" class="btn btn-warning flex-1" :aria-label="`Отменить бронь на ${slot.date} с ${slot.start_time} до ${slot.end_time}`" :disabled="isCanceling || isDeleting">
-          <span v-if="isCanceling" class="spinner-small" aria-hidden="true"></span>
-          {{ isCanceling ? 'Отмена...' : 'Отменить бронь' }}
-        </button>
+        <span class="flex-1" :title="(isCanceling || isDeleting) ? 'Отменить бронь - Действие недоступно во время загрузки' : 'Отменить бронь'" style="display: flex;">
+          <button @click="$emit('cancel', slot.id)" class="btn btn-warning" style="width: 100%;" :aria-label="`Отменить бронь на ${slot.date} с ${slot.start_time} до ${slot.end_time}${(isCanceling || isDeleting) ? ' - Действие недоступно во время загрузки' : ''}`" :disabled="isCanceling || isDeleting">
+            <span v-if="isCanceling" class="spinner-small" aria-hidden="true"></span>
+            {{ isCanceling ? 'Отмена...' : 'Отменить бронь' }}
+          </button>
+        </span>
       </template>
       <span :title="(isDeleting || isCanceling) ? 'Удалить слот - Действие недоступно во время загрузки' : 'Удалить слот'" style="display: inline-flex;">
         <button @click="$emit('delete', slot.id)" class="btn btn-outline btn-icon" :aria-label="`Удалить слот на ${slot.date} с ${slot.start_time} до ${slot.end_time}${isDeleting || isCanceling ? ' - Действие недоступно во время загрузки' : ''}`" :disabled="isDeleting || isCanceling">
