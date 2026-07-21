@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2025-05-29 - [Concluding Actions Asynchronous Feedback]
+**Learning:** Concluding actions like "Logout" or "Delete Account" still require asynchronous visual feedback. Although these actions result in a redirect or unmounting of the component, there is often a brief window during network requests where the user may become uncertain if their click registered, potentially leading to double-clicks or frustration.
+**Action:** Always wrap the async logic of concluding actions with a loading state (e.g., `isLoggingOut`) and bind it to the button's `:disabled` attribute alongside a visual spinner and updated text, ensuring immediate feedback even if the page will ultimately unload.
