@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-05-17 - Tooltips for Icon-Only Navigation Buttons
+**Learning:** Found that primary navigation icon-only buttons (like the hamburger menu and its close button in `DashboardLayout.vue`) lacked visual tooltips. While `aria-label` provides context for screen readers, sighted users relying on hover to discover the button's purpose were left guessing.
+**Action:** Always complement `aria-label` with a standard HTML `title` attribute for icon-only buttons (especially layout toggles) so both screen reader and mouse users receive consistent contextual help.
