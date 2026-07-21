@@ -150,8 +150,9 @@ function handlePostRequest($path) {
             checkAdminAuth();
 
             // Validate required fields
-            if (empty($data['start_time']) || empty($data['end_time'])) {
-                jsonResponse(['error' => 'start_time and end_time are required'], 400);
+            if (!isset($data['start_time']) || !is_string($data['start_time']) || trim($data['start_time']) === '' ||
+                !isset($data['end_time']) || !is_string($data['end_time']) || trim($data['end_time']) === '') {
+                jsonResponse(['error' => 'start_time and end_time are required and must be strings'], 400);
             }
 
             $result = createSlot($data);
