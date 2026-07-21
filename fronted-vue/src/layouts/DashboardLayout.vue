@@ -7,6 +7,7 @@
           ref="closeButton"
           class="close-mobile"
           @click="closeMenu"
+          title="Закрыть меню (Esc)"
           aria-label="Закрыть меню (Esc)"
           title="Закрыть меню (Esc)"
           aria-controls="sidebar"
@@ -24,7 +25,10 @@
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn btn-outline w-100">Выйти</button>
+        <button @click="handleLogout" class="btn btn-outline w-100" :disabled="isLoggingOut">
+          <span v-if="isLoggingOut" class="spinner-small" aria-hidden="true"></span>
+          {{ isLoggingOut ? 'Выход...' : 'Выйти' }}
+        </button>
       </div>
     </aside>
 
@@ -34,6 +38,7 @@
           ref="menuToggle"
           class="menu-toggle"
           @click="openMenu"
+          title="Открыть меню"
           aria-label="Открыть меню"
           title="Открыть меню"
           aria-controls="sidebar"
@@ -66,6 +71,7 @@ import { useAuthStore } from '../store/auth';
 const router = useRouter();
 const authStore = useAuthStore();
 const isMobileMenuOpen = ref(false);
+const isLoggingOut = ref(false);
 
 const menuToggle = ref(null);
 const closeButton = ref(null);
@@ -101,8 +107,13 @@ onUnmounted(() => {
 });
 
 const handleLogout = async () => {
-  await authStore.logout();
-  router.push('/login');
+  isLoggingOut.value = true;
+  try {
+    await authStore.logout();
+    router.push('/login');
+  } finally {
+    isLoggingOut.value = false;
+  }
 };
 </script>
 
