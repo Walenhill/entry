@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
+        <button type="submit" class="btn btn-primary login-btn" :disabled="isLoading">
           <span v-if="isLoading" class="spinner-small" aria-hidden="true"></span>
           {{ isLoading ? 'Вход...' : 'Войти' }}
         </button>
@@ -124,7 +124,7 @@ const handleLogin = async () => {
   margin-bottom: 0.5rem;
 }
 
-.w-100 {
+.login-btn {
   width: 100%;
   padding: 0.75rem;
   font-size: 1rem;
