@@ -66,3 +66,7 @@
 ## 2024-07-14 - Reducing TCP Handshake Latency with Persistent Connections
 **Learning:** For high-frequency, short-lived API requests in PHP, creating a new database connection on every request introduces significant overhead from repeated TCP handshakes and authentication.
 **Action:** Use persistent database connections by prepending `p:` to the hostname when creating a new `mysqli` instance to simulate database connection pooling.
+
+## 2024-07-22 - Releasing Session Lock for Concurrent Requests
+**Learning:** In PHP APIs, global authentication middleware that implicitly starts a session (like `checkAdminAuth()`) places an exclusive lock on the session file for the duration of the request. This forces all subsequent requests from the same user to execute sequentially, severely bottlenecking concurrent read-only endpoints (like fetching slots or stats).
+**Action:** To prevent session lock contention from blocking concurrent requests, explicitly call `session_write_close()` early in read-only endpoints (e.g., GET requests) immediately after authentication is verified. This allows other concurrent requests to proceed while the current request continues processing without breaking subsequent routes that legitimately require session writes (like logout).
