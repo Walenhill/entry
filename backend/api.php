@@ -50,6 +50,7 @@ function handleGetRequest($path, $queryParams) {
             checkAdminAuth(); // Will exit if unauthorized
             $isAdmin = true;
         }
+        session_write_close(); // Prevent session lock contention for concurrent GET requests
         
         $slots = getSlots($isAdmin, $dateFilter);
         jsonResponse($slots);
@@ -58,6 +59,7 @@ function handleGetRequest($path, $queryParams) {
     // GET /stats - Get statistics (admin only)
     elseif ($path === 'stats') {
         checkAdminAuth();
+        session_write_close(); // Prevent session lock contention
         $stats = getStatistics();
         jsonResponse(['success' => true, 'data' => $stats]);
     }
@@ -78,6 +80,7 @@ function handleGetRequest($path, $queryParams) {
             checkAdminAuth();
             $isAdmin = true;
         }
+        session_write_close(); // Prevent session lock contention
 
         // If user is not admin, they should only be able to view available slots
         if (!$isAdmin) {
@@ -129,6 +132,7 @@ function handlePostRequest($path) {
         // POST /slots/generate - Generate slots from template (admin only)
         case 'slots/generate':
             checkAdminAuth();
+            session_write_close(); // Prevent session lock contention during long-running generation
 
             $result = generateSlotsFromTemplate($data);
 
