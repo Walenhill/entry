@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-07-25 - Stale-while-revalidate UI Pattern
+**Learning:** Replacing main content grids with full-page loading spinners during background refetches causes unnecessary DOM churn.
+**Action:** Implement a 'stale-while-revalidate' pattern by keeping existing data rendered with a visual indicator (like opacity: 0.6; pointer-events: none) and only showing the full loader if the array is empty.

@@ -25,7 +25,7 @@
     </div>
 
     <!-- Состояния -->
-    <div v-if="slotsStore.isLoading" class="state-container" role="status" aria-live="polite">
+    <div v-if="slotsStore.isLoading && slotsStore.slots.length === 0" class="state-container" role="status" aria-live="polite">
       <div class="loader" aria-hidden="true"></div>
       <p class="mt-3 text-muted">Загрузка слотов...</p>
     </div>
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Сетка слотов -->
-    <div v-else class="slots-grid">
+    <div v-else class="slots-grid" :style="slotsStore.isLoading ? 'opacity: 0.6; pointer-events: none;' : ''">
       <!-- Performance optimization: use v-memo to prevent O(N) re-renders
            when unrelated parent state changes (e.g. cancelingSlotId) -->
       <SlotCard
