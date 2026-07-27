@@ -54,6 +54,8 @@ header("X-Frame-Options: DENY");
 header("X-XSS-Protection: 1; mode=block");
 header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none';");
 header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
