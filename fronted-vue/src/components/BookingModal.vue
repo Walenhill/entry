@@ -20,8 +20,10 @@
             type="text"
             id="clientName"
             ref="nameInput"
-            v-model="formData.name"
+            v-model.trim="formData.name"
             required
+            pattern=".*\S+.*"
+            title="Поле не должно быть пустым или состоять только из пробелов"
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
