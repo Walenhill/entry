@@ -20,8 +20,10 @@
             type="text"
             id="clientName"
             ref="nameInput"
-            v-model="formData.name"
+            v-model.trim="formData.name"
             required
+            pattern=".*\S+.*"
+            title="Поле не может состоять только из пробелов"
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
@@ -38,8 +40,10 @@
           <input
             type="tel"
             id="clientPhone"
-            v-model="formData.phone"
+            v-model.trim="formData.phone"
             required
+            pattern=".*\S+.*"
+            title="Поле не может состоять только из пробелов"
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
