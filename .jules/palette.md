@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-05-17 - Prevent Whitespace-only Form Submissions
+**Learning:** Found that required fields (like client name and phone in BookingModal.vue) accept whitespace-only strings because standard HTML required attributes treat spaces as valid input. This results in empty entries without custom JS validation.
+**Action:** Always apply the v-model.trim modifier on text inputs alongside the HTML5 pattern=".*\S+.*" attribute and a descriptive title attribute for native browser validation to prevent whitespace-only submissions cleanly.
