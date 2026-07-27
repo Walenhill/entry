@@ -20,11 +20,13 @@
             type="text"
             id="clientName"
             ref="nameInput"
-            v-model="formData.name"
+            v-model.trim="formData.name"
             required
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
+            pattern=".*\S+.*"
+            title="Поле не может состоять только из пробелов"
             aria-describedby="name-counter"
             :disabled="isSubmitting"
           />
@@ -38,11 +40,13 @@
           <input
             type="tel"
             id="clientPhone"
-            v-model="formData.phone"
+            v-model.trim="formData.phone"
             required
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
+            pattern=".*\S+.*"
+            title="Поле не может состоять только из пробелов"
             aria-describedby="phone-counter"
             :disabled="isSubmitting"
           />
