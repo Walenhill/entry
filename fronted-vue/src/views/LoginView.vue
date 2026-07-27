@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 1rem;" :disabled="isLoading">
           <span v-if="isLoading" class="spinner-small" aria-hidden="true"></span>
           {{ isLoading ? 'Вход...' : 'Войти' }}
         </button>
@@ -122,12 +122,6 @@ const handleLogin = async () => {
 .login-header h2 {
   color: var(--text-primary);
   margin-bottom: 0.5rem;
-}
-
-.w-100 {
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
 }
 
 .password-input-wrapper {
