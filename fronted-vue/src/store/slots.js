@@ -8,7 +8,8 @@ export const useSlotsStore = defineStore('slots', {
     isLoading: false,
     stats: null,
     statsLoading: false,
-    statsError: null
+    statsError: null,
+    error: null
   }),
   actions: {
     formatSlot(slot) {
@@ -40,9 +41,10 @@ export const useSlotsStore = defineStore('slots', {
         if (slotsData) {
           this.slots = slotsData.map(slot => this.formatSlot(slot));
         }
+        this.error = null;
       } catch (error) {
         console.error('Error loading slots:', error);
-        throw error;
+        this.error = 'Не удалось загрузить слоты';
       } finally {
         this.isLoading = false;
       }

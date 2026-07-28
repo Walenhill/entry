@@ -24,10 +24,22 @@
       <h3 class="text-secondary">Все слоты</h3>
     </div>
 
+    <div v-if="slotsStore.error && slotsStore.slots.length > 0" class="error-message mb-4" role="alert" aria-live="assertive">
+      <div class="flex justify-between items-center">
+        <span>{{ slotsStore.error }}</span>
+        <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; min-height: 32px;" @click="slotsStore.fetchSlots()">Повторить</button>
+      </div>
+    </div>
+
     <!-- Состояния -->
     <div v-if="slotsStore.isLoading && slotsStore.slots.length === 0" class="state-container" role="status" aria-live="polite">
       <div class="loader" aria-hidden="true"></div>
       <p class="mt-3 text-muted">Загрузка слотов...</p>
+    </div>
+
+    <div v-else-if="slotsStore.error && slotsStore.slots.length === 0" class="state-container error-state" role="alert" aria-live="assertive">
+      <p class="text-danger">{{ slotsStore.error }}</p>
+      <button class="btn btn-outline mt-3" @click="slotsStore.fetchSlots()">Повторить попытку</button>
     </div>
 
     <div v-else-if="slotsStore.slots.length === 0 && !slotsStore.isLoading" class="state-container empty-state" role="status" aria-live="polite">
