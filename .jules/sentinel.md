@@ -61,3 +61,8 @@
 **Vulnerability:** Sensitive API responses (e.g., admin statistics, client data in bookings) could be cached by the browser due to missing cache-control headers, potentially exposing data to local users or if the device is shared.
 **Learning:** Default browser behavior or heuristics might cache JSON responses, especially on GET requests. Relying on default behavior for dynamic, sensitive data creates an information disclosure risk.
 **Prevention:** Always ensure the PHP API explicitly sets strict anti-caching headers (`Cache-Control: no-store, no-cache, must-revalidate, max-age=0` and `Pragma: no-cache`) on all sensitive or dynamic JSON endpoints.
+
+## 2024-05-24 - Default Credentials Block
+**Vulnerability:** The application allowed the use of the default `MASTER_PASSWORD` (`change_this_master_password`) from configuration templates, allowing unauthorized administrative access if deployed unchanged.
+**Learning:** Explicit checks preventing generic passwords like "admin123" are insufficient if the template suggests a different default string.
+**Prevention:** Always programmatically block the exact default strings provided in examples and templates, forcing administrators to set a secure secret.
