@@ -13,6 +13,14 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = getRequestPath();
 $queryParams = getQueryParams();
 
+// CSRF Protection: Enforce application/json for state-changing requests to prevent simple form CSRF
+if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') === false) {
+        jsonResponse(['error' => 'Content-Type must be application/json'], 415);
+    }
+}
+
 // Route handling
 switch ($method) {
     case 'GET':

@@ -61,3 +61,8 @@
 **Vulnerability:** Sensitive API responses (e.g., admin statistics, client data in bookings) could be cached by the browser due to missing cache-control headers, potentially exposing data to local users or if the device is shared.
 **Learning:** Default browser behavior or heuristics might cache JSON responses, especially on GET requests. Relying on default behavior for dynamic, sensitive data creates an information disclosure risk.
 **Prevention:** Always ensure the PHP API explicitly sets strict anti-caching headers (`Cache-Control: no-store, no-cache, must-revalidate, max-age=0` and `Pragma: no-cache`) on all sensitive or dynamic JSON endpoints.
+
+## 2026-08-02 - [Missing CSRF Protection via Content-Type Validation]
+**Vulnerability:** The API router allowed POST, PUT, and PATCH requests without validating the Content-Type header. This permitted simple form-based Cross-Site Request Forgery (CSRF) attacks (e.g., `text/plain` payloads) which bypass CORS preflights.
+**Learning:** In a JSON-only API using cookie-based session authentication, failing to enforce `application/json` on state-changing endpoints leaves them vulnerable to CSRF via simple requests.
+**Prevention:** Always explicitly validate that the `Content-Type` header is `application/json` for all state-changing endpoints before processing the request.
