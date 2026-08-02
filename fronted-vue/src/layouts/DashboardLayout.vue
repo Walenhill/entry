@@ -72,6 +72,7 @@ const closeButton = ref(null);
 
 const openMenu = async () => {
   isMobileMenuOpen.value = true;
+  document.body.style.overflow = 'hidden';
   await nextTick();
   if (closeButton.value) {
     closeButton.value.focus();
@@ -80,6 +81,7 @@ const openMenu = async () => {
 
 const closeMenu = async () => {
   isMobileMenuOpen.value = false;
+  document.body.style.overflow = '';
   await nextTick();
   if (menuToggle.value) {
     menuToggle.value.focus();
@@ -98,6 +100,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown);
+  document.body.style.overflow = '';
 });
 
 const handleLogout = async () => {
