@@ -61,3 +61,8 @@
 **Vulnerability:** Sensitive API responses (e.g., admin statistics, client data in bookings) could be cached by the browser due to missing cache-control headers, potentially exposing data to local users or if the device is shared.
 **Learning:** Default browser behavior or heuristics might cache JSON responses, especially on GET requests. Relying on default behavior for dynamic, sensitive data creates an information disclosure risk.
 **Prevention:** Always ensure the PHP API explicitly sets strict anti-caching headers (`Cache-Control: no-store, no-cache, must-revalidate, max-age=0` and `Pragma: no-cache`) on all sensitive or dynamic JSON endpoints.
+
+## 2026-07-29 - Prevent Application-level DoS via Session Lock Contention
+**Vulnerability:** The API used PHP's default session handling without releasing the session lock early. This allowed malicious or slow long-running requests (e.g., large GET requests or batch generations) to lock the session file, causing all subsequent concurrent requests from the same authenticated user to hang and potentially exhaust server resources.
+**Learning:** By default, PHP locks the session file until the script terminates. In APIs with concurrent requests from single-page applications, this can cause significant performance degradation or Denial of Service.
+**Prevention:** Explicitly call `session_write_close()` immediately after authenticating the session (`checkAdminAuth()`) in read-only endpoints (like GET) or before executing long-running operations, allowing concurrent requests to proceed.

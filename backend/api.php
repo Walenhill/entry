@@ -49,6 +49,7 @@ function handleGetRequest($path, $queryParams) {
         if ($role === 'admin') {
             checkAdminAuth(); // Will exit if unauthorized
             $isAdmin = true;
+            session_write_close();
         }
         
         $slots = getSlots($isAdmin, $dateFilter);
@@ -58,6 +59,7 @@ function handleGetRequest($path, $queryParams) {
     // GET /stats - Get statistics (admin only)
     elseif ($path === 'stats') {
         checkAdminAuth();
+        session_write_close();
         $stats = getStatistics();
         jsonResponse(['success' => true, 'data' => $stats]);
     }
@@ -77,6 +79,7 @@ function handleGetRequest($path, $queryParams) {
         if ($role === 'admin') {
             checkAdminAuth();
             $isAdmin = true;
+            session_write_close();
         }
 
         // If user is not admin, they should only be able to view available slots
@@ -129,6 +132,7 @@ function handlePostRequest($path) {
         // POST /slots/generate - Generate slots from template (admin only)
         case 'slots/generate':
             checkAdminAuth();
+            session_write_close();
 
             $result = generateSlotsFromTemplate($data);
 
