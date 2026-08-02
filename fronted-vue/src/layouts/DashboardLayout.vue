@@ -71,6 +71,7 @@ const menuToggle = ref(null);
 const closeButton = ref(null);
 
 const openMenu = async () => {
+  document.body.style.overflow = 'hidden';
   isMobileMenuOpen.value = true;
   await nextTick();
   if (closeButton.value) {
@@ -79,6 +80,7 @@ const openMenu = async () => {
 };
 
 const closeMenu = async () => {
+  document.body.style.overflow = '';
   isMobileMenuOpen.value = false;
   await nextTick();
   if (menuToggle.value) {
@@ -97,6 +99,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  document.body.style.overflow = '';
   document.removeEventListener('keydown', handleKeydown);
 });
 
