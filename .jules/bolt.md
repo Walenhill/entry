@@ -70,3 +70,7 @@
 ## 2026-07-27 - Preventing DOM Churn with Stale-While-Revalidate
 **Learning:** In the Vue frontend, replacing the main content grid with a full-page loading spinner during background data refetches causes unnecessary DOM destruction and recreation, leading to expensive reflows and a jarring user experience.
 **Action:** Implement a stale-while-revalidate pattern by keeping the existing data rendered with a subtle visual indicator (opacity: 0.6; pointer-events: none) during background refetches, and only showing the full loader if the data array is entirely empty.
+
+## 2026-08-02 - Preventing Session Lock Contention in PHP APIs
+**Learning:** In PHP, `session_start()` locks the session file until the script terminates or `session_write_close()` is called. This means multiple concurrent requests from the same client (e.g., loading stats and slots simultaneously, or polling during a long-running batch generation) will be executed sequentially by the server, creating an artificial bottleneck.
+**Action:** Explicitly call `session_write_close()` immediately after authentication is verified (`checkAdminAuth()`) in read-only endpoints (like GET requests) and long-running processes to free the session lock and allow concurrent request processing.
