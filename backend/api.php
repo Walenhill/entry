@@ -13,6 +13,14 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = getRequestPath();
 $queryParams = getQueryParams();
 
+// Enforce Content-Type for state-changing endpoints to prevent CSRF
+if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (stripos($contentType, 'application/json') === false) {
+        jsonResponse(['error' => 'Unsupported Media Type'], 415);
+    }
+}
+
 // Route handling
 switch ($method) {
     case 'GET':

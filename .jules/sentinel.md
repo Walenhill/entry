@@ -61,3 +61,8 @@
 **Vulnerability:** Sensitive API responses (e.g., admin statistics, client data in bookings) could be cached by the browser due to missing cache-control headers, potentially exposing data to local users or if the device is shared.
 **Learning:** Default browser behavior or heuristics might cache JSON responses, especially on GET requests. Relying on default behavior for dynamic, sensitive data creates an information disclosure risk.
 **Prevention:** Always ensure the PHP API explicitly sets strict anti-caching headers (`Cache-Control: no-store, no-cache, must-revalidate, max-age=0` and `Pragma: no-cache`) on all sensitive or dynamic JSON endpoints.
+
+## 2024-08-03 - CSRF Bypass via Simple Requests
+**Vulnerability:** State-changing endpoints (POST/PUT/PATCH) using SameSite=Lax session cookies were vulnerable to Cross-Site Request Forgery (CSRF). An attacker could bypass CORS preflight checks by sending a simple request with `Content-Type: text/plain` or `application/x-www-form-urlencoded` via an HTML form or navigator.sendBeacon.
+**Learning:** CORS only prevents *reading* cross-origin responses and sending *custom* headers. It does not stop a browser from sending a simple POST request with credentials (cookies) to an endpoint. If the endpoint blindly trusts the cookie without requiring a preflight (e.g. by enforcing a custom Content-Type like `application/json`), it is vulnerable to CSRF.
+**Prevention:** Always enforce `Content-Type: application/json` on state-changing endpoints (POST, PUT, PATCH). This acts as a critical defense-in-depth measure because browsers require a CORS preflight request (OPTIONS) before sending an `application/json` payload cross-origin, effectively stopping simple form-based CSRF attacks.
