@@ -91,11 +91,13 @@ watch(() => props.show, async (newVal) => {
   if (newVal) {
     previousActiveElement = document.activeElement;
     formData.value = { name: '', phone: '' };
+    document.body.style.overflow = 'hidden';
     await nextTick();
     if (nameInput.value) {
       nameInput.value.focus();
     }
   } else {
+    document.body.style.overflow = '';
     await nextTick();
     if (previousActiveElement) {
       previousActiveElement.focus();
@@ -119,6 +121,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown);
+  document.body.style.overflow = '';
 });
 </script>
 
