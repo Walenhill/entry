@@ -89,6 +89,7 @@ let previousActiveElement = null;
 // Reset form when modal opens
 watch(() => props.show, async (newVal) => {
   if (newVal) {
+    document.body.style.overflow = 'hidden';
     previousActiveElement = document.activeElement;
     formData.value = { name: '', phone: '' };
     await nextTick();
@@ -96,6 +97,7 @@ watch(() => props.show, async (newVal) => {
       nameInput.value.focus();
     }
   } else {
+    document.body.style.overflow = '';
     await nextTick();
     if (previousActiveElement) {
       previousActiveElement.focus();
@@ -118,6 +120,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  document.body.style.overflow = '';
   document.removeEventListener('keydown', handleKeydown);
 });
 </script>
