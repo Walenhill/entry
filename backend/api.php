@@ -56,6 +56,7 @@ function handleGetRequest($path, $queryParams) {
         $isAdmin = false;
         if ($role === 'admin') {
             checkAdminAuth(); // Will exit if unauthorized
+            session_write_close();
             $isAdmin = true;
         }
         
@@ -66,6 +67,7 @@ function handleGetRequest($path, $queryParams) {
     // GET /stats - Get statistics (admin only)
     elseif ($path === 'stats') {
         checkAdminAuth();
+        session_write_close();
         $stats = getStatistics();
         jsonResponse(['success' => true, 'data' => $stats]);
     }
@@ -84,6 +86,7 @@ function handleGetRequest($path, $queryParams) {
 
         if ($role === 'admin') {
             checkAdminAuth();
+            session_write_close();
             $isAdmin = true;
         }
 
