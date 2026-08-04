@@ -57,12 +57,19 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'cancel']);
 
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 // Get tomorrow's date as default
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
-const defaultDate = tomorrow.toISOString().split('T')[0];
+const defaultDate = formatDate(tomorrow);
 
-const today = new Date().toISOString().split('T')[0];
+const today = formatDate(new Date());
 
 const dateInput = ref(null);
 let previousActiveElement = null;
