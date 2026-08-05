@@ -74,3 +74,7 @@
 ## 2026-06-08 - Preventing Session Lock Contention
 **Learning:** In PHP APIs, to prevent session lock contention from blocking concurrent requests, explicitly call `session_write_close()` early in read-only endpoints (e.g., GET requests) or long-running processes after authentication is complete. Do not place this closure inside global authentication middleware (like `checkAdminAuth()`) to avoid breaking subsequent routing paths that legitimately require session writes (like logout).
 **Action:** Add `session_write_close();` after authentication in read-only endpoints.
+
+## 2026-08-05 - Add composite index for admin dashboard queries
+**Learning:** The admin dashboard top clients query groups results by `client_phone` and `client_name` while filtering by `status`. Without a composite index covering these specific columns, MySQL is forced to perform a full table scan and use a temporary table and filesort for the grouping operation.
+**Action:** Add a composite index on `(status, client_phone, client_name)` to allow MySQL to utilize an index scan for both the filtering and grouping steps, dramatically reducing query latency for large datasets.
