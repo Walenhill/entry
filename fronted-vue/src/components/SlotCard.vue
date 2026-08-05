@@ -2,8 +2,8 @@
   <div class="card slot-card" :class="`status-${statusClass}`">
     <div class="slot-header">
       <div class="time-block">
-        <span class="time">{{ slot.start_time }} - {{ slot.end_time }}</span>
-        <span class="date">{{ slot.date }}</span>
+        <time :datetime="`${slot.date}T${slot.start_time}`" class="time">{{ slot.start_time }} - {{ slot.end_time }}</time>
+        <time :datetime="slot.date" class="date">{{ slot.date }}</time>
       </div>
       <span class="badge" :class="`badge-${statusClass}`">{{ statusText }}</span>
     </div>
@@ -11,16 +11,18 @@
     <div class="slot-body">
       <p v-if="slot.description" class="description text-muted">{{ slot.description }}</p>
 
-      <div v-if="slot.is_booked" class="booking-details">
+      <dl v-if="slot.is_booked" class="booking-details">
         <div class="detail-item">
-          <span class="label">Клиент:</span>
-          <span class="value">{{ slot.booked_by }}</span>
+          <dt class="label">Клиент:</dt>
+          <dd class="value">{{ slot.booked_by }}</dd>
         </div>
         <div class="detail-item" v-if="slot.booking_comment">
-          <span class="label">Телефон:</span>
-          <a :href="`tel:${slot.booking_comment}`" class="value phone-link" :aria-label="`Позвонить клиенту: ${slot.booking_comment}`">{{ slot.booking_comment }}</a>
+          <dt class="label">Телефон:</dt>
+          <dd class="value">
+            <a :href="`tel:${slot.booking_comment}`" class="phone-link" :aria-label="`Позвонить клиенту: ${slot.booking_comment}`">{{ slot.booking_comment }}</a>
+          </dd>
         </div>
-      </div>
+      </dl>
     </div>
 
     <div class="slot-footer">
@@ -163,6 +165,7 @@ const statusText = computed(() => props.slot.is_booked ? 'Забронирова
 .detail-item .value {
   color: var(--text-primary);
   font-weight: 500;
+  margin-left: 0;
 }
 
 .slot-footer {
