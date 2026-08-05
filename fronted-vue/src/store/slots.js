@@ -23,7 +23,7 @@ export const useSlotsStore = defineStore('slots', {
         description: slot.description,
         is_booked: slot.status === 'booked',
         booked_by: slot.client_name,
-        booking_comment: slot.client_phone // Use client_phone for the comment field in UI
+        booking_phone: slot.client_phone // Map directly to phone for semantic correctness
       });
     },
 
