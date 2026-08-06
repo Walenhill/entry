@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2024-05-29 - Background Scrolling Behind Modals and Overlays
+**Learning:** Found that opening full-screen overlays (like modals or mobile sidebars) does not prevent the background body from scrolling. This causes a confusing UX on mobile and desktop where users can accidentally scroll the main page underneath the overlay, losing their place or triggering unintended interactions.
+**Action:** Always set document.body.style.overflow = 'hidden' when an overlay opens and explicitly restore it to '' when the overlay closes or the component unmounts to prevent background scrolling.
