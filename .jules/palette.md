@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-05-18 - Semantic Description Lists for Key-Value Pairs
+**Learning:** Generic HTML tags like `<div>` and `<span>` for key-value pairs (like client name and phone number) lack semantic meaning for screen readers, missing the relationship between the label and its data.
+**Action:** Use semantic description lists (`<dl>`, `<dt>`, `<dd>`) for key-value data to improve accessibility. Always reset default browser margins (`margin: 0` on `<dl>` and `margin-left: 0` on `<dd>`) to maintain existing flex/grid visual layouts.
