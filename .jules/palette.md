@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-08-08 - Use Description Lists for Key-Value Data
+**Learning:** In Vue components, generic HTML (like <div> and <span>) used for key-value pairs lacks semantic meaning for screen readers. Replacing them with description lists (<dl>, <dt>, <dd>) improves accessibility but introduces default browser margins/indentation that can break visual layout.
+**Action:** When refactoring generic tags to semantic description lists, always explicitly reset the browser defaults by adding `margin: 0;` to the <dl> and `margin-left: 0;` to the <dd> elements in the component's styles to preserve the original visual design while gaining the a11y benefits.
