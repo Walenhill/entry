@@ -11,16 +11,16 @@
     <div class="slot-body">
       <p v-if="slot.description" class="description text-muted">{{ slot.description }}</p>
 
-      <div v-if="slot.is_booked" class="booking-details">
+      <dl v-if="slot.is_booked" class="booking-details">
         <div class="detail-item">
-          <span class="label">Клиент:</span>
-          <span class="value">{{ slot.booked_by }}</span>
+          <dt class="label">Клиент:</dt>
+          <dd class="value">{{ slot.booked_by }}</dd>
         </div>
         <div class="detail-item" v-if="slot.booking_comment">
-          <span class="label">Телефон:</span>
-          <a :href="`tel:${slot.booking_comment}`" class="value phone-link" :aria-label="`Позвонить клиенту: ${slot.booking_comment}`">{{ slot.booking_comment }}</a>
+          <dt class="label">Телефон:</dt>
+          <dd class="value"><a :href="`tel:${slot.booking_comment}`" class="phone-link" :aria-label="`Позвонить клиенту: ${slot.booking_comment}`" style="color: inherit; text-decoration: none;">{{ slot.booking_comment }}</a></dd>
         </div>
-      </div>
+      </dl>
     </div>
 
     <div class="slot-footer">
@@ -144,6 +144,7 @@ const statusText = computed(() => props.slot.is_booked ? 'Забронирова
   padding: 0.75rem;
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-color);
+  margin: 0;
 }
 
 .detail-item {
@@ -163,6 +164,7 @@ const statusText = computed(() => props.slot.is_booked ? 'Забронирова
 .detail-item .value {
   color: var(--text-primary);
   font-weight: 500;
+  margin-left: 0;
 }
 
 .slot-footer {
