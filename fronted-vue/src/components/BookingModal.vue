@@ -8,10 +8,16 @@
         </span>
       </div>
 
-      <div v-if="slot" class="modal-info mb-4">
-        <p><strong>Дата:</strong> {{ slot.date }}</p>
-        <p><strong>Время:</strong> {{ slot.start_time }} - {{ slot.end_time }}</p>
-      </div>
+      <dl v-if="slot" class="modal-info mb-4">
+        <div class="info-item">
+          <dt>Дата:</dt>
+          <dd>{{ slot.date }}</dd>
+        </div>
+        <div class="info-item">
+          <dt>Время:</dt>
+          <dd>{{ slot.start_time }} - {{ slot.end_time }}</dd>
+        </div>
+      </dl>
 
       <form @submit.prevent="handleSubmit">
         <div class="form-group mb-3">
@@ -161,15 +167,26 @@ onUnmounted(() => {
   padding: 1rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
+  margin: 0;
 }
 
-.modal-info p {
+.modal-info .info-item {
+  display: flex;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
   color: var(--text-secondary);
 }
 
-.modal-info p:last-child {
+.modal-info .info-item:last-child {
   margin-bottom: 0;
+}
+
+.modal-info dt {
+  font-weight: bold;
+}
+
+.modal-info dd {
+  margin-left: 0;
 }
 
 .modal-actions {
