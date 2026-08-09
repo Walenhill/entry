@@ -1,4 +1,7 @@
 <?php
+// Performance optimization: Compress HTTP responses to reduce network payload size
+ob_start('ob_gzhandler');
+
 /**
  * API Routes and Controllers
  * This file handles all HTTP requests and routes them to appropriate CRUD functions
