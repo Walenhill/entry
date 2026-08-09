@@ -120,3 +120,60 @@ function getQueryParams() {
     
     return $queryParams;
 }
+
+/**
+ * Get the real client IP address securely
+ */
+function getClientIp() {
+    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+
+    if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $rightmostIp = trim(end($ips));
+
+            if (filter_var($rightmostIp, FILTER_VALIDATE_IP)) {
+                $ipAddress = $rightmostIp;
+            }
+        }
+    }
+
+    return $ipAddress;
+}
+
+/**
+ * Check if the client IP has exceeded the booking rate limit
+ * Returns true if allowed, false if blocked
+ */
+function checkBookingRateLimit($ipAddress) {
+    $conn = getDbConnection();
+
+    $maxAttempts = 10;
+    $blockDuration = 60; // minutes
+
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) as attempts
+        FROM booking_attempts
+        WHERE ip_address = ?
+        AND attempt_time > DATE_SUB(NOW(), INTERVAL ? MINUTE)
+    ");
+    $stmt->bind_param("si", $ipAddress, $blockDuration);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if ($result['attempts'] >= $maxAttempts) {
+        return false;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO booking_attempts (ip_address, attempt_time) VALUES (?, NOW())");
+    $stmt->bind_param("s", $ipAddress);
+    $stmt->execute();
+    $stmt->close();
+
+    if (random_int(1, 100) <= 5) {
+        $conn->query("DELETE FROM booking_attempts WHERE attempt_time < DATE_SUB(NOW(), INTERVAL 2 HOUR)");
+    }
+
+    return true;
+}

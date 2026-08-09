@@ -38,3 +38,11 @@ INSERT INTO slots (start_time, end_time, description, status) VALUES
 ('2024-06-01 16:00:00', '2024-06-01 17:00:00', 'Вечерний слот', 'available'),
 ('2024-06-01 17:00:00', '2024-06-01 18:00:00', 'Поздний слот', 'available'),
 ('2024-06-01 18:00:00', '2024-06-01 19:00:00', 'Завершающий слот', 'available');
+
+-- Таблица попыток бронирования
+CREATE TABLE IF NOT EXISTS booking_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ip_time (ip_address, attempt_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
