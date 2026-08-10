@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2025-05-29 - [Icon-Only Button Tooltips]
+**Learning:** Icon-only buttons (like the hamburger menu toggle or the modal close button) often rely solely on `aria-label` for screen readers. However, this ignores sighted users who may not immediately recognize the icon's function, especially custom ones. Relying purely on visual context degrades the usability of the interface for power users and those with cognitive disabilities.
+**Action:** Always include a `title` attribute on active icon-only buttons to provide a native hover tooltip, complementing the `aria-label` intended for assistive technologies.
