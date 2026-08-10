@@ -27,3 +27,11 @@ WHERE start_time IS NULL AND time IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_start_time ON slots(start_time);
 CREATE INDEX IF NOT EXISTS idx_status ON slots(status);
 CREATE INDEX IF NOT EXISTS idx_status_start_time ON slots(status, start_time);
+
+-- Добавляем таблицу для rate limiting бронирований
+CREATE TABLE IF NOT EXISTS booking_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ip_time (ip_address, attempt_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
