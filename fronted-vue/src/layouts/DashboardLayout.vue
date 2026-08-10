@@ -99,6 +99,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  document.body.style.overflow = '';
   document.removeEventListener('keydown', handleKeydown);
   document.body.style.overflow = '';
 });
