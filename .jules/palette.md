@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-07-16 - Wrapping Text-Based Visual Icons
+**Learning:** Found that using raw text characters as visual icons (like '×' for close or '☰' for menu) inside interactive elements causes screen readers to redundantly announce the literal character alongside the element's `aria-label`, reducing clarity.
+**Action:** Always wrap visual text characters used as icons in a `<span aria-hidden="true">` element to hide them from screen readers, relying entirely on the `aria-label` for semantic meaning.
