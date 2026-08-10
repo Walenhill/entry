@@ -71,6 +71,7 @@ const menuToggle = ref(null);
 const closeButton = ref(null);
 
 const openMenu = async () => {
+  document.body.style.overflow = 'hidden';
   isMobileMenuOpen.value = true;
   document.body.style.overflow = 'hidden';
   await nextTick();
@@ -80,6 +81,7 @@ const openMenu = async () => {
 };
 
 const closeMenu = async () => {
+  document.body.style.overflow = '';
   isMobileMenuOpen.value = false;
   document.body.style.overflow = '';
   await nextTick();
