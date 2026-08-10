@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-05-18 - Screen Reader Noise from Raw Icons
+**Learning:** Found that purely visual raw text characters (like "×" or "☰") inside icon-only buttons cause screen readers to redundantly announce the literal character (e.g., "multiplication X") alongside the button's `aria-label`, creating unnecessary noise and confusion. Additionally, sighted mouse users lack context for these buttons without hover tooltips.
+**Action:** Always wrap raw text icons in `<span aria-hidden="true">`, and always provide a `title` attribute on the button element itself to serve as a hover tooltip for sighted users.
