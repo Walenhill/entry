@@ -27,6 +27,8 @@
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
+            pattern=".*\S+.*"
+            title="Поле не может состоять только из пробелов"
             aria-describedby="name-counter"
             :disabled="isSubmitting"
           />
@@ -47,6 +49,8 @@
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
+            pattern=".*\S+.*"
+            title="Поле не может состоять только из пробелов"
             aria-describedby="phone-counter"
             :disabled="isSubmitting"
           />
