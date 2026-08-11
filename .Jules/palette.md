@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2024-05-18 - [Semantic Layouts & Component CSS Boundaries]
+**Learning:** When refactoring generic HTML (`<div>`, `<span>`, `<p>`) into semantic description lists (`<dl>`, `<dt>`, `<dd>`) to improve screen reader accessibility (e.g., in `BookingModal.vue`), it is critical to reset browser default margins (like `<dd>`'s default `margin-inline-start`) using existing project utility classes or inline styles (e.g., `style="margin: 0;"` or `style="margin-left: 0;"`). Adding new component-specific CSS classes directly violates project boundaries designed to prevent custom CSS sprawl.
+**Action:** Always utilize the existing utility class system (like flexbox helpers or `mb-1`) or minimal inline styles to adapt semantic HTML elements, explicitly avoiding the creation of new rules in the `<style scoped>` blocks of Vue components.

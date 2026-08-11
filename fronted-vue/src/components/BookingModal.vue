@@ -8,10 +8,16 @@
         </span>
       </div>
 
-      <div v-if="slot" class="modal-info mb-4">
-        <p><strong>Дата:</strong> {{ slot.date }}</p>
-        <p><strong>Время:</strong> {{ slot.start_time }} - {{ slot.end_time }}</p>
-      </div>
+      <dl v-if="slot" class="modal-info mb-4" style="margin: 0;">
+        <div class="flex justify-between mb-1" style="font-size: 0.875rem;">
+          <dt class="text-secondary" style="font-weight: bold;">Дата:</dt>
+          <dd style="font-weight: 500; margin-left: 0;">{{ slot.date }}</dd>
+        </div>
+        <div class="flex justify-between" style="font-size: 0.875rem;">
+          <dt class="text-secondary" style="font-weight: bold;">Время:</dt>
+          <dd style="font-weight: 500; margin-left: 0;">{{ slot.start_time }} - {{ slot.end_time }}</dd>
+        </div>
+      </dl>
 
       <form @submit.prevent="handleSubmit">
         <div class="form-group mb-3">
