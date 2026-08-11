@@ -411,6 +411,9 @@ function getStatistics() {
     $occupancyRate = $total > 0 ? round(($booked / $total) * 100, 2) : 0;
     
     // Top clients by visits
+    // Performance optimization: The idx_stats_top_clients (status, client_phone, client_name) index
+    // acts as a covering index, allowing MySQL to group and filter directly from the index tree
+    // without reading the actual table rows, eliminating significant disk I/O.
     $result = $conn->query("SELECT client_name, client_phone, COUNT(*) as visits 
         FROM slots 
         WHERE status = 'booked' AND client_name IS NOT NULL
