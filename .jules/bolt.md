@@ -74,3 +74,11 @@
 ## 2026-06-08 - Preventing Session Lock Contention
 **Learning:** In PHP APIs, to prevent session lock contention from blocking concurrent requests, explicitly call `session_write_close()` early in read-only endpoints (e.g., GET requests) or long-running processes after authentication is complete. Do not place this closure inside global authentication middleware (like `checkAdminAuth()`) to avoid breaking subsequent routing paths that legitimately require session writes (like logout).
 **Action:** Add `session_write_close();` after authentication in read-only endpoints.
+
+## 2026-08-09 - Compress HTTP API Responses with ob_gzhandler
+**Learning:** The PHP backend returned large JSON payloads uncompressed, wasting network bandwidth. While web servers (Nginx/Apache) often handle compression, PHP's  provides a built-in, application-level way to compress output buffers when server-level compression is missing or misconfigured.
+**Action:** Add `ob_start('ob_gzhandler');` at the very top of the main API entrypoint (`backend/api.php`) before any output is emitted to automatically negotiate and apply gzip compression based on the client's `Accept-Encoding` header.
+
+## 2026-08-09 - Compress HTTP API Responses with ob_gzhandler
+**Learning:** The PHP backend returned large JSON payloads uncompressed, wasting network bandwidth. While web servers (Nginx/Apache) often handle compression, PHP's ob_gzhandler provides a built-in, application-level way to compress output buffers when server-level compression is missing or misconfigured.
+**Action:** Add ob_start('ob_gzhandler'); at the very top of the main API entrypoint (backend/api.php) before any output is emitted to automatically negotiate and apply gzip compression based on the client's Accept-Encoding header.
