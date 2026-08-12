@@ -171,25 +171,7 @@ function loginAdmin($password) {
         return ['success' => false, 'error' => 'Password is too long'];
     }
 
-    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    
-    // Если REMOTE_ADDR - это локальный/частный IP (например, Docker-прокси),
-    // пытаемся получить реальный IP клиента из заголовка X-Forwarded-For.
-    if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-
-            // To prevent IP spoofing without knowing exact trusted proxy topology,
-            // we ONLY trust the rightmost IP in the X-Forwarded-For chain.
-            // This is the IP appended by the reverse proxy that connected directly to us.
-            // Any IPs to the left of it were provided by the client and cannot be trusted.
-            $rightmostIp = trim(end($ips));
-
-            if (filter_var($rightmostIp, FILTER_VALIDATE_IP)) {
-                $ipAddress = $rightmostIp;
-            }
-        }
-    }
+    $ipAddress = getClientIp();
 
     // Проверка блокировки IP
     if (isIpBlocked($ipAddress)) {

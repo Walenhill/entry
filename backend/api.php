@@ -183,6 +183,11 @@ function handlePostRequest($path) {
     if (preg_match('#^slots/(\d+)/book$#', $path, $matches)) {
         $slotId = (int)$matches[1];
         
+        $ipAddress = getClientIp();
+        if (!checkBookingRateLimit($ipAddress)) {
+            jsonResponse(['error' => 'Too many booking attempts. Please try again later.'], 429);
+        }
+
         // Validate required fields and prevent DoS from TypeErrors by enforcing string or int type
         if (!isset($data['client_name']) || !(is_string($data['client_name']) || is_int($data['client_name'])) || trim((string)$data['client_name']) === '' ||
             !isset($data['client_phone']) || !(is_string($data['client_phone']) || is_int($data['client_phone'])) || trim((string)$data['client_phone']) === '') {
