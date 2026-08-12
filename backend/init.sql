@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS slots (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_start_time (start_time),
     INDEX idx_status (status),
-    INDEX idx_status_start_time (status, start_time)
+    INDEX idx_status_start_time (status, start_time),
+    -- Performance optimization: Covering index for top clients query in getStatistics()
+    INDEX idx_booked_clients (status, client_phone, client_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Таблица попыток входа (для защиты от брутфорса)

@@ -27,3 +27,5 @@ WHERE start_time IS NULL AND time IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_start_time ON slots(start_time);
 CREATE INDEX IF NOT EXISTS idx_status ON slots(status);
 CREATE INDEX IF NOT EXISTS idx_status_start_time ON slots(status, start_time);
+-- Performance optimization: Covering index for top clients query in getStatistics()
+CREATE INDEX IF NOT EXISTS idx_booked_clients ON slots(status, client_phone, client_name);

@@ -74,3 +74,7 @@
 ## 2026-06-08 - Preventing Session Lock Contention
 **Learning:** In PHP APIs, to prevent session lock contention from blocking concurrent requests, explicitly call `session_write_close()` early in read-only endpoints (e.g., GET requests) or long-running processes after authentication is complete. Do not place this closure inside global authentication middleware (like `checkAdminAuth()`) to avoid breaking subsequent routing paths that legitimately require session writes (like logout).
 **Action:** Add `session_write_close();` after authentication in read-only endpoints.
+
+## 2026-08-08 - Adding Covering Indexes for Grouping Queries
+**Learning:** When a query uses `GROUP BY` on columns that are not fully covered by an index, MySQL often performs a temporary filesort and a full table or index scan, which becomes a bottleneck as the table grows.
+**Action:** Add a composite covering index that includes both the filtered columns (e.g., `status`) and the grouped columns (e.g., `client_phone`, `client_name`) in the exact order they are accessed. This allows the database engine to resolve the query entirely from the index without accessing the main table or performing a filesort.
