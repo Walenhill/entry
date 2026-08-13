@@ -1,5 +1,4 @@
-import { test, describe, beforeEach, afterEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, beforeEach, afterEach, expect } from 'vitest';
 import { handleApiError } from './errorHandler.js';
 
 describe('handleApiError', () => {
@@ -39,11 +38,11 @@ describe('handleApiError', () => {
 
     handleApiError(error, 'Log message', 'Alert Prefix');
 
-    assert.strictEqual(consoleErrorCalls.length, 1);
-    assert.deepStrictEqual(consoleErrorCalls[0], ['Log message', error]);
+    expect(consoleErrorCalls.length).toBe(1);
+    expect(consoleErrorCalls[0]).toEqual(['Log message', error]);
 
-    assert.strictEqual(alertCalls.length, 1);
-    assert.strictEqual(alertCalls[0], 'Alert Prefix: Backend specific error');
+    expect(alertCalls.length).toBe(1);
+    expect(alertCalls[0]).toBe('Alert Prefix: Backend specific error');
   });
 
   test('uses error.response.data.message when error field is unavailable', () => {
@@ -57,11 +56,11 @@ describe('handleApiError', () => {
 
     handleApiError(error, 'Log message', 'Alert Prefix');
 
-    assert.strictEqual(consoleErrorCalls.length, 1);
-    assert.deepStrictEqual(consoleErrorCalls[0], ['Log message', error]);
+    expect(consoleErrorCalls.length).toBe(1);
+    expect(consoleErrorCalls[0]).toEqual(['Log message', error]);
 
-    assert.strictEqual(alertCalls.length, 1);
-    assert.strictEqual(alertCalls[0], 'Alert Prefix: Server validation error');
+    expect(alertCalls.length).toBe(1);
+    expect(alertCalls[0]).toBe('Alert Prefix: Server validation error');
   });
 
   test('falls back to error.message when response.data.message is unavailable', () => {
@@ -69,11 +68,11 @@ describe('handleApiError', () => {
 
     handleApiError(error, 'Network log', 'Network Alert');
 
-    assert.strictEqual(consoleErrorCalls.length, 1);
-    assert.deepStrictEqual(consoleErrorCalls[0], ['Network log', error]);
+    expect(consoleErrorCalls.length).toBe(1);
+    expect(consoleErrorCalls[0]).toEqual(['Network log', error]);
 
-    assert.strictEqual(alertCalls.length, 1);
-    assert.strictEqual(alertCalls[0], 'Network Alert: Network error');
+    expect(alertCalls.length).toBe(1);
+    expect(alertCalls[0]).toBe('Network Alert: Network error');
   });
 
   test('falls back to Unknown error when no message is available', () => {
@@ -81,10 +80,10 @@ describe('handleApiError', () => {
 
     handleApiError(error, 'Unknown log', 'Unknown Alert');
 
-    assert.strictEqual(consoleErrorCalls.length, 1);
-    assert.deepStrictEqual(consoleErrorCalls[0], ['Unknown log', error]);
+    expect(consoleErrorCalls.length).toBe(1);
+    expect(consoleErrorCalls[0]).toEqual(['Unknown log', error]);
 
-    assert.strictEqual(alertCalls.length, 1);
-    assert.strictEqual(alertCalls[0], 'Unknown Alert: Unknown error');
+    expect(alertCalls.length).toBe(1);
+    expect(alertCalls[0]).toBe('Unknown Alert: Unknown error');
   });
 });
