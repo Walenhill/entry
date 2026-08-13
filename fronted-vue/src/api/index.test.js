@@ -1,5 +1,4 @@
-import { test, describe, beforeEach, afterEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, beforeEach, afterEach, expect } from 'vitest';
 import apiClient, { slotsApi } from './index.js';
 
 describe('slotsApi', () => {
@@ -44,59 +43,59 @@ describe('slotsApi', () => {
 
   test('getAllSlots calls GET /slots with correct default parameters', async () => {
     await slotsApi.getAllSlots();
-    assert.strictEqual(getCalls.length, 1);
-    assert.strictEqual(getCalls[0].url, '/slots');
-    assert.deepStrictEqual(getCalls[0].config, { params: { role: 'client' } });
+    expect(getCalls.length).toBe(1);
+    expect(getCalls[0].url).toBe('/slots');
+    expect(getCalls[0].config).toEqual({ params: { role: 'client' } });
   });
 
   test('getAllSlots calls GET /slots with provided date and role', async () => {
     await slotsApi.getAllSlots('2023-10-10', 'admin');
-    assert.strictEqual(getCalls.length, 1);
-    assert.strictEqual(getCalls[0].url, '/slots');
-    assert.deepStrictEqual(getCalls[0].config, { params: { date: '2023-10-10', role: 'admin' } });
+    expect(getCalls.length).toBe(1);
+    expect(getCalls[0].url).toBe('/slots');
+    expect(getCalls[0].config).toEqual({ params: { date: '2023-10-10', role: 'admin' } });
   });
 
   test('createSlot calls POST /slots with correct data', async () => {
     const slotData = { time: '10:00' };
     await slotsApi.createSlot(slotData);
-    assert.strictEqual(postCalls.length, 1);
-    assert.strictEqual(postCalls[0].url, '/slots');
-    assert.deepStrictEqual(postCalls[0].data, slotData);
+    expect(postCalls.length).toBe(1);
+    expect(postCalls[0].url).toBe('/slots');
+    expect(postCalls[0].data).toEqual(slotData);
   });
 
   test('generateSlots calls POST /slots/generate with correct template data', async () => {
     const templateData = { templateId: 1 };
     await slotsApi.generateSlots(templateData);
-    assert.strictEqual(postCalls.length, 1);
-    assert.strictEqual(postCalls[0].url, '/slots/generate');
-    assert.deepStrictEqual(postCalls[0].data, templateData);
+    expect(postCalls.length).toBe(1);
+    expect(postCalls[0].url).toBe('/slots/generate');
+    expect(postCalls[0].data).toEqual(templateData);
   });
 
   test('bookSlot calls POST /slots/{id}/book with correct id and booking data', async () => {
     const bookingData = { name: 'John Doe' };
     await slotsApi.bookSlot(123, bookingData);
-    assert.strictEqual(postCalls.length, 1);
-    assert.strictEqual(postCalls[0].url, '/slots/123/book');
-    assert.deepStrictEqual(postCalls[0].data, bookingData);
+    expect(postCalls.length).toBe(1);
+    expect(postCalls[0].url).toBe('/slots/123/book');
+    expect(postCalls[0].data).toEqual(bookingData);
   });
 
   test('cancelBooking calls POST /slots/{id}/cancel with correct id', async () => {
     await slotsApi.cancelBooking(123);
-    assert.strictEqual(postCalls.length, 1);
-    assert.strictEqual(postCalls[0].url, '/slots/123/cancel');
-    assert.strictEqual(postCalls[0].data, undefined);
+    expect(postCalls.length).toBe(1);
+    expect(postCalls[0].url).toBe('/slots/123/cancel');
+    expect(postCalls[0].data).toBe(undefined);
   });
 
   test('deleteSlot calls DELETE /slots/{id} with correct id', async () => {
     await slotsApi.deleteSlot(123);
-    assert.strictEqual(deleteCalls.length, 1);
-    assert.strictEqual(deleteCalls[0].url, '/slots/123');
+    expect(deleteCalls.length).toBe(1);
+    expect(deleteCalls[0].url).toBe('/slots/123');
   });
 
   test('getStats calls GET /stats', async () => {
     await slotsApi.getStats();
-    assert.strictEqual(getCalls.length, 1);
-    assert.strictEqual(getCalls[0].url, '/stats');
-    assert.strictEqual(getCalls[0].config, undefined);
+    expect(getCalls.length).toBe(1);
+    expect(getCalls[0].url).toBe('/stats');
+    expect(getCalls[0].config).toBe(undefined);
   });
 });
