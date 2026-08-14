@@ -1,5 +1,4 @@
-import { test, describe, beforeEach, afterEach } from 'node:test';
-import assert from 'node:assert';
+import { test, describe, beforeEach, afterEach, assert } from 'vitest';
 import apiClient, { slotsApi } from './index.js';
 
 describe('slotsApi', () => {
