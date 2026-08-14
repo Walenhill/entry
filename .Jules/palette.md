@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2025-05-28 - [Caps Lock Warning]
+**Learning:** Users often fail logins because Caps Lock is on, leading to frustration and potential account lockouts. A real-time, screen-reader accessible warning (using `role="alert"` and `aria-live="polite"`) provides immediate, actionable feedback before they submit the form.
+**Action:** When implementing password inputs, always include a real-time Caps Lock check via keyboard/mouse events and display an accessible warning if active.
