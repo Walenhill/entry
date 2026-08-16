@@ -21,7 +21,7 @@
 
       <form @submit.prevent="handleSubmit">
         <div class="form-group mb-3">
-          <label for="clientName">Имя клиента <span class="text-danger">*</span></label>
+          <label for="clientName">Имя клиента <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">(Обязательно)</span></label>
           <input
             type="text"
             id="clientName"
@@ -37,12 +37,13 @@
             :disabled="isSubmitting"
           />
           <div id="name-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
-            {{ formData.name.length }} / 100
+            <span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Введено {{ formData.name.length }} из 100 символов</span>
+            <span aria-hidden="true">{{ formData.name.length }} / 100</span>
           </div>
         </div>
 
         <div class="form-group mb-4">
-          <label for="clientPhone">Телефон <span class="text-danger">*</span></label>
+          <label for="clientPhone">Телефон <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">(Обязательно)</span></label>
           <input
             type="tel"
             id="clientPhone"
@@ -57,7 +58,8 @@
             :disabled="isSubmitting"
           />
           <div id="phone-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
-            {{ formData.phone.length }} / 20
+            <span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Введено {{ formData.phone.length }} из 20 символов</span>
+            <span aria-hidden="true">{{ formData.phone.length }} / 20</span>
           </div>
         </div>
 

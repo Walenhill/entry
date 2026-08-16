@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2026-08-16 - [Accessible Form Metadata]
+**Learning:** Screen readers blindly parse raw text nodes like '/' in character counters (reading '0 slash 255') and '*' in required labels (reading 'asterisk'), which creates a disjointed, noisy experience. When using aria-describedby for limits or visual cues for required fields, the text must be translated into natural language for assistive technologies while preserving the concise visual layout for sighted users.
+**Action:** Always provide descriptive screen reader text for counters using visually-hidden inline styles (e.g., 'Введено X из Y символов') and hide raw visual symbols (like '/' or '*') using aria-hidden='true'.

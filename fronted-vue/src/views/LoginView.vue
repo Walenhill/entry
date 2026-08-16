@@ -8,7 +8,7 @@
 
       <form @submit.prevent="handleLogin">
         <div class="form-group mb-4">
-          <label for="password">Пароль <span class="text-danger">*</span></label>
+          <label for="password">Пароль <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">(Обязательно)</span></label>
           <div class="password-input-wrapper">
             <input
               :type="showPassword ? 'text' : 'password'"
