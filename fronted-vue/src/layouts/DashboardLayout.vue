@@ -16,15 +16,15 @@
 
       <nav class="sidebar-nav" aria-label="Основная навигация">
         <router-link to="/" class="nav-item" @click="closeMenu">
-          Слоты
+          <span aria-hidden="true" class="nav-icon">📅</span> Слоты
         </router-link>
         <router-link to="/stats" class="nav-item" @click="closeMenu">
-          Статистика
+          <span aria-hidden="true" class="nav-icon">📊</span> Статистика
         </router-link>
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn btn-outline logout-btn">Выйти</button>
+        <button @click="handleLogout" class="btn btn-outline logout-btn"><span aria-hidden="true" class="nav-icon">🚪</span> Выйти</button>
       </div>
     </aside>
 
@@ -147,6 +147,16 @@ const handleLogout = async () => {
   color: var(--text-muted);
   font-size: 1.5rem;
   cursor: pointer;
+  border-radius: var(--border-radius-sm);
+}
+
+.close-mobile:hover {
+  color: var(--text-primary);
+}
+
+.close-mobile:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-secondary);
 }
 
 .sidebar-nav {
@@ -163,6 +173,14 @@ const handleLogout = async () => {
   text-decoration: none;
   transition: all 0.2s;
   border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+}
+
+.nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
 }
 
 .nav-item:hover {
@@ -209,6 +227,16 @@ const handleLogout = async () => {
   color: var(--text-primary);
   font-size: 1.5rem;
   cursor: pointer;
+  border-radius: var(--border-radius-sm);
+}
+
+.menu-toggle:hover {
+  color: var(--accent-secondary);
+}
+
+.menu-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--accent-secondary);
 }
 
 .user-info {
