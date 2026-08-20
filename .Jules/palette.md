@@ -28,3 +28,7 @@
 ## 2024-05-18 - [Empty States & Link Interactions in Stats]
 **Learning:** Found that the default empty state for the top clients table was just a text string, which looked unpolished and wasn't screen-reader optimal. Also, dynamically rendered phone links (`<a href="tel:...">`) were missing the standard `.phone-link` class, meaning they lacked visual feedback (hover styles/colors) despite the CSS existing in the component block.
 **Action:** Always verify that tables and lists have structured empty states (icon + heading + message) and ensure all functional links (like `tel:` or `mailto:`) explicitly include utility classes for interaction feedback.
+
+## 2025-05-28 - [Keyboard Accessible Focus Rings on Structural Elements]
+**Learning:** Standalone structural buttons (like `.close-btn`, `.menu-toggle`, or `.close-mobile`) often rely on native browser behavior for focus rings, which can be invisible or inconsistent against dark themes, creating a major accessibility barrier for keyboard users navigating modals and menus.
+**Action:** Always explicitly define `:focus-visible` states using `outline: none` and a themed `box-shadow` (e.g., using `var(--bg-surface)` and `var(--accent-secondary)`) for structural buttons to ensure clear, high-contrast visual feedback without adding custom CSS UI dependencies.
