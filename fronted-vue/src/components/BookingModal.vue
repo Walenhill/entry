@@ -162,6 +162,12 @@ onUnmounted(() => {
   color: var(--text-primary);
 }
 
+.close-btn:focus-visible {
+  outline: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--accent-secondary);
+}
+
 .modal-info {
   background-color: var(--bg-main);
   padding: 1rem;
