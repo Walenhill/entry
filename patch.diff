@@ -1,0 +1,26 @@
+--- fronted-vue/src/layouts/DashboardLayout.vue
++++ fronted-vue/src/layouts/DashboardLayout.vue
+@@ -1,7 +1,7 @@
+ <template>
+   <div class="dashboard-layout">
+-    <a href="#main-content" class="btn btn-primary" style="position: absolute; left: -9999px; z-index: 999; padding: 1rem; margin: 1rem;" @focus="$event.target.style.left='0'" @blur="$event.target.style.left='-9999px'">Перейти к основному контенту</a>
++    <a href="#main-content" class="btn btn-primary skip-link">Перейти к основному контенту</a>
+     <aside class="sidebar" id="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
+       <div class="sidebar-header">
+         <h2 class="logo">BookingApp</h2>
+@@ -259,4 +259,15 @@
+     padding: 1rem;
+   }
+ }
++
++.skip-link {
++  position: absolute;
++  left: -9999px;
++  z-index: 999;
++  padding: 1rem;
++  margin: 1rem;
++}
++.skip-link:focus {
++  left: 0;
++}
+ </style>
