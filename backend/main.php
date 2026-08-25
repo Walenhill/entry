@@ -47,6 +47,9 @@ if ($matchedIndex !== false) {
 
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// ⚡ Bolt Performance Optimization: Cache OPTIONS preflight requests for 24 hours
+// This eliminates redundant network requests for API calls involving credentials.
+header("Access-Control-Max-Age: 86400");
 
 // Security Headers
 header("X-Content-Type-Options: nosniff");
