@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-05-28 - Skip to Content Links
+**Learning:** Keyboard users often have to tab through long navigation menus on every single page view, which is tedious. A 'skip to content' link solves this but must be hidden until focused to not disrupt visual design.
+**Action:** Add a visually hidden skip link (using clip styles, not display: none) as the first focusable element that reveals itself on focus and anchors directly to a main container with tabindex='-1' and outline: none.
