@@ -44,3 +44,7 @@
 ## 2024-06-28 - Disabled Action Buttons Accessibility
 **Learning:** Disabled action buttons (like icon-only buttons or modal close buttons) become inert and drop their tooltips, which can confuse users and reduce accessibility during asynchronous operations.
 **Action:** When disabling action buttons, do not completely replace the existing `aria-label` or apply a `title` directly to the disabled `<button>`. Instead, wrap the disabled button in a `<span>` to hold the `title` attribute, and append the blocked state to the original `aria-label` (e.g., `aria-label="[Action] - Действие недоступно во время загрузки"`) to preserve context and accessibility.
+
+## 2026-05-17 - Skip to Content Focus Management
+**Learning:** Screen reader and keyboard users need a way to bypass repetitive navigation elements. However, simply using an anchor link (href="#id") can interfere with Vue Router or fail to move keyboard focus properly in some browsers if the target container isn't explicitly focusable.
+**Action:** Implement a 'Skip to Content' link that visually hides until focused. Use a programmatic focus shift via '@click.prevent' targeting the main content container, and ensure the target element has 'tabindex="-1"' and 'style="outline: none;"' to cleanly receive focus without an unsightly ring.
