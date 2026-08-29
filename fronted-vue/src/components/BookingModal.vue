@@ -95,6 +95,7 @@ let previousActiveElement = null;
 // Reset form when modal opens
 watch(() => props.show, async (newVal) => {
   if (newVal) {
+    document.body.style.overflow = 'hidden';
     previousActiveElement = document.activeElement;
     formData.value = { name: '', phone: '' };
     document.body.style.overflow = 'hidden';
