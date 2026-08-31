@@ -48,6 +48,10 @@ if ($matchedIndex !== false) {
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
+// Performance optimization: Cache CORS preflight OPTIONS requests in the browser
+// for up to 24 hours to reduce network latency on state-changing API calls.
+header("Access-Control-Max-Age: 86400");
+
 // Security Headers
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
