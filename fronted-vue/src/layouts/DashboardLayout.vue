@@ -149,6 +149,18 @@ const handleLogout = async () => {
   cursor: pointer;
 }
 
+.menu-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-secondary);
+  border-radius: var(--border-radius-sm);
+}
+
+.close-mobile:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-secondary);
+  border-radius: var(--border-radius-sm);
+}
+
 .sidebar-nav {
   flex: 1;
   padding: 1.5rem 0;
