@@ -16,7 +16,8 @@ $queryParams = getQueryParams();
 // Enforce Content-Type for state-changing endpoints to prevent CSRF
 if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
     $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-    if (stripos($contentType, 'application/json') === false) {
+    $primaryType = trim(explode(';', $contentType)[0]);
+    if (strcasecmp($primaryType, 'application/json') !== 0) {
         jsonResponse(['error' => 'Unsupported Media Type'], 415);
     }
 }
