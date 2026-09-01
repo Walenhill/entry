@@ -74,3 +74,7 @@
 ## 2026-06-08 - Preventing Session Lock Contention
 **Learning:** In PHP APIs, to prevent session lock contention from blocking concurrent requests, explicitly call `session_write_close()` early in read-only endpoints (e.g., GET requests) or long-running processes after authentication is complete. Do not place this closure inside global authentication middleware (like `checkAdminAuth()`) to avoid breaking subsequent routing paths that legitimately require session writes (like logout).
 **Action:** Add `session_write_close();` after authentication in read-only endpoints.
+
+## 2026-07-28 - Caching CORS Preflight Requests
+**Learning:** Browsers send preflight `OPTIONS` requests for API calls involving credentials or custom headers, doubling the network latency for each request if left unoptimized.
+**Action:** Add `Access-Control-Max-Age: 86400` header to API responses to instruct the browser to cache the preflight result for 24 hours, eliminating the redundant network roundtrip for subsequent requests.
