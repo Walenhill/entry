@@ -255,6 +255,19 @@ a:focus-visible {
 .gap-3 { gap: 1rem; }
 .gap-4 { gap: 1.5rem; }
 
+/* Accessibility */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 1000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
 /* Utilities */
 .spinner-small {
   display: inline-block;

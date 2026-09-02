@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-layout">
+    <a href="#main-content" class="skip-link btn btn-primary">Перейти к основному контенту</a>
     <aside class="sidebar" id="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <h2 class="logo">BookingApp</h2>
@@ -44,7 +45,7 @@
         </div>
       </header>
 
-      <main class="content-area">
+      <main class="content-area" id="main-content" tabindex="-1" style="outline: none;">
         <router-view />
       </main>
     </div>
