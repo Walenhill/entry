@@ -4,15 +4,15 @@
     <form @submit.prevent="handleSubmit">
       <div class="form-row">
         <div class="form-group">
-          <label for="date">Дата <span class="text-danger">*</span></label>
+          <label for="date">Дата <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
           <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required :disabled="isSubmitting" />
         </div>
         <div class="form-group">
-          <label for="start_time">Начало <span class="text-danger">*</span></label>
+          <label for="start_time">Начало <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
           <input type="time" id="start_time" v-model="form.start_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" />
         </div>
         <div class="form-group">
-          <label for="end_time">Конец <span class="text-danger">*</span></label>
+          <label for="end_time">Конец <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
           <input type="time" id="end_time" v-model="form.end_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" @input="timeError = ''" />
         </div>
       </div>
