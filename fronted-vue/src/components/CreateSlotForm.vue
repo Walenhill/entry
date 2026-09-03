@@ -38,7 +38,10 @@
       </div>
 
       <div class="form-actions justify-end">
-        <button type="button" class="btn btn-outline mr-2" @click="$emit('cancel')" :disabled="isSubmitting">Отмена</button>
+        <button type="button" class="btn btn-outline mr-2" @click="$emit('cancel')" :disabled="isSubmitting" aria-keyshortcuts="Escape">
+          Отмена
+          <span class="text-muted" style="font-size: 0.8em; margin-left: 4px; padding: 1px 4px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-main);">Esc</span>
+        </button>
         <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
           <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
           {{ isSubmitting ? 'Создание...' : 'Добавить слот' }}

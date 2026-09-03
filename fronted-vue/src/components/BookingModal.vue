@@ -62,7 +62,10 @@
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn btn-outline" @click="$emit('close')" :disabled="isSubmitting">Отмена</button>
+          <button type="button" class="btn btn-outline" @click="$emit('close')" :disabled="isSubmitting" aria-keyshortcuts="Escape">
+            Отмена
+            <span class="text-muted" style="font-size: 0.8em; margin-left: 4px; padding: 1px 4px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-main);">Esc</span>
+          </button>
           <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
             <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
             {{ isSubmitting ? 'Сохранение...' : 'Подтвердить бронь' }}
