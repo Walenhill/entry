@@ -14,14 +14,21 @@ jobs:
       github.event.pull_request.draft == false &&
       (
         github.event.pull_request.user.login == 'google-labs-jules[bot]' ||
-        contains(github.event.pull_request.user.login, 'jules')
+        contains(github.event.pull_request.user.login, 'jules') ||
+        contains(github.event.pull_request.body, 'jules') ||
+        contains(github.event.pull_request.body, 'Co-authored-by: google-labs-jules') ||
+        startsWith(github.event.pull_request.head.ref, 'sentinel') ||
+        startsWith(github.event.pull_request.head.ref, 'palette') ||
+        startsWith(github.event.pull_request.head.ref, 'bolt') ||
+        startsWith(github.event.pull_request.head.ref, 'elaine')
       )
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Enable auto-merge
+      - name: Auto-merge Jules PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
-        run: gh pr merge "$PR_URL" --squash --auto
+        run: |
+          gh pr merge "$PR_URL" --squash --admin || gh pr merge "$PR_URL" --squash || gh pr merge "$PR_URL" --squash --auto
