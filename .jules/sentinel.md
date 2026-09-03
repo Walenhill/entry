@@ -66,3 +66,8 @@
 **Vulnerability:** State-changing endpoints (POST/PUT/PATCH) using SameSite=Lax session cookies were vulnerable to Cross-Site Request Forgery (CSRF). An attacker could bypass CORS preflight checks by sending a simple request with `Content-Type: text/plain` or `application/x-www-form-urlencoded` via an HTML form or navigator.sendBeacon.
 **Learning:** CORS only prevents *reading* cross-origin responses and sending *custom* headers. It does not stop a browser from sending a simple POST request with credentials (cookies) to an endpoint. If the endpoint blindly trusts the cookie without requiring a preflight (e.g. by enforcing a custom Content-Type like `application/json`), it is vulnerable to CSRF.
 **Prevention:** Always enforce `Content-Type: application/json` on state-changing endpoints (POST, PUT, PATCH). This acts as a critical defense-in-depth measure because browsers require a CORS preflight request (OPTIONS) before sending an `application/json` payload cross-origin, effectively stopping simple form-based CSRF attacks.
+
+## 2026-09-03 - [CSRF Bypass via Loose Content-Type Validation]
+**Vulnerability:** The CSRF protection on state-changing API endpoints relied on loosely matching 'application/json' within the Content-Type header using stripos().
+**Learning:** Attackers can send cross-origin simple requests (e.g., via fetch with mode: 'no-cors') with a Content-Type like 'text/plain; application/json=true'. The loose stripos() check passes, skipping the CORS preflight and successfully delivering the CSRF payload.
+**Prevention:** Always use strict parsing for Content-Type validation on JSON endpoints. Split the header by ';' and use strcasecmp() to strictly compare the primary media type against 'application/json'.
