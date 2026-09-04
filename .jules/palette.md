@@ -48,3 +48,7 @@
 ## 2026-05-18 - Keyboard Shortcut Hints in Forms
 **Learning:** Users often do not realize that inline forms and modals can be closed via the keyboard (Escape key) unless explicitly instructed, leading to unnecessary mouse movement.
 **Action:** Always include a visual keyboard shortcut hint (e.g., a styled `<kbd>` or simple text like `Esc`) within secondary action buttons (like 'Отмена') to educate users about available keyboard interactions, and use `aria-keyshortcuts` to expose this to assistive technologies.
+
+## 2026-05-19 - Visually Hidden Skip Links via Vue Bindings
+**Learning:** Implementing 'Skip to content' links without adding custom CSS classes (to adhere to strict styling boundaries) can be elegantly achieved using Vue's dynamic `:style` bindings hooked to `@focus` and `@blur` events, avoiding the need for a dedicated `.sr-only` class.
+**Action:** Always use dynamic inline style bindings for visually hidden accessible elements that must appear on focus when custom CSS classes cannot be added.
