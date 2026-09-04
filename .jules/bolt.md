@@ -78,3 +78,7 @@
 ## 2026-09-03 - Eliminating Redundant Preflight Requests
 **Learning:** The API router configuration was missing the `Access-Control-Max-Age` header. Because the frontend uses `withCredentials: true`, the browser was forcing an `OPTIONS` preflight request before every cross-origin API call, effectively doubling network latency for authenticated actions.
 **Action:** Add `header('Access-Control-Max-Age: 86400');` alongside other CORS headers to cache the preflight response in the browser, eliminating the redundant network roundtrip.
+
+## 2026-09-04 - Eliminating Table Data Reads with Covering Indexes
+**Learning:** Queries that filter on one column but group by other non-indexed columns (e.g., `WHERE status = 'booked' GROUP BY client_phone, client_name`) force MySQL to read the data pages (full row reads) to access the grouping columns, even if an index on the filtering column exists.
+**Action:** Create a composite covering index that includes both the filtering column and the grouping columns (e.g., `(status, client_phone, client_name)`). This enables the database engine to perform an ultra-fast Index-Only Scan (`Using index`), resolving the query entirely from the index tree and completely eliminating table I/O for the aggregation.
