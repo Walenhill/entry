@@ -1,5 +1,14 @@
 <template>
   <div class="dashboard-layout">
+    <a
+      href="#main-content"
+      class="btn btn-primary"
+      :style="isSkipLinkFocused ? 'position: fixed; top: 1rem; left: 1rem; z-index: 9999;' : 'position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;'"
+      @focus="isSkipLinkFocused = true"
+      @blur="isSkipLinkFocused = false"
+    >
+      Перейти к основному контенту
+    </a>
     <aside class="sidebar" id="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <h2 class="logo">BookingApp</h2>
@@ -44,7 +53,7 @@
         </div>
       </header>
 
-      <main class="content-area">
+      <main id="main-content" class="content-area" tabindex="-1" style="outline: none;">
         <router-view />
       </main>
     </div>
@@ -66,6 +75,7 @@ import { useAuthStore } from '../store/auth';
 const router = useRouter();
 const authStore = useAuthStore();
 const isMobileMenuOpen = ref(false);
+const isSkipLinkFocused = ref(false);
 
 const menuToggle = ref(null);
 const closeButton = ref(null);
