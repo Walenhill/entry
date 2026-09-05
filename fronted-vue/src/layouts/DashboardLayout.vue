@@ -24,16 +24,21 @@
       </div>
 
       <nav class="sidebar-nav" aria-label="Основная навигация">
-        <router-link to="/" class="nav-item" @click="closeMenu">
-          Слоты
+        <router-link to="/" class="nav-item" @click="closeMenu" style="display: flex; align-items: center; gap: 0.75rem;">
+          <span aria-hidden="true" style="font-size: 1.1em;">📅</span>
+          <span>Слоты</span>
         </router-link>
-        <router-link to="/stats" class="nav-item" @click="closeMenu">
-          Статистика
+        <router-link to="/stats" class="nav-item" @click="closeMenu" style="display: flex; align-items: center; gap: 0.75rem;">
+          <span aria-hidden="true" style="font-size: 1.1em;">📊</span>
+          <span>Статистика</span>
         </router-link>
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn btn-outline logout-btn">Выйти</button>
+        <button @click="handleLogout" class="btn btn-outline logout-btn" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span aria-hidden="true">🚪</span>
+          <span>Выйти</span>
+        </button>
       </div>
     </aside>
 
@@ -48,7 +53,8 @@
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
         ><span aria-hidden="true">☰</span></button>
-        <div class="user-info">
+        <div class="user-info" style="display: flex; align-items: center; gap: 0.5rem;">
+          <span aria-hidden="true" style="font-size: 1.2rem;">👤</span>
           <span>Администратор</span>
         </div>
       </header>
