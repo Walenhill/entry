@@ -52,3 +52,6 @@
 ## 2026-05-19 - Visually Hidden Skip Links via Vue Bindings
 **Learning:** Implementing 'Skip to content' links without adding custom CSS classes (to adhere to strict styling boundaries) can be elegantly achieved using Vue's dynamic `:style` bindings hooked to `@focus` and `@blur` events, avoiding the need for a dedicated `.sr-only` class.
 **Action:** Always use dynamic inline style bindings for visually hidden accessible elements that must appear on focus when custom CSS classes cannot be added.
+## 2023-10-27 - Establish Emoji Icon Pattern
+**Learning:** The application uses emojis (e.g., 📅, 👥, 📋) wrapped in `aria-hidden="true"` as a lightweight, dependency-free icon system across empty states and statistics cards.
+**Action:** When adding visual polish or icons to new components, continue using semantic emojis with `aria-hidden="true"` rather than introducing external icon libraries to maintain visual consistency and performance.
