@@ -204,7 +204,7 @@ function loginAdmin($password) {
         if (!$defaultPassword) {
             return ['success' => false, 'error' => 'Server configuration error: MASTER_PASSWORD is not set.'];
         }
-        if ($defaultPassword === 'admin123') {
+        if ($defaultPassword === 'admin123' || $defaultPassword === 'change_this_master_password') {
             return ['success' => false, 'error' => 'Security error: Please change the default MASTER_PASSWORD to a secure value.'];
         }
         $storedHash = hashPassword($defaultPassword);
