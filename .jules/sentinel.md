@@ -71,3 +71,8 @@
 **Vulnerability:** The CSRF protection on state-changing API endpoints relied on loosely matching 'application/json' within the Content-Type header using stripos().
 **Learning:** Attackers can send cross-origin simple requests (e.g., via fetch with mode: 'no-cors') with a Content-Type like 'text/plain; application/json=true'. The loose stripos() check passes, skipping the CORS preflight and successfully delivering the CSRF payload.
 **Prevention:** Always use strict parsing for Content-Type validation on JSON endpoints. Split the header by ';' and use strcasecmp() to strictly compare the primary media type against 'application/json'.
+
+## 2026-09-06 - [Default Credentials in Environment File]
+**Vulnerability:** The application rejected the hardcoded 'admin123' password but failed to reject 'change_this_master_password', which is the suggested default in `.env.example`.
+**Learning:** If users deploy using the example environment file without modifying it, the admin account will be initialized with a publicly known default password. Blacklisting a single placeholder string is insufficient if another placeholder is provided in documentation.
+**Prevention:** Always explicitly blacklist all placeholder passwords provided in `.env.example` or documentation during the initial setup/authentication flow.
