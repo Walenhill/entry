@@ -55,3 +55,7 @@
 ## 2023-10-27 - Establish Emoji Icon Pattern
 **Learning:** The application uses emojis (e.g., 📅, 👥, 📋) wrapped in `aria-hidden="true"` as a lightweight, dependency-free icon system across empty states and statistics cards.
 **Action:** When adding visual polish or icons to new components, continue using semantic emojis with `aria-hidden="true"` rather than introducing external icon libraries to maintain visual consistency and performance.
+
+## 2026-09-06 - Password Fields Caps Lock Warning
+**Learning:** Users often enter incorrect passwords because they are unaware that Caps Lock is active, leading to frustrating failed login attempts.
+**Action:** Always include a visual warning (e.g., "Внимание: включен Caps Lock") dynamically triggered by `KeyboardEvent.getModifierState('CapsLock')` on password inputs, and ensure it is announced to screen readers via `role="alert"` and `aria-live="polite"`.

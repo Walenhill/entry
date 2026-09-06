@@ -20,7 +20,10 @@
               autocomplete="current-password"
               :disabled="isLoading"
               :aria-invalid="!!error"
-              :aria-describedby="error ? 'login-error' : null"
+              :aria-describedby="error ? 'login-error' : (capsLockOn ? 'caps-lock-warning' : null)"
+              @keyup="checkCapsLock"
+              @keydown="checkCapsLock"
+              @mousedown="checkCapsLock"
             />
             <span :title="isLoading ? (showPassword ? 'Скрыть пароль - Действие недоступно во время загрузки' : 'Показать пароль - Действие недоступно во время загрузки') : (showPassword ? 'Скрыть пароль' : 'Показать пароль')" style="display: inline-flex; position: absolute; right: 0.5rem;">
               <button
@@ -34,6 +37,9 @@
                 <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
               </button>
             </span>
+          </div>
+          <div v-if="capsLockOn" id="caps-lock-warning" class="caps-warning" role="alert" aria-live="polite">
+            <span aria-hidden="true">⚠️</span> Внимание: включен Caps Lock
           </div>
         </div>
 
@@ -63,6 +69,13 @@ const showPassword = ref(false);
 const password = ref('');
 const isLoading = ref(false);
 const error = ref('');
+const capsLockOn = ref(false);
+
+const checkCapsLock = (event) => {
+  if (event.getModifierState) {
+    capsLockOn.value = event.getModifierState('CapsLock');
+  }
+};
 
 onMounted(() => {
   nextTick(() => {
@@ -165,5 +178,14 @@ const handleLogin = async () => {
 .password-toggle-btn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--bg-main), 0 0 0 4px var(--accent-secondary);
+}
+
+.caps-warning {
+  color: var(--status-warning);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 </style>
