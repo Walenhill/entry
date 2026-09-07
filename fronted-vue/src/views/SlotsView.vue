@@ -205,36 +205,9 @@ onMounted(() => {
   gap: 1.5rem;
 }
 
-.state-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  background-color: var(--bg-surface);
-  border-radius: var(--border-radius-lg);
-  border: 1px dashed var(--border-color);
-  text-align: center;
-}
-
 .empty-icon {
   font-size: 3rem;
   opacity: 0.5;
-}
-
-/* Simple Loader */
-.loader {
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--accent-secondary);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 640px) {
