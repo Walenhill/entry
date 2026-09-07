@@ -59,3 +59,7 @@
 ## 2026-09-06 - Password Fields Caps Lock Warning
 **Learning:** Users often enter incorrect passwords because they are unaware that Caps Lock is active, leading to frustrating failed login attempts.
 **Action:** Always include a visual warning (e.g., "Внимание: включен Caps Lock") dynamically triggered by `KeyboardEvent.getModifierState('CapsLock')` on password inputs, and ensure it is announced to screen readers via `role="alert"` and `aria-live="polite"`.
+
+## 2026-09-07 - [SPA Dynamic Document Titles]
+**Learning:** In Single Page Applications, navigating between routes does not reload the page, meaning the document `<title>` remains static by default. This deprives screen reader users of critical feedback that a navigation event succeeded and context about the new page, while also degrading the experience for sighted users navigating multiple tabs.
+**Action:** Always bind dynamic route meta properties to `document.title` within the Vue Router navigation guards to ensure page titles accurately reflect the current view.

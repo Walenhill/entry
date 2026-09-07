@@ -6,7 +6,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
-    meta: { requiresGuest: true }
+    meta: { requiresGuest: true, title: 'Вход в панель' }
   },
   {
     path: '/',
@@ -16,12 +16,14 @@ const routes = [
       {
         path: '',
         name: 'Slots',
-        component: () => import('../views/SlotsView.vue')
+        component: () => import('../views/SlotsView.vue'),
+        meta: { title: 'Управление слотами' }
       },
       {
         path: 'stats',
         name: 'Stats',
-        component: () => import('../views/StatsView.vue')
+        component: () => import('../views/StatsView.vue'),
+        meta: { title: 'Статистика' }
       }
     ]
   },
@@ -37,6 +39,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const baseTitle = 'Система записи';
+  document.title = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle;
+
   const authStore = useAuthStore();
   const isAuthenticated = authStore.isAuthenticated;
 
