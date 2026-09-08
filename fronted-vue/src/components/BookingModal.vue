@@ -48,8 +48,8 @@
             id="clientPhone"
             v-model.trim="formData.phone"
             required
-            pattern=".*\S+.*"
-            title="Поле не может состоять только из пробелов"
+            pattern="^[\+]?[0-9\s\-\(\)]{7,20}$"
+            title="Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))"
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
