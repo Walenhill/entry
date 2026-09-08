@@ -63,3 +63,7 @@
 ## 2026-09-07 - [SPA Dynamic Document Titles]
 **Learning:** In Single Page Applications, navigating between routes does not reload the page, meaning the document `<title>` remains static by default. This deprives screen reader users of critical feedback that a navigation event succeeded and context about the new page, while also degrading the experience for sighted users navigating multiple tabs.
 **Action:** Always bind dynamic route meta properties to `document.title` within the Vue Router navigation guards to ensure page titles accurately reflect the current view.
+
+## 2026-05-20 - Semantic Time Elements
+**Learning:** Found that generic span elements used for displaying dates and times lack semantic meaning, causing assistive technologies to announce them as plain text without chronological context.
+**Action:** Always wrap dates and times in semantic `<time>` elements with valid machine-readable `datetime` attributes (e.g., `<time datetime="YYYY-MM-DDTHH:MM">`) to improve accessibility.

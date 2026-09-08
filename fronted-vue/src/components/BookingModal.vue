@@ -11,11 +11,11 @@
       <dl v-if="slot" class="modal-info mb-4">
         <div class="info-item">
           <dt>Дата:</dt>
-          <dd>{{ slot.date }}</dd>
+          <dd><time :datetime="slot.date">{{ slot.date }}</time></dd>
         </div>
         <div class="info-item">
           <dt>Время:</dt>
-          <dd>{{ slot.start_time }} - {{ slot.end_time }}</dd>
+          <dd><time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> - <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time></dd>
         </div>
       </dl>
 

@@ -2,8 +2,11 @@
   <div class="card slot-card" :class="`status-${statusClass}`">
     <div class="slot-header">
       <div class="time-block">
-        <span class="time">{{ slot.start_time }} - {{ slot.end_time }}</span>
-        <span class="date">{{ slot.date }}</span>
+        <span class="time">
+          <time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> -
+          <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time>
+        </span>
+        <time class="date" :datetime="slot.date">{{ slot.date }}</time>
       </div>
       <span class="badge" :class="`badge-${statusClass}`">{{ statusText }}</span>
     </div>
