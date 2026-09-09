@@ -31,9 +31,11 @@
           maxlength="255"
           aria-describedby="desc-counter"
           :disabled="isSubmitting"
+          :aria-invalid="form.description.length === 255"
         ></textarea>
-        <div id="desc-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
+        <div id="desc-counter" :class="form.description.length === 255 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
           {{ form.description.length }} / 255
+          <span v-if="form.description.length === 255" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
         </div>
       </div>
 
