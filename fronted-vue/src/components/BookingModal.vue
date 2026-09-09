@@ -35,9 +35,11 @@
             maxlength="100"
             aria-describedby="name-counter"
             :disabled="isSubmitting"
+            :aria-invalid="formData.name.length === 100"
           />
-          <div id="name-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
+          <div id="name-counter" :class="formData.name.length === 100 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
             {{ formData.name.length }} / 100
+            <span v-if="formData.name.length === 100" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
           </div>
         </div>
 
@@ -55,9 +57,11 @@
             maxlength="20"
             aria-describedby="phone-counter"
             :disabled="isSubmitting"
+            :aria-invalid="formData.phone.length === 20"
           />
-          <div id="phone-counter" class="text-muted" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;">
+          <div id="phone-counter" :class="formData.phone.length === 20 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
             {{ formData.phone.length }} / 20
+            <span v-if="formData.phone.length === 20" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
           </div>
         </div>
 
