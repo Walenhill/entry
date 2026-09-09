@@ -67,3 +67,11 @@
 ## 2026-05-20 - Semantic Time Elements
 **Learning:** Found that generic span elements used for displaying dates and times lack semantic meaning, causing assistive technologies to announce them as plain text without chronological context.
 **Action:** Always wrap dates and times in semantic `<time>` elements with valid machine-readable `datetime` attributes (e.g., `<time datetime="YYYY-MM-DDTHH:MM">`) to improve accessibility.
+
+## 2026-05-21 - Human-readable Date Formatting
+**Learning:** Found that displaying raw ISO date strings (e.g., '2024-05-20') in the UI is not very user-friendly, and formatting dates via  can cause off-by-one errors due to UTC interpretation when timezone offsets are considered.
+**Action:** Always format dates using  for better readability (e.g., '20 мая 2024 г., Вт'). To ensure the date is parsed correctly in the local timezone, append 'T00:00:00' to the string before instantiating the Date object. Use  if the Russian locale returns lowercase months.
+
+## 2026-05-21 - Human-readable Date Formatting
+**Learning:** Found that displaying raw ISO date strings (e.g., '2024-05-20') in the UI is not very user-friendly, and formatting dates via `new Date('YYYY-MM-DD')` can cause off-by-one errors due to UTC interpretation when timezone offsets are considered.
+**Action:** Always format dates using `Intl.DateTimeFormat` for better readability (e.g., '20 мая 2024 г., Вт'). To ensure the date is parsed correctly in the local timezone, append 'T00:00:00' to the string before instantiating the Date object. Use `style=\"text-transform: capitalize;\"` if the Russian locale returns lowercase months.

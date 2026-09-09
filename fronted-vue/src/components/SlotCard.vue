@@ -6,7 +6,7 @@
           <time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> -
           <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time>
         </span>
-        <time class="date" :datetime="slot.date">{{ slot.date }}</time>
+        <time class="date" :datetime="slot.date" style="text-transform: capitalize;">{{ formattedDate }}</time>
       </div>
       <span class="badge" :class="`badge-${statusClass}`">{{ statusText }}</span>
     </div>
@@ -72,6 +72,19 @@ defineEmits(['book', 'cancel', 'delete']);
 
 const statusClass = computed(() => props.slot.is_booked ? 'booked' : 'available');
 const statusText = computed(() => props.slot.is_booked ? 'Забронировано' : 'Свободно');
+
+const formattedDate = computed(() => {
+  if (!props.slot.date) return '';
+  try {
+    return new Intl.DateTimeFormat('ru-RU', {
+      day: 'numeric',
+      month: 'long',
+      weekday: 'short'
+    }).format(new Date(`${props.slot.date}T00:00:00`));
+  } catch (e) {
+    return props.slot.date;
+  }
+});
 </script>
 
 <style scoped>
