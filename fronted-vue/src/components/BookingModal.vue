@@ -33,10 +33,13 @@
             autocomplete="name"
             placeholder="Введите имя"
             maxlength="100"
-            aria-describedby="name-counter"
+            :aria-describedby="nameError ? 'name-error name-counter' : 'name-counter'"
             :disabled="isSubmitting"
-            :aria-invalid="formData.name.length === 100"
+            :aria-invalid="formData.name.length === 100 || nameError"
+            @input="nameError = false"
+            @invalid="nameError = true"
           />
+          <div v-if="nameError" id="name-error" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Поле не может состоять только из пробелов</div>
           <div id="name-counter" :class="formData.name.length === 100 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
             {{ formData.name.length }} / 100
             <span v-if="formData.name.length === 100" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
@@ -55,10 +58,13 @@
             autocomplete="tel"
             placeholder="Введите номер телефона"
             maxlength="20"
-            aria-describedby="phone-counter"
+            :aria-describedby="phoneError ? 'phone-error phone-counter' : 'phone-counter'"
             :disabled="isSubmitting"
-            :aria-invalid="formData.phone.length === 20"
+            :aria-invalid="formData.phone.length === 20 || phoneError"
+            @input="phoneError = false"
+            @invalid="phoneError = true"
           />
+          <div v-if="phoneError" id="phone-error" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))</div>
           <div id="phone-counter" :class="formData.phone.length === 20 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
             {{ formData.phone.length }} / 20
             <span v-if="formData.phone.length === 20" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
@@ -99,11 +105,16 @@ const formData = ref({
 const nameInput = ref(null);
 let previousActiveElement = null;
 
+const nameError = ref(false);
+const phoneError = ref(false);
+
 // Reset form when modal opens
 watch(() => props.show, async (newVal) => {
   if (newVal) {
     previousActiveElement = document.activeElement;
     formData.value = { name: '', phone: '' };
+    nameError.value = false;
+    phoneError.value = false;
     document.body.style.overflow = 'hidden';
     await nextTick();
     if (nameInput.value) {
