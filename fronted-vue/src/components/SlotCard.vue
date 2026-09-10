@@ -50,6 +50,16 @@
   </div>
 </template>
 
+<script>
+// Performance optimization: Cache Intl.DateTimeFormat instance globally outside the component
+// setup to prevent costly repeated recreation for every slot card on every render/instantiation.
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+  weekday: 'short'
+});
+</script>
+
 <script setup>
 import { computed } from 'vue';
 
@@ -76,11 +86,7 @@ const statusText = computed(() => props.slot.is_booked ? 'Забронирова
 const formattedDate = computed(() => {
   if (!props.slot.date) return '';
   try {
-    return new Intl.DateTimeFormat('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      weekday: 'short'
-    }).format(new Date(`${props.slot.date}T00:00:00`));
+    return dateFormatter.format(new Date(`${props.slot.date}T00:00:00`));
   } catch (e) {
     return props.slot.date;
   }

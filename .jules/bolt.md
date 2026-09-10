@@ -82,3 +82,6 @@
 ## 2026-09-04 - Eliminating Table Data Reads with Covering Indexes
 **Learning:** Queries that filter on one column but group by other non-indexed columns (e.g., `WHERE status = 'booked' GROUP BY client_phone, client_name`) force MySQL to read the data pages (full row reads) to access the grouping columns, even if an index on the filtering column exists.
 **Action:** Create a composite covering index that includes both the filtering column and the grouping columns (e.g., `(status, client_phone, client_name)`). This enables the database engine to perform an ultra-fast Index-Only Scan (`Using index`), resolving the query entirely from the index tree and completely eliminating table I/O for the aggregation.
+## 2026-09-10 - Component Instantiation Overhead
+**Learning:** Instantiating objects like `Intl.DateTimeFormat` inside a Vue `<script setup>` runs on every component instance creation, not just once per module. While fixing overhead, remember to place shared instances in a standard `<script>` block or a separate module to ensure they are truly cached globally.
+**Action:** Use a standard `<script>` block above `<script setup>` for globally cached static utility instances.
