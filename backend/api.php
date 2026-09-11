@@ -189,6 +189,14 @@ function handlePostRequest($path) {
             !isset($data['client_phone']) || !(is_string($data['client_phone']) || is_int($data['client_phone'])) || trim((string)$data['client_phone']) === '') {
             jsonResponse(['error' => 'client_name and client_phone are required and must be strings or integers'], 400);
         }
+
+        // Prevent DoS attacks with excessive input lengths before processing
+        if (mb_strlen((string)$data['client_name']) > 100) {
+            jsonResponse(['error' => 'client_name must not exceed 100 characters'], 400);
+        }
+        if (mb_strlen((string)$data['client_phone']) > 20) {
+            jsonResponse(['error' => 'client_phone must not exceed 20 characters'], 400);
+        }
         
         $result = bookSlot($slotId, $data);
         
