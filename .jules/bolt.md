@@ -85,3 +85,7 @@
 ## 2026-09-10 - Component Instantiation Overhead
 **Learning:** Instantiating objects like `Intl.DateTimeFormat` inside a Vue `<script setup>` runs on every component instance creation, not just once per module. While fixing overhead, remember to place shared instances in a standard `<script>` block or a separate module to ensure they are truly cached globally.
 **Action:** Use a standard `<script>` block above `<script setup>` for globally cached static utility instances.
+
+## 2026-09-12 - Caching Formatted Strings for Vue Computed Properties in Lists
+**Learning:** In unpaginated Vue lists, running `Intl.DateTimeFormat.format()` on newly instantiated `Date` objects inside a computed property for every single list item creates redundant CPU overhead. Even if the formatter instance is shared globally, formatting the exact same date string (e.g., all 50 slots on the same day) repeats the expensive parsing and localization logic.
+**Action:** Cache the output of expensive formatting operations in a plain JavaScript `Map` using the raw input string as the key. This reduces the per-item overhead from an expensive function call to an O(1) hash map lookup, which is critical for smooth rendering of large lists.
