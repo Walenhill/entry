@@ -58,6 +58,10 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
   month: 'long',
   weekday: 'short'
 });
+
+// Performance optimization: Cache formatted dates to eliminate redundant Date parsing
+// and formatting overhead for slots on the same day across the unpaginated list.
+const dateCache = new Map();
 </script>
 
 <script setup>
@@ -85,8 +89,15 @@ const statusText = computed(() => props.slot.is_booked ? 'Забронирова
 
 const formattedDate = computed(() => {
   if (!props.slot.date) return '';
+
+  if (dateCache.has(props.slot.date)) {
+    return dateCache.get(props.slot.date);
+  }
+
   try {
-    return dateFormatter.format(new Date(`${props.slot.date}T00:00:00`));
+    const formatted = dateFormatter.format(new Date(`${props.slot.date}T00:00:00`));
+    dateCache.set(props.slot.date, formatted);
+    return formatted;
   } catch (e) {
     return props.slot.date;
   }
