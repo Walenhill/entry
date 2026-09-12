@@ -1,6 +1,6 @@
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert';
-import apiClient, { slotsApi } from './index.js';
+import apiClient, { slotsApi, authApi } from './index.js';
 
 describe('slotsApi', () => {
   let originalGet;
@@ -98,5 +98,57 @@ describe('slotsApi', () => {
     assert.strictEqual(getCalls.length, 1);
     assert.strictEqual(getCalls[0].url, '/stats');
     assert.strictEqual(getCalls[0].config, undefined);
+  });
+});
+
+describe('authApi', () => {
+  let originalPost;
+  let postCalls = [];
+  let originalLocalStorage;
+  let localStorageCalls = [];
+
+  beforeEach(() => {
+    postCalls = [];
+    localStorageCalls = [];
+
+    // Mock localStorage since we are running in a Node.js environment
+    originalLocalStorage = global.localStorage;
+    global.localStorage = {
+      removeItem: (key) => {
+        localStorageCalls.push({ method: 'removeItem', key });
+      },
+      getItem: (key) => {
+        localStorageCalls.push({ method: 'getItem', key });
+        return null;
+      }
+    };
+    postCalls = [];
+
+    originalPost = apiClient.post;
+
+    apiClient.post = (url, data, config) => {
+      postCalls.push({ url, data, config });
+      return Promise.resolve({ data: 'mocked post response' });
+    };
+  });
+
+  afterEach(() => {
+    apiClient.post = originalPost;
+    global.localStorage = originalLocalStorage;
+  });
+
+  test('login calls POST /auth/login with correct password', async () => {
+    await authApi.login('secret');
+    assert.strictEqual(postCalls.length, 1);
+    assert.strictEqual(postCalls[0].url, '/auth/login');
+    assert.deepStrictEqual(postCalls[0].data, { password: 'secret' });
+  });
+
+  test('logout calls POST /auth/logout and clears localStorage', async () => {
+    await authApi.logout();
+    assert.strictEqual(postCalls.length, 1);
+    assert.strictEqual(postCalls[0].url, '/auth/logout');
+    assert.strictEqual(localStorageCalls.length, 1);
+    assert.deepStrictEqual(localStorageCalls[0], { method: 'removeItem', key: 'is_logged_in' });
   });
 });
