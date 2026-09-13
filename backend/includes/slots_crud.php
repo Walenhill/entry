@@ -278,6 +278,10 @@ function bookSlot($id, $clientData) {
     if (mb_strlen($clientPhone) > 20) {
         return ['error' => 'Client phone must not exceed 20 characters'];
     }
+
+    if (!preg_match('/^[\+]?[0-9\s\-\(\)]{7,20}$/', $clientPhone)) {
+        return ['error' => 'Invalid phone number format'];
+    }
     
     $stmt = $conn->prepare("UPDATE slots SET status = 'booked', client_name = ?, client_phone = ? WHERE id = ? AND status = 'available'");
     $stmt->bind_param("ssi", $clientName, $clientPhone, $id);
