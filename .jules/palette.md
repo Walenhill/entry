@@ -75,3 +75,7 @@
 ## 2026-05-21 - Human-readable Date Formatting
 **Learning:** Found that displaying raw ISO date strings (e.g., '2024-05-20') in the UI is not very user-friendly, and formatting dates via `new Date('YYYY-MM-DD')` can cause off-by-one errors due to UTC interpretation when timezone offsets are considered.
 **Action:** Always format dates using `Intl.DateTimeFormat` for better readability (e.g., '20 мая 2024 г., Вт'). To ensure the date is parsed correctly in the local timezone, append 'T00:00:00' to the string before instantiating the Date object. Use `style=\"text-transform: capitalize;\"` if the Russian locale returns lowercase months.
+
+## 2026-09-13 - [Logout Loading State]
+**Learning:** Found that the asynchronous logout action lacked visual feedback, leaving users uncertain if their click was registered, and didn't apply accessible disabled state wrappers.
+**Action:** Always add loading state variables (e.g., isLoggingOut) to async layout actions and wrap the disabled button in a <span> to maintain accessible tooltips and context during the loading phase.
