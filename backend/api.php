@@ -197,6 +197,10 @@ function handlePostRequest($path) {
         if (mb_strlen((string)$data['client_phone']) > 20) {
             jsonResponse(['error' => 'client_phone must not exceed 20 characters'], 400);
         }
+
+        if (!preg_match('/^[\+]?[0-9\s\-\(\)]{7,20}$/', (string)$data['client_phone'])) {
+            jsonResponse(['error' => 'Invalid phone number format'], 400);
+        }
         
         $result = bookSlot($slotId, $data);
         
