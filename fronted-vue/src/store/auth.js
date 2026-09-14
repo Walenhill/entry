@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { authApi } from '../api';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -20,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
         console.error('Login error:', err);
         return {
           success: false,
-          message: err.response?.data?.error || err.response?.data?.message || 'Ошибка входа. Проверьте пароль.'
+          message: extractErrorMessage(err, 'Ошибка входа. Проверьте пароль.')
         };
       }
     },

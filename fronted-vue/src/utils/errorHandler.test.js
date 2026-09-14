@@ -1,6 +1,6 @@
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert';
-import { handleApiError } from './errorHandler.js';
+import { handleApiError, extractErrorMessage } from './errorHandler.js';
 
 describe('handleApiError', () => {
   let originalConsoleError;
