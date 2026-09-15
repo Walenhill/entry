@@ -76,10 +76,12 @@
             Отмена
             <span class="text-muted" style="font-size: 0.8em; margin-left: 4px; padding: 1px 4px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-main);">Esc</span>
           </button>
-          <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-            <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
-            {{ isSubmitting ? 'Сохранение...' : 'Подтвердить бронь' }}
-          </button>
+          <span :title="isSubmitting ? 'Подтвердить бронь - Действие недоступно во время загрузки' : 'Подтвердить бронь'" style="display: inline-flex;">
+            <button type="submit" class="btn btn-primary" :disabled="isSubmitting" :aria-label="isSubmitting ? 'Подтвердить бронь - Действие недоступно во время загрузки' : 'Подтвердить бронь'">
+              <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
+              {{ isSubmitting ? 'Сохранение...' : 'Подтвердить бронь' }}
+            </button>
+          </span>
         </div>
       </form>
     </div>

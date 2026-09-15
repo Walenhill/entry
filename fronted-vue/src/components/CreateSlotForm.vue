@@ -44,10 +44,12 @@
           Отмена
           <span class="text-muted" style="font-size: 0.8em; margin-left: 4px; padding: 1px 4px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-main);">Esc</span>
         </button>
-        <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-          <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
-          {{ isSubmitting ? 'Создание...' : 'Добавить слот' }}
-        </button>
+        <span :title="isSubmitting ? 'Добавить слот - Действие недоступно во время загрузки' : 'Добавить слот'" style="display: inline-flex;">
+          <button type="submit" class="btn btn-primary" :disabled="isSubmitting" :aria-label="isSubmitting ? 'Добавить слот - Действие недоступно во время загрузки' : 'Добавить слот'">
+            <span v-if="isSubmitting" class="spinner-small" aria-hidden="true"></span>
+            {{ isSubmitting ? 'Создание...' : 'Добавить слот' }}
+          </button>
+        </span>
       </div>
     </form>
   </div>
