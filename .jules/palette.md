@@ -75,3 +75,7 @@
 ## 2026-05-21 - Human-readable Date Formatting
 **Learning:** Found that displaying raw ISO date strings (e.g., '2024-05-20') in the UI is not very user-friendly, and formatting dates via `new Date('YYYY-MM-DD')` can cause off-by-one errors due to UTC interpretation when timezone offsets are considered.
 **Action:** Always format dates using `Intl.DateTimeFormat` for better readability (e.g., '20 мая 2024 г., Вт'). To ensure the date is parsed correctly in the local timezone, append 'T00:00:00' to the string before instantiating the Date object. Use `style=\"text-transform: capitalize;\"` if the Russian locale returns lowercase months.
+
+## 2026-09-15 - Visual feedback for invalid form fields
+**Learning:** The application successfully tracks and announces form errors via `:aria-invalid` and visually hidden text, but completely lacks visual cues (like a red border) on the inputs themselves, relying only on native HTML5 popups. Using inline styles bound to the same error state seamlessly provides this missing visual cue without adding new CSS classes.
+**Action:** Always ensure that form validation not only sets ARIA attributes but also provides explicit visual feedback for sighted users.

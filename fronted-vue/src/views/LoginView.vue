@@ -20,6 +20,7 @@
               autocomplete="current-password"
               :disabled="isLoading"
               :aria-invalid="!!error"
+              :style="error ? 'border-color: var(--status-danger);' : ''"
               :aria-describedby="error ? 'login-error' : (capsLockOn ? 'caps-lock-warning' : null)"
               @keyup="checkCapsLock"
               @keydown="checkCapsLock"

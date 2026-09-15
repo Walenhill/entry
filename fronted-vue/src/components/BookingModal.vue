@@ -36,6 +36,7 @@
             :aria-describedby="nameError ? 'name-error name-counter' : 'name-counter'"
             :disabled="isSubmitting"
             :aria-invalid="formData.name.length === 100 || nameError"
+            :style="(formData.name.length === 100 || nameError) ? 'border-color: var(--status-danger);' : ''"
             @input="nameError = false"
             @invalid="nameError = true"
           />
@@ -61,6 +62,7 @@
             :aria-describedby="phoneError ? 'phone-error phone-counter' : 'phone-counter'"
             :disabled="isSubmitting"
             :aria-invalid="formData.phone.length === 20 || phoneError"
+            :style="(formData.phone.length === 20 || phoneError) ? 'border-color: var(--status-danger);' : ''"
             @input="phoneError = false"
             @invalid="phoneError = true"
           />
