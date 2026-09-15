@@ -43,10 +43,12 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary login-btn" :disabled="isLoading">
-          <span v-if="isLoading" class="spinner-small" aria-hidden="true"></span>
-          {{ isLoading ? 'Вход...' : 'Войти' }}
-        </button>
+        <span :title="isLoading ? 'Войти - Действие недоступно во время загрузки' : 'Войти'" style="display: inline-flex; width: 100%;">
+          <button type="submit" class="btn btn-primary login-btn" :disabled="isLoading" :aria-label="isLoading ? 'Войти - Действие недоступно во время загрузки' : 'Войти'">
+            <span v-if="isLoading" class="spinner-small" aria-hidden="true"></span>
+            {{ isLoading ? 'Вход...' : 'Войти' }}
+          </button>
+        </span>
 
         <div v-if="error" id="login-error" class="error-message mt-3 text-center" role="alert" aria-live="assertive">
           {{ error }}
