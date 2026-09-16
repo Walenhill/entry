@@ -249,11 +249,6 @@ function handleUpdateRequest($path) {
         checkAdminAuth();
         $slotId = (int)$matches[1];
         
-        $slot = getSlotById($slotId);
-        if (!$slot) {
-            jsonResponse(['error' => 'Slot not found'], 404);
-        }
-        
         // Only update description for now
         if (isset($data['description'])) {
             $description = sanitizeInput($data['description']);
@@ -266,7 +261,24 @@ function handleUpdateRequest($path) {
             $stmt->bind_param("si", $description, $slotId);
             
             if ($stmt->execute()) {
-                $slot['description'] = $description;
+                if ($stmt->affected_rows === 0) {
+                    // If no rows affected, the slot might not exist (or the description is identical, but we still treat as success if it exists)
+                    // To avoid a read query just to check existence if identical, we check if the slot exists only if affected_rows is 0
+                    $checkStmt = $conn->prepare("SELECT 1 FROM slots WHERE id = ?");
+                    $checkStmt->bind_param("i", $slotId);
+                    $checkStmt->execute();
+                    $exists = $checkStmt->get_result()->num_rows > 0;
+                    $checkStmt->close();
+                    if (!$exists) {
+                        jsonResponse(['error' => 'Slot not found'], 404);
+                    }
+                }
+                // Performance optimization: Construct the updated slot object directly in memory instead of executing a redundant SELECT query.
+                // Note: since this is just an update to a slot, returning only id and description matches the updated attributes.
+                $slot = [
+                    'id' => $slotId,
+                    'description' => $description
+                ];
                 jsonResponse([
                     'success' => true,
                     'slot' => $slot
