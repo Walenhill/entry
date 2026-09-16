@@ -10,3 +10,10 @@
 ## 2026-09-14 - Deduplicate API error message extraction
 **Learning:** When multiple API consumers manually extract error messages from deeply nested fields like `err.response?.data?.error`, it leads to fragile, duplicated fallback logic across the codebase.
 **Action:** Extract error parsing logic into a central, reusable utility function (e.g., `extractErrorMessage`) inside the API error handler module, and use it consistently wherever manual error parsing is needed.
+
+## 2026-09-16 - Sync server-side regex validation with frontend
+**Learning:** Backend validation should mirror frontend HTML5 pattern checks (e.g., regex  for non-empty strings) to prevent bypassing the validation via direct API calls.
+**Action:** Use targeted file reads via  on the frontend file to accurately sync the correct expression on the backend without hallucinating or guessing patterns.
+## 2026-09-16 - Sync server-side regex validation with frontend
+**Learning:** Backend validation should mirror frontend HTML5 pattern checks (e.g., regex `.*\S+.*` for non-empty strings) to prevent bypassing the validation via direct API calls.
+**Action:** Use targeted file reads via `grep pattern` on the frontend file to accurately sync the correct expression on the backend without hallucinating or guessing patterns.
