@@ -17,3 +17,6 @@
 ## 2026-09-16 - Sync server-side regex validation with frontend
 **Learning:** Backend validation should mirror frontend HTML5 pattern checks (e.g., regex `.*\S+.*` for non-empty strings) to prevent bypassing the validation via direct API calls.
 **Action:** Use targeted file reads via `grep pattern` on the frontend file to accurately sync the correct expression on the backend without hallucinating or guessing patterns.
+## 2026-09-17 - [Add frontend unit tests for auth store]
+**Learning:** [It's important to provide complete test coverage for frontend stores, especially ones handling auth, because API request behaviors and local storage updates are critical for app state.]
+**Action:** [When targeting small test coverage improvement, make sure to add comprehensive coverage for a specific logical unit (like Pinia store actions).]
