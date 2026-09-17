@@ -90,6 +90,16 @@
   </div>
 </template>
 
+<script>
+// Performance optimization: Cache Intl.DateTimeFormat instance globally outside the component
+// setup to prevent costly repeated recreation when the modal computes formatted dates.
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+  weekday: 'short'
+});
+</script>
+
 <script setup>
 import { ref, watch, onMounted, onUnmounted, nextTick, computed } from 'vue';
 
@@ -115,12 +125,7 @@ const phoneError = ref(false);
 const formattedDate = computed(() => {
   if (!props.slot || !props.slot.date) return '';
   try {
-    const formatter = new Intl.DateTimeFormat('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      weekday: 'short'
-    });
-    return formatter.format(new Date(`${props.slot.date}T00:00:00`));
+    return dateFormatter.format(new Date(`${props.slot.date}T00:00:00`));
   } catch (e) {
     return props.slot.date;
   }
