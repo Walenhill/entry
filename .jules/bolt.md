@@ -89,3 +89,6 @@
 ## 2026-09-12 - Caching Formatted Strings for Vue Computed Properties in Lists
 **Learning:** In unpaginated Vue lists, running `Intl.DateTimeFormat.format()` on newly instantiated `Date` objects inside a computed property for every single list item creates redundant CPU overhead. Even if the formatter instance is shared globally, formatting the exact same date string (e.g., all 50 slots on the same day) repeats the expensive parsing and localization logic.
 **Action:** Cache the output of expensive formatting operations in a plain JavaScript `Map` using the raw input string as the key. This reduces the per-item overhead from an expensive function call to an O(1) hash map lookup, which is critical for smooth rendering of large lists.
+## 2026-09-17 - [Extract Intl.DateTimeFormat to module scope in Vue]
+**Learning:** Instantiating `Intl.DateTimeFormat` inside a Vue `computed` property forces costly re-creation on every reactive update, blocking the main thread. Vue 3 SFCs natively support a standard `<script>` block alongside `<script setup>` to safely cache these instances globally.
+**Action:** Always extract `Intl.DateTimeFormat` or other expensive, stateless objects out of `computed` properties into a module-level `<script>` block to reuse the same instance across renders.
