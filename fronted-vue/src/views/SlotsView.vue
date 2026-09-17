@@ -2,13 +2,27 @@
   <div class="slots-view">
     <div class="page-header flex justify-between items-center mb-4">
       <h1>Управление слотами</h1>
-      <button
-        v-show="!showCreateForm"
-        @click="openCreateForm"
-        class="btn btn-primary"
-      >
-        + Создать слот
-      </button>
+      <div class="flex gap-2">
+        <span :title="slotsStore.isLoading ? 'Обновить список - Действие недоступно во время загрузки' : 'Обновить список'" style="display: inline-flex;">
+          <button
+            @click="slotsStore.fetchSlots()"
+            class="btn btn-outline"
+            style="padding: 0; width: 48px;"
+            :aria-label="slotsStore.isLoading ? 'Обновить список - Действие недоступно во время загрузки' : 'Обновить список'"
+            :disabled="slotsStore.isLoading"
+          >
+            <span v-if="slotsStore.isLoading" class="spinner-small" style="margin: 0;" aria-hidden="true"></span>
+            <span v-else aria-hidden="true" style="font-size: 1.25rem;">↻</span>
+          </button>
+        </span>
+        <button
+          v-show="!showCreateForm"
+          @click="openCreateForm"
+          class="btn btn-primary"
+        >
+          <span aria-hidden="true">+</span> Создать слот
+        </button>
+      </div>
     </div>
 
     <!-- Форма создания -->
@@ -40,7 +54,7 @@
       <h3 class="mt-3">Нет доступных слотов</h3>
       <p class="text-muted mb-4">Создайте новый слот, чтобы он появился здесь.</p>
       <button class="btn btn-primary" @click="openCreateForm" v-show="!showCreateForm">
-        + Создать слот
+        <span aria-hidden="true">+</span> Создать слот
       </button>
     </div>
 
