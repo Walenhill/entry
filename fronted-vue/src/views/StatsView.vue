@@ -1,11 +1,25 @@
 <template>
   <div class="stats-view">
-    <div class="page-header mb-4">
-      <h1>Статистика системы</h1>
-      <p class="text-muted">Обзор загруженности и активности клиентов</p>
+    <div class="page-header flex justify-between items-center mb-4">
+      <div>
+        <h1>Статистика системы</h1>
+        <p class="text-muted" style="margin-bottom: 0;">Обзор загруженности и активности клиентов</p>
+      </div>
+      <span :title="slotsStore.statsLoading ? 'Обновить статистику - Действие недоступно во время загрузки' : 'Обновить статистику'" style="display: inline-flex;">
+        <button
+          @click="slotsStore.fetchStats()"
+          class="btn btn-outline"
+          style="padding: 0; width: 48px;"
+          :aria-label="slotsStore.statsLoading ? 'Обновить статистику - Действие недоступно во время загрузки' : 'Обновить статистику'"
+          :disabled="slotsStore.statsLoading"
+        >
+          <span v-if="slotsStore.statsLoading" class="spinner-small" style="margin: 0;" aria-hidden="true"></span>
+          <span v-else aria-hidden="true" style="font-size: 1.25rem;">↻</span>
+        </button>
+      </span>
     </div>
 
-    <div v-if="slotsStore.statsLoading" class="state-container" role="status" aria-live="polite">
+    <div v-if="slotsStore.statsLoading && !slotsStore.stats" class="state-container" role="status" aria-live="polite">
       <div class="loader" aria-hidden="true"></div>
       <p class="mt-3 text-muted">Загрузка статистики...</p>
     </div>
@@ -15,7 +29,7 @@
       <button class="btn btn-outline mt-3" @click="slotsStore.fetchStats()">Повторить попытку</button>
     </div>
 
-    <div v-else-if="slotsStore.stats" class="stats-content">
+    <div v-else-if="slotsStore.stats" class="stats-content" :style="slotsStore.statsLoading ? 'opacity: 0.6; pointer-events: none;' : ''">
       <!-- Cards -->
       <div class="stats-cards mb-4">
         <div class="card stat-card">
@@ -240,6 +254,12 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
   .progress-wrapper {
     flex-direction: column;
     align-items: flex-start;
