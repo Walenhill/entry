@@ -2,6 +2,28 @@ import { defineStore } from 'pinia';
 import { markRaw } from 'vue';
 import { slotsApi } from '../api';
 
+// Performance optimization: Cache Intl.DateTimeFormat instance globally
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+  weekday: 'short'
+});
+
+// Performance optimization: Cache formatted dates to eliminate redundant Date parsing
+const dateCache = new Map();
+
+const formatCachedDate = (dateStr) => {
+  if (!dateStr) return '';
+  if (dateCache.has(dateStr)) return dateCache.get(dateStr);
+  try {
+    const formatted = dateFormatter.format(new Date(`${dateStr}T00:00:00`));
+    dateCache.set(dateStr, formatted);
+    return formatted;
+  } catch (e) {
+    return dateStr;
+  }
+};
+
 export const useSlotsStore = defineStore('slots', {
   state: () => ({
     slots: [],
@@ -15,16 +37,21 @@ export const useSlotsStore = defineStore('slots', {
     formatSlot(slot) {
       // Performance optimization: Using string slicing instead of Date instantiation
       // reduces processing time significantly, as the DB returns strict YYYY-MM-DD HH:MM:SS format
+      const isBooked = slot.status === 'booked';
+      const date = slot.start_time.substring(0, 10);
       return markRaw({
         id: slot.id,
         raw_start_time: slot.start_time, // Retain raw DB string for fast O(1) comparisons
-        date: slot.start_time.substring(0, 10),
+        date: date,
         start_time: slot.start_time.substring(11, 16),
         end_time: slot.end_time.substring(11, 16),
         description: slot.description,
-        is_booked: slot.status === 'booked',
+        is_booked: isBooked,
         booked_by: slot.client_name,
-        booking_comment: slot.client_phone // Use client_phone for the comment field in UI
+        booking_comment: slot.client_phone, // Use client_phone for the comment field in UI
+        formattedDate: formatCachedDate(date),
+        statusClass: isBooked ? 'booked' : 'available',
+        statusText: isBooked ? 'Забронировано' : 'Свободно'
       });
     },
 
