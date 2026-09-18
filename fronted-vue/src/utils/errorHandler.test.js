@@ -88,3 +88,25 @@ describe('handleApiError', () => {
     assert.strictEqual(alertCalls[0], 'Unknown Alert: Unknown error');
   });
 });
+
+describe('extractErrorMessage', () => {
+  test('extracts error.response.data.error', () => {
+    assert.strictEqual(extractErrorMessage({ response: { data: { error: 'Test error' } } }), 'Test error');
+  });
+
+  test('extracts error.response.data.message', () => {
+    assert.strictEqual(extractErrorMessage({ response: { data: { message: 'Test message' } } }), 'Test message');
+  });
+
+  test('extracts error.message', () => {
+    assert.strictEqual(extractErrorMessage({ message: 'Native message' }), 'Native message');
+  });
+
+  test('returns fallback when no message is found', () => {
+    assert.strictEqual(extractErrorMessage({}, 'Custom fallback'), 'Custom fallback');
+  });
+
+  test('returns default fallback when no message and no fallback provided', () => {
+    assert.strictEqual(extractErrorMessage({}), 'Unknown error');
+  });
+});
