@@ -79,3 +79,7 @@
 ## 2026-09-15 - Visual feedback for invalid form fields
 **Learning:** The application successfully tracks and announces form errors via `:aria-invalid` and visually hidden text, but completely lacks visual cues (like a red border) on the inputs themselves, relying only on native HTML5 popups. Using inline styles bound to the same error state seamlessly provides this missing visual cue without adding new CSS classes.
 **Action:** Always ensure that form validation not only sets ARIA attributes but also provides explicit visual feedback for sighted users.
+
+## 2026-09-18 - Stale-while-revalidate for Refresh Actions
+**Learning:** Replacing content with a full-screen loading spinner during manual refreshes causes jarring layout shifts and prevents users from referencing the old data while waiting.
+**Action:** Use a stale-while-revalidate pattern for refresh actions. Keep the existing data visible but dim it using inline styles (e.g., `opacity: 0.6; pointer-events: none;`) and show a smaller loading indicator (like a spinner inside the refresh button) to indicate background activity.
