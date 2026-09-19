@@ -1,14 +1,14 @@
 <template>
-  <div class="card slot-card" :class="`status-${statusClass}`">
+  <div class="card slot-card" :class="`status-${slot.statusClass}`">
     <div class="slot-header">
       <div class="time-block">
         <span class="time">
           <time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> -
           <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time>
         </span>
-        <time class="date" :datetime="slot.date" style="text-transform: capitalize;">{{ formattedDate }}</time>
+        <time class="date" :datetime="slot.date" style="text-transform: capitalize;">{{ slot.formattedDate }}</time>
       </div>
-      <span class="badge" :class="`badge-${statusClass}`">{{ statusText }}</span>
+      <span class="badge" :class="`badge-${slot.statusClass}`">{{ slot.statusText }}</span>
     </div>
 
     <div class="slot-body">
@@ -50,23 +50,7 @@
   </div>
 </template>
 
-<script>
-// Performance optimization: Cache Intl.DateTimeFormat instance globally outside the component
-// setup to prevent costly repeated recreation for every slot card on every render/instantiation.
-const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
-  day: 'numeric',
-  month: 'long',
-  weekday: 'short'
-});
-
-// Performance optimization: Cache formatted dates to eliminate redundant Date parsing
-// and formatting overhead for slots on the same day across the unpaginated list.
-const dateCache = new Map();
-</script>
-
 <script setup>
-import { computed } from 'vue';
-
 const props = defineProps({
   slot: {
     type: Object,
@@ -83,25 +67,6 @@ const props = defineProps({
 });
 
 defineEmits(['book', 'cancel', 'delete']);
-
-const statusClass = computed(() => props.slot.is_booked ? 'booked' : 'available');
-const statusText = computed(() => props.slot.is_booked ? 'Забронировано' : 'Свободно');
-
-const formattedDate = computed(() => {
-  if (!props.slot.date) return '';
-
-  if (dateCache.has(props.slot.date)) {
-    return dateCache.get(props.slot.date);
-  }
-
-  try {
-    const formatted = dateFormatter.format(new Date(`${props.slot.date}T00:00:00`));
-    dateCache.set(props.slot.date, formatted);
-    return formatted;
-  } catch (e) {
-    return props.slot.date;
-  }
-});
 </script>
 
 <style scoped>
