@@ -76,3 +76,8 @@
 **Vulnerability:** The application rejected the hardcoded 'admin123' password but failed to reject 'change_this_master_password', which is the suggested default in `.env.example`.
 **Learning:** If users deploy using the example environment file without modifying it, the admin account will be initialized with a publicly known default password. Blacklisting a single placeholder string is insufficient if another placeholder is provided in documentation.
 **Prevention:** Always explicitly blacklist all placeholder passwords provided in `.env.example` or documentation during the initial setup/authentication flow.
+
+## 2026-09-19 - Rate Limiting Bypass via IP Spoofing
+**Vulnerability:** The application blindly trusted the `X-Forwarded-For` header for rate limiting whenever `REMOTE_ADDR` was a private IP (which is always true in a default Docker setup without a real reverse proxy).
+**Learning:** Trusting `X-Forwarded-For` solely based on `REMOTE_ADDR` being private allows any attacker on the local/Docker network to spoof their IP and completely bypass rate limiting (like brute-force protection).
+**Prevention:** Never blindly trust `X-Forwarded-For` without explicit configuration (e.g., an environment variable like `TRUST_X_FORWARDED_FOR=true`) that confirms the application is safely behind a trusted reverse proxy that strips client-supplied spoofed headers.
