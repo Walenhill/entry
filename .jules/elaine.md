@@ -20,3 +20,7 @@
 ## 2026-09-17 - [Add frontend unit tests for auth store]
 **Learning:** [It's important to provide complete test coverage for frontend stores, especially ones handling auth, because API request behaviors and local storage updates are critical for app state.]
 **Action:** [When targeting small test coverage improvement, make sure to add comprehensive coverage for a specific logical unit (like Pinia store actions).]
+
+## 2024-03-22 - Add frontend unit tests for auth store
+**Learning:** It's important to provide complete test coverage for frontend stores and APIs, especially ones handling auth, because API request behaviors and local storage updates are critical for app state.
+**Action:** When targeting small test coverage improvement, make sure to add comprehensive coverage for a specific logical unit (like the auth API authentication check).

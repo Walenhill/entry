@@ -151,4 +151,28 @@ describe('authApi', () => {
     assert.strictEqual(localStorageCalls.length, 1);
     assert.deepStrictEqual(localStorageCalls[0], { method: 'removeItem', key: 'is_logged_in' });
   });
+
+  test('isAuthenticated returns true if is_logged_in is true in localStorage', () => {
+    global.localStorage.getItem = (key) => {
+      localStorageCalls.push({ method: 'getItem', key });
+      if (key === 'is_logged_in') return 'true';
+      return null;
+    };
+    const result = authApi.isAuthenticated();
+    assert.strictEqual(result, true);
+    assert.strictEqual(localStorageCalls.length, 1);
+    assert.deepStrictEqual(localStorageCalls[0], { method: 'getItem', key: 'is_logged_in' });
+  });
+
+  test('isAuthenticated returns false if is_logged_in is not true in localStorage', () => {
+    global.localStorage.getItem = (key) => {
+      localStorageCalls.push({ method: 'getItem', key });
+      if (key === 'is_logged_in') return 'false';
+      return null;
+    };
+    const result = authApi.isAuthenticated();
+    assert.strictEqual(result, false);
+    assert.strictEqual(localStorageCalls.length, 1);
+    assert.deepStrictEqual(localStorageCalls[0], { method: 'getItem', key: 'is_logged_in' });
+  });
 });
