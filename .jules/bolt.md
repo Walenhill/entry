@@ -92,3 +92,7 @@
 ## 2026-09-17 - [Extract Intl.DateTimeFormat to module scope in Vue]
 **Learning:** Instantiating `Intl.DateTimeFormat` inside a Vue `computed` property forces costly re-creation on every reactive update, blocking the main thread. Vue 3 SFCs natively support a standard `<script>` block alongside `<script setup>` to safely cache these instances globally.
 **Action:** Always extract `Intl.DateTimeFormat` or other expensive, stateless objects out of `computed` properties into a module-level `<script>` block to reuse the same instance across renders.
+
+## 2026-09-19 - Removing redundant component-level computed properties
+**Learning:** Computing properties like `statusClass`, `statusText`, and `formattedDate` in a component (e.g. `SlotCard.vue`) that is rendered many times (like in a v-for loop) adds unnecessary memory and CPU overhead. If these values are already pre-computed globally or in a store (e.g. `slots.js` store), keeping them in the component is redundant and slows down rendering for large unpaginated lists.
+**Action:** Rely on the globally pre-computed properties provided by the store (e.g. `slot.formattedDate`) instead of re-evaluating or importing them via `computed` within the component, avoiding O(N) component creation overhead.
