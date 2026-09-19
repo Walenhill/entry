@@ -83,3 +83,7 @@
 ## 2026-09-18 - Stale-while-revalidate for Refresh Actions
 **Learning:** Replacing content with a full-screen loading spinner during manual refreshes causes jarring layout shifts and prevents users from referencing the old data while waiting.
 **Action:** Use a stale-while-revalidate pattern for refresh actions. Keep the existing data visible but dim it using inline styles (e.g., `opacity: 0.6; pointer-events: none;`) and show a smaller loading indicator (like a spinner inside the refresh button) to indicate background activity.
+
+## 2026-09-19 - Active State Tactile Feedback
+**Learning:** Buttons without an active state rely purely on the change in URL or appearance of a loading spinner for feedback. Some users might click a button and not immediately realize it was successful, leading to multiple clicks.
+**Action:** Add a `transform: scale(0.97)` to the `:active` state for all standard buttons (excluding disabled ones) to provide an immediate tactile response when clicked.

@@ -134,6 +134,10 @@ a:focus-visible {
   cursor: not-allowed;
 }
 
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
 .btn-primary {
   background-color: var(--accent-primary);
   color: var(--text-inverse);
