@@ -77,7 +77,8 @@ defineEmits(['book', 'cancel', 'delete']);
   border-left: 4px solid var(--status-success);
 }
 
-.slot-card:hover {
+.slot-card:hover,
+.slot-card:focus-within {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
