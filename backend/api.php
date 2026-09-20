@@ -198,6 +198,10 @@ function handlePostRequest($path) {
             jsonResponse(['error' => 'client_phone must not exceed 20 characters'], 400);
         }
 
+        if (!preg_match('/^.*\S+.*$/s', (string)$data['client_name'])) {
+            jsonResponse(['error' => 'client_name must not consist of only spaces'], 400);
+        }
+
         if (!preg_match('/^[\+]?[0-9\s\-\(\)]{7,20}$/', (string)$data['client_phone'])) {
             jsonResponse(['error' => 'Invalid phone number format'], 400);
         }
