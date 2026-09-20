@@ -87,3 +87,7 @@
 ## 2026-09-19 - Active State Tactile Feedback
 **Learning:** Buttons without an active state rely purely on the change in URL or appearance of a loading spinner for feedback. Some users might click a button and not immediately realize it was successful, leading to multiple clicks.
 **Action:** Add a `transform: scale(0.97)` to the `:active` state for all standard buttons (excluding disabled ones) to provide an immediate tactile response when clicked.
+
+## 2024-10-25 - Interactive Card Keyboard Focus Context
+**Learning:** Cards containing multiple interactive elements (buttons, links) provide a hover effect for mouse users (`:hover`), but keyboard users tabbing through the elements do not receive the same card-level visual feedback, which can lead to a loss of context.
+**Action:** Always pair `:hover` state styles with `:focus-within` on card components containing interactive elements so keyboard users get the same visual elevation and context cues as mouse users.
