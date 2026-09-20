@@ -24,3 +24,6 @@
 ## 2024-03-22 - Add frontend unit tests for auth store
 **Learning:** It's important to provide complete test coverage for frontend stores and APIs, especially ones handling auth, because API request behaviors and local storage updates are critical for app state.
 **Action:** When targeting small test coverage improvement, make sure to add comprehensive coverage for a specific logical unit (like the auth API authentication check).
+## 2026-09-20 - Sync server-side regex validation with frontend
+**Learning:** Backend validation should mirror frontend HTML5 pattern checks (e.g., regex `.*\S+.*`) to prevent bypassing the validation via direct API calls. When bringing HTML5 validation to PHP using `preg_match` with the `.` wildcard, you must use the `/s` modifier (PCRE_DOTALL) to ensure it can handle multiline strings correctly, otherwise it incorrectly rejects strings containing newlines.
+**Action:** Use targeted file reads via `grep pattern` on the frontend file to accurately sync the correct expression on the backend without hallucinating or guessing patterns, and add `/s` in PHP if needed for newline support.
