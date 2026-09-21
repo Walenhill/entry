@@ -35,10 +35,13 @@
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn btn-outline logout-btn" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-          <span aria-hidden="true">🚪</span>
-          <span>Выйти</span>
-        </button>
+        <span :title="isLoggingOut ? 'Выйти из системы - Действие недоступно во время загрузки' : 'Выйти из системы'" style="display: block; width: 100%;">
+          <button @click="handleLogout" class="btn btn-outline logout-btn" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;" :aria-label="isLoggingOut ? 'Выйти из системы - Действие недоступно во время загрузки' : 'Выйти из системы'" :disabled="isLoggingOut">
+            <span v-if="isLoggingOut" class="spinner-small" aria-hidden="true"></span>
+            <span v-else aria-hidden="true">🚪</span>
+            <span>{{ isLoggingOut ? 'Выход...' : 'Выйти' }}</span>
+          </button>
+        </span>
       </div>
     </aside>
 
@@ -82,6 +85,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const isMobileMenuOpen = ref(false);
 const isSkipLinkFocused = ref(false);
+const isLoggingOut = ref(false);
 
 const menuToggle = ref(null);
 const closeButton = ref(null);
@@ -120,8 +124,10 @@ onUnmounted(() => {
 });
 
 const handleLogout = async () => {
+  isLoggingOut.value = true;
   await authStore.logout();
   router.push('/login');
+  isLoggingOut.value = false;
 };
 </script>
 
