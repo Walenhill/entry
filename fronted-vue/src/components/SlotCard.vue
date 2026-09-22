@@ -21,7 +21,12 @@
         </div>
         <div class="detail-item" v-if="slot.booking_comment">
           <dt class="label">Телефон:</dt>
-          <dd class="value"><a :href="`tel:${slot.booking_comment}`" class="phone-link" :aria-label="`Позвонить клиенту: ${slot.booking_comment}`">{{ slot.booking_comment }}</a></dd>
+          <dd class="value">
+            <a :href="`tel:${slot.booking_comment}`" class="phone-link" :aria-label="`Позвонить клиенту: ${slot.booking_comment}`" title="Нажмите, чтобы позвонить" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+              <span aria-hidden="true" style="font-size: 0.9em;">📞</span>
+              {{ slot.booking_comment }}
+            </a>
+          </dd>
         </div>
       </dl>
     </div>
