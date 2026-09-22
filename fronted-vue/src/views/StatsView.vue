@@ -100,7 +100,10 @@
               <tr v-for="(client, index) in slotsStore.stats.top_clients" :key="index">
                 <td>{{ client.client_name }}</td>
                 <td>
-                  <a v-if="client.client_phone" :href="`tel:${client.client_phone}`" class="phone-link" :aria-label="`Позвонить клиенту: ${client.client_phone}`">{{ client.client_phone }}</a>
+                  <a v-if="client.client_phone" :href="`tel:${client.client_phone}`" class="phone-link" :aria-label="`Позвонить клиенту: ${client.client_phone}`" title="Нажмите, чтобы позвонить" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                    <span aria-hidden="true" style="font-size: 0.9em;">📞</span>
+                    {{ client.client_phone }}
+                  </a>
                   <span v-else class="text-muted">-</span>
                 </td>
                 <td><span class="badge badge-info">{{ client.visits }}</span></td>

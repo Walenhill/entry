@@ -1,3 +1,3 @@
-## 2024-10-27 - Simulating Network Delay in Playwright for Vue Apps
-**Learning:** Using `time.sleep()` inside a synchronous Playwright route handler blocks the main thread, freezing the entire browser UI and preventing visual state updates (like Vue loading spinners) from rendering.
-**Action:** To verify visual loading states in Playwright, do not try to delay the network response inside a synchronous route handler. Instead, either intercept the route and leave it unfulfilled (hanging), or manually trigger the UI state change via `page.evaluate()` or UI interaction before the network call resolves.
+## 2023-11-20 - Adding Icons for Links Without Modifying Global Styles
+**Learning:** Adding subtle emoji prefixes (`📞`) and title tooltips (`title="Нажмите, чтобы позвонить"`) with inline layout styles (`display: inline-flex; align-items: center; gap: 0.25rem;`) is an effective way to improve the clickability and affordance of generic links without relying on external icon libraries or adding custom classes to global stylesheets. Hiding emojis from screen readers (`aria-hidden="true"`) ensures accessibility tools read out the custom `aria-label` correctly.
+**Action:** Use this pattern to quickly boost clarity on actionable text when you are constrained from adding global utility classes or SVG components.
