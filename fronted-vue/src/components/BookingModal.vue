@@ -11,7 +11,7 @@
       <dl v-if="slot" class="modal-info mb-4">
         <div class="info-item">
           <dt>Дата:</dt>
-          <dd><time :datetime="slot.date" style="text-transform: capitalize;">{{ formattedDate }}</time></dd>
+          <dd><time :datetime="slot.date" style="text-transform: capitalize;">{{ slot.formattedDate }}</time></dd>
         </div>
         <div class="info-item">
           <dt>Время:</dt>
@@ -90,18 +90,8 @@
   </div>
 </template>
 
-<script>
-// Performance optimization: Cache Intl.DateTimeFormat instance globally outside the component
-// setup to prevent costly repeated recreation when the modal computes formatted dates.
-const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
-  day: 'numeric',
-  month: 'long',
-  weekday: 'short'
-});
-</script>
-
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick, computed } from 'vue';
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
 
 const props = defineProps({
   show: Boolean,
@@ -121,15 +111,6 @@ let previousActiveElement = null;
 
 const nameError = ref(false);
 const phoneError = ref(false);
-
-const formattedDate = computed(() => {
-  if (!props.slot || !props.slot.date) return '';
-  try {
-    return dateFormatter.format(new Date(`${props.slot.date}T00:00:00`));
-  } catch (e) {
-    return props.slot.date;
-  }
-});
 
 // Reset form when modal opens
 watch(() => props.show, async (newVal) => {
