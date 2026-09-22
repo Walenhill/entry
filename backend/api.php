@@ -166,6 +166,10 @@ function handlePostRequest($path) {
                 jsonResponse(['error' => 'start_time and end_time are required'], 400);
             }
 
+            if (isset($data['description']) && !is_string($data['description'])) {
+                jsonResponse(['error' => 'description must be a string'], 400);
+            }
+
             $result = createSlot($data);
 
             if (isset($result['error'])) {
