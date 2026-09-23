@@ -63,7 +63,11 @@
       </header>
 
       <main id="main-content" class="content-area" tabindex="-1" style="outline: none;">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition name="page-fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </main>
     </div>
 
@@ -296,6 +300,25 @@ const handleLogout = async () => {
 
   .content-area {
     padding: 1rem;
+  }
+}
+
+/* Page Transitions */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade-enter-active,
+  .page-fade-leave-active {
+    transition: none;
   }
 }
 </style>
