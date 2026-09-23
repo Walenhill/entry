@@ -151,12 +151,17 @@ function checkAdminAuth() {
     }
     
     // Проверка актуальности сессии (опционально можно добавить время жизни)
-    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 3600)) {
+    $currentTime = time();
+    if (isset($_SESSION['last_activity']) && ($currentTime - $_SESSION['last_activity'] > 3600)) {
         session_destroy();
         jsonResponse(['error' => 'Session expired'], 401);
     }
     
-    $_SESSION['last_activity'] = time();
+    // Performance optimization: Throttle session write operations
+    // Only update last_activity every 60 seconds to prevent session lock contention and unnecessary I/O on every request
+    if (!isset($_SESSION['last_activity']) || ($currentTime - $_SESSION['last_activity'] > 60)) {
+        $_SESSION['last_activity'] = $currentTime;
+    }
     return true;
 }
 
