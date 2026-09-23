@@ -103,3 +103,6 @@
 ## 2026-09-19 - Removing redundant component-level computed properties
 **Learning:** Computing properties like `statusClass`, `statusText`, and `formattedDate` in a component (e.g. `SlotCard.vue` or `BookingModal.vue`) that is rendered many times or on every user interaction adds unnecessary memory and CPU overhead. If these values are already pre-computed globally or in a store (e.g. `slots.js` store), keeping them in the component is redundant.
 **Action:** Rely on the globally pre-computed properties provided by the store (e.g. `slot.formattedDate`) instead of re-evaluating or importing them via `computed` within the component, avoiding overhead.
+## 2026-09-23 - Throttling Session Writes to Prevent Lock Contention
+**Learning:** In PHP, modifying `$_SESSION` on every request (e.g., `$_SESSION['last_activity'] = time();`) forces a write to the session storage (often disk) when the script ends. Under high concurrency, this causes session lock contention, where subsequent requests block waiting for the session file to unlock, drastically reducing API throughput.
+**Action:** Throttle high-frequency session writes (like timestamp updates) by checking the elapsed time since the last update and only writing if a specific interval (e.g., 60 seconds) has passed.
