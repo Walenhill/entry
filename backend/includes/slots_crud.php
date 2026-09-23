@@ -279,7 +279,7 @@ function bookSlot($id, $clientData) {
         return ['error' => 'Client phone must not exceed 20 characters'];
     }
 
-    if (!preg_match('/^.*\S+.*$/', $clientName)) {
+    if (!preg_match('/^.*\S+.*$/s', $clientName)) {
         return ['error' => 'Client name must not consist of only spaces'];
     }
 
