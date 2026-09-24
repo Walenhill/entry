@@ -85,10 +85,10 @@
 
       <!-- Top Clients Table -->
       <div class="card">
-        <h3 class="mb-3">Активные клиенты</h3>
+        <h3 id="top-clients-heading" class="mb-3">Активные клиенты</h3>
 
         <div class="table-responsive">
-          <table class="table" v-if="slotsStore.stats.top_clients && slotsStore.stats.top_clients.length > 0">
+          <table class="table" v-if="slotsStore.stats.top_clients && slotsStore.stats.top_clients.length > 0" aria-labelledby="top-clients-heading">
             <thead>
               <tr>
                 <th>Имя клиента</th>
@@ -234,6 +234,20 @@ onMounted(() => {
 
 .table tr:last-child td {
   border-bottom: none;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table tbody tr {
+    transition: none;
+  }
 }
 
 .badge-info {
