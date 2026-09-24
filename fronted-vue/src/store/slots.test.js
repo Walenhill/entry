@@ -39,7 +39,7 @@ describe('Slots Store - Error Handling', () => {
       await store.fetchSlots();
 
       expect(consoleSpy).toHaveBeenCalledWith('Error loading slots:', mockError);
-      expect(store.error).toBe('Не удалось загрузить слоты');
+      expect(store.error).toBe('API Error');
       expect(store.isLoading).toBe(false);
     });
   });
@@ -117,7 +117,7 @@ describe('Slots Store - Error Handling', () => {
       await store.fetchStats();
 
       expect(consoleSpy).toHaveBeenCalledWith('Error fetching stats:', mockError);
-      expect(store.statsError).toBe('Ошибка при получении данных');
+      expect(store.statsError).toBe('API Error');
       expect(store.statsLoading).toBe(false);
     });
   });

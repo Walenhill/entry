@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { markRaw } from 'vue';
 import { slotsApi } from '../api';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 // Performance optimization: Cache Intl.DateTimeFormat instance globally
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
@@ -71,7 +72,7 @@ export const useSlotsStore = defineStore('slots', {
         }
       } catch (error) {
         console.error('Error loading slots:', error);
-        this.error = 'Не удалось загрузить слоты';
+        this.error = extractErrorMessage(error, 'Не удалось загрузить слоты');
       } finally {
         this.isLoading = false;
       }
@@ -166,7 +167,7 @@ export const useSlotsStore = defineStore('slots', {
         }
       } catch (error) {
         console.error('Error fetching stats:', error);
-        this.statsError = 'Ошибка при получении данных';
+        this.statsError = extractErrorMessage(error, 'Ошибка при получении данных');
       } finally {
         this.statsLoading = false;
       }
