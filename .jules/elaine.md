@@ -27,3 +27,6 @@
 ## 2026-09-20 - Sync server-side regex validation with frontend
 **Learning:** Backend validation should mirror frontend HTML5 pattern checks (e.g., regex `.*\S+.*`) to prevent bypassing the validation via direct API calls. When bringing HTML5 validation to PHP using `preg_match` with the `.` wildcard, you must use the `/s` modifier (PCRE_DOTALL) to ensure it can handle multiline strings correctly, otherwise it incorrectly rejects strings containing newlines.
 **Action:** Use targeted file reads via `grep pattern` on the frontend file to accurately sync the correct expression on the backend without hallucinating or guessing patterns, and add `/s` in PHP if needed for newline support.
+## 2026-09-24 - Deduplicate API error message extraction in slots store
+**Learning:** When multiple actions in a Pinia store manually extract error messages using fallback strings, it leads to inconsistent error reporting and duplicated logic. It's better to leverage a central utility like `extractErrorMessage` to provide robust handling of backend validation responses.
+**Action:** When updating store actions, ensure they import and utilize `extractErrorMessage` for setting component-level error states rather than hardcoding default failure strings.
