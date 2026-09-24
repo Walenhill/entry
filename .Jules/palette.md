@@ -5,3 +5,6 @@
 ## 2024-03-24 - Vue SPA Route Transitions and Reduced Motion
 **Learning:** Adding a subtle fade transition to `<router-view>` via `<transition name="page-fade" mode="out-in">` drastically improves the "feel" of a Vue SPA with minimal code. However, any animated transition that applies to the entire page content must include `@media (prefers-reduced-motion: reduce)` to disable it, otherwise it can cause accessibility and usability issues for users sensitive to motion.
 **Action:** Use this pattern to add polish to SPAs, always ensuring `prefers-reduced-motion` is paired with page-level transitions.
+## 2026-09-24 - Data Table Keyboard Accessibility & Scanability
+**Learning:** Discovered that raw HTML tables lack descriptive names for assistive technologies, and row-level hover states were missing, making horizontal scanning difficult for sighted users.
+**Action:** Always associate data tables with their headings using `aria-labelledby` and add `:hover` states to table rows (respecting `prefers-reduced-motion`) to improve visual scanability.
