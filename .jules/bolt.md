@@ -106,3 +106,7 @@
 ## 2026-09-23 - Throttling Session Writes to Prevent Lock Contention
 **Learning:** In PHP, modifying `$_SESSION` on every request (e.g., `$_SESSION['last_activity'] = time();`) forces a write to the session storage (often disk) when the script ends. Under high concurrency, this causes session lock contention, where subsequent requests block waiting for the session file to unlock, drastically reducing API throughput.
 **Action:** Throttle high-frequency session writes (like timestamp updates) by checking the elapsed time since the last update and only writing if a specific interval (e.g., 60 seconds) has passed.
+
+## 2026-09-24 - Eliminating Array Allocation on Filter
+**Learning:** Using `array.filter()` inside a Vue store mutation (like `deleteSlot`) creates and returns a completely new array in memory. For large data sets like unpaginated slot lists, this causes unnecessary O(N) memory allocation and increases Garbage Collection pressure.
+**Action:** Use an in-place mutation approach by finding the index with `findIndex()` and removing it with `splice()`. This avoids creating a new array entirely, maintaining Vue's reactivity more efficiently.

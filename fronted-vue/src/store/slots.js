@@ -144,8 +144,12 @@ export const useSlotsStore = defineStore('slots', {
       try {
         const response = await slotsApi.deleteSlot(id);
         if (response.data.success) {
-          // Performance optimization: Mutate local array instead of re-fetching all slots
-          this.slots = this.slots.filter(s => s.id !== id);
+          // Performance optimization: In-place array mutation using splice avoids O(N) memory
+          // allocation from filter(), reducing Garbage Collection pressure for large lists.
+          const index = this.slots.findIndex(s => s.id === id);
+          if (index !== -1) {
+            this.slots.splice(index, 1);
+          }
         } else {
           await this.fetchSlots();
         }
