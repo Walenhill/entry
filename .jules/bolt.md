@@ -110,3 +110,7 @@
 ## 2026-09-24 - Eliminating Array Allocation on Filter
 **Learning:** Using `array.filter()` inside a Vue store mutation (like `deleteSlot`) creates and returns a completely new array in memory. For large data sets like unpaginated slot lists, this causes unnecessary O(N) memory allocation and increases Garbage Collection pressure.
 **Action:** Use an in-place mutation approach by finding the index with `findIndex()` and removing it with `splice()`. This avoids creating a new array entirely, maintaining Vue's reactivity more efficiently.
+
+## 2026-10-25 - CSS Native Virtualization for Unpaginated Lists
+**Learning:** Rendering large unpaginated lists of complex DOM elements (like `SlotCard` instances) forces the browser to calculate layout and painting for hundreds of off-screen items during the initial render, blocking the main thread and slowing down Time to Interactive (TTI).
+**Action:** Apply `content-visibility: auto; contain-intrinsic-size: auto 200px;` to the list item's root CSS class. This provides native CSS virtualization, instructing the browser to skip layout and painting for off-screen elements, drastically improving initial render performance without the complexity of a JavaScript-based virtual scroll library.

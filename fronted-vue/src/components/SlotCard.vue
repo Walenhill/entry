@@ -80,6 +80,9 @@ defineEmits(['book', 'cancel', 'delete']);
   flex-direction: column;
   transition: transform 0.2s, box-shadow 0.2s;
   border-left: 4px solid var(--status-success);
+  /* Performance optimization: Native CSS virtualization prevents browser layout/painting of off-screen list items */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
 }
 
 .slot-card:hover,
