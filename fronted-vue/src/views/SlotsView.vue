@@ -62,7 +62,7 @@
     <!-- Performance optimization: Using a stale-while-revalidate pattern.
          Instead of unmounting the grid during background refetches, we keep it mounted and simply dim it.
          This prevents expensive O(N) DOM destruction and recreation (DOM churn). -->
-    <div v-else class="slots-grid" :style="slotsStore.isLoading ? 'opacity: 0.6; pointer-events: none;' : ''">
+    <div v-else class="slots-grid" :style="slotsStore.isLoading ? 'opacity: 0.6; pointer-events: none;' : ''" :aria-busy="slotsStore.isLoading">
       <!-- Performance optimization: use v-memo to prevent O(N) re-renders
            when unrelated parent state changes (e.g. cancelingSlotId) -->
       <SlotCard

@@ -29,7 +29,7 @@
       <button class="btn btn-outline mt-3" @click="slotsStore.fetchStats()">Повторить попытку</button>
     </div>
 
-    <div v-else-if="slotsStore.stats" class="stats-content" :style="slotsStore.statsLoading ? 'opacity: 0.6; pointer-events: none;' : ''">
+    <div v-else-if="slotsStore.stats" class="stats-content" :style="slotsStore.statsLoading ? 'opacity: 0.6; pointer-events: none;' : ''" :aria-busy="slotsStore.statsLoading">
       <!-- Cards -->
       <div class="stats-cards mb-4">
         <div class="card stat-card">
@@ -76,6 +76,7 @@
             aria-valuemin="0"
             aria-valuemax="100"
             aria-label="Загруженность расписания"
+            :aria-valuetext="`${slotsStore.stats.occupancy_rate}% заполнено`"
           >
             <div class="progress-fill" :style="{ width: `${slotsStore.stats.occupancy_rate}%` }"></div>
           </div>
