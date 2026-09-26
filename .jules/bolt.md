@@ -114,3 +114,7 @@
 ## 2026-10-25 - CSS Native Virtualization for Unpaginated Lists
 **Learning:** Rendering large unpaginated lists of complex DOM elements (like `SlotCard` instances) forces the browser to calculate layout and painting for hundreds of off-screen items during the initial render, blocking the main thread and slowing down Time to Interactive (TTI).
 **Action:** Apply `content-visibility: auto; contain-intrinsic-size: auto 200px;` to the list item's root CSS class. This provides native CSS virtualization, instructing the browser to skip layout and painting for off-screen elements, drastically improving initial render performance without the complexity of a JavaScript-based virtual scroll library.
+
+## 2026-11-10 - Index Probabilistic Queries
+**Learning:** Even if an expensive cleanup query (like deleting old login attempts) is run probabilistically (e.g., 5% of the time) to reduce DB load, failing to index the queried column (e.g., `attempt_time`) still triggers a full table scan when it does run. This can cause periodic performance spikes and lock contention.
+**Action:** Always add an index to columns used in `WHERE` clauses for garbage collection queries, regardless of how frequently they are executed, to ensure they complete instantly and don't block the database.
