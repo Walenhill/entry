@@ -81,3 +81,7 @@
 **Vulnerability:** The application blindly trusted the `X-Forwarded-For` header for rate limiting whenever `REMOTE_ADDR` was a private IP (which is always true in a default Docker setup without a real reverse proxy).
 **Learning:** Trusting `X-Forwarded-For` solely based on `REMOTE_ADDR` being private allows any attacker on the local/Docker network to spoof their IP and completely bypass rate limiting (like brute-force protection).
 **Prevention:** Never blindly trust `X-Forwarded-For` without explicit configuration (e.g., an environment variable like `TRUST_X_FORWARDED_FOR=true`) that confirms the application is safely behind a trusted reverse proxy that strips client-supplied spoofed headers.
+## 2024-05-24 - Missing Referrer-Policy and Permissions-Policy Security Headers
+**Vulnerability:** API responses lacked `Referrer-Policy` and `Permissions-Policy` standard security headers, exposing the application to potential cross-origin referrer leakage and unnecessary browser feature access.
+**Learning:** Security headers are not automatically applied in vanilla PHP APIs unless explicitly configured.
+**Prevention:** Ensure standard security headers (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) are set at the main entry point for all API responses.
