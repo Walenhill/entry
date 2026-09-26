@@ -1,3 +1,3 @@
-## 2024-05-24 - Accessibility bindings for Stale-While-Revalidate pattern and progress bars
-**Learning:** When using a stale-while-revalidate pattern in Vue to avoid DOM churn by keeping a list mounted but dimmed via CSS, the loading state change is visual only. Screen readers won't announce the background update. Furthermore, screen readers sometimes misinterpret standard `role="progressbar"` elements when they lack descriptive context.
-**Action:** When dimming a UI container during loading, explicitly add `:aria-busy="loadingState"` to the container. When creating a `role="progressbar"`, always bind an explicit `:aria-valuetext` with a contextual description string alongside `aria-valuenow`.
+## 2025-02-06 - Add aria-keyshortcuts for Esc actions
+**Learning:** Adding `aria-keyshortcuts="Escape"` to buttons that can be triggered by the keyboard Esc key (like modals or sidebars) provides explicit context for screen reader users, improving accessibility beyond just visual hints or tooltips.
+**Action:** Next time when adding keyboard event listeners for UI actions (e.g., `handleKeydown` for `Escape`), check if the corresponding trigger buttons explicitly bind the `aria-keyshortcuts` attribute.
