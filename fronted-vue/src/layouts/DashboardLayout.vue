@@ -20,6 +20,7 @@
           title="Закрыть меню (Esc)"
           aria-controls="sidebar"
           :aria-expanded="isMobileMenuOpen"
+          aria-keyshortcuts="Escape"
         ><span aria-hidden="true">×</span></button>
       </div>
 
