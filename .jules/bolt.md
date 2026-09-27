@@ -118,3 +118,7 @@
 ## 2026-11-10 - Index Probabilistic Queries
 **Learning:** Even if an expensive cleanup query (like deleting old login attempts) is run probabilistically (e.g., 5% of the time) to reduce DB load, failing to index the queried column (e.g., `attempt_time`) still triggers a full table scan when it does run. This can cause periodic performance spikes and lock contention.
 **Action:** Always add an index to columns used in `WHERE` clauses for garbage collection queries, regardless of how frequently they are executed, to ensure they complete instantly and don't block the database.
+
+## 2024-11-20 - Component Code Splitting for Modals and Forms
+**Learning:** Statically importing conditionally rendered components (like modals or create forms) in Vue views includes their entire code in the main bundle, unnecessarily increasing the initial page load size for all users, even if they never interact with those components.
+**Action:** Use Vue 3's `defineAsyncComponent` to lazy-load these components (e.g., `const BookingModal = defineAsyncComponent(() => import('./BookingModal.vue'))`). This implements component-level code splitting, significantly reducing the initial JavaScript bundle size and improving Time to Interactive (TTI).

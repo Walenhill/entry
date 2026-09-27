@@ -90,12 +90,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, defineAsyncComponent } from 'vue';
 import { useSlotsStore } from '../store/slots';
 import SlotCard from '../components/SlotCard.vue';
-import CreateSlotForm from '../components/CreateSlotForm.vue';
-import BookingModal from '../components/BookingModal.vue';
 import { handleApiError } from '../utils/errorHandler';
+
+// Performance optimization: Lazy load heavy modals and forms that are not needed on initial render
+const CreateSlotForm = defineAsyncComponent(() => import('../components/CreateSlotForm.vue'));
+const BookingModal = defineAsyncComponent(() => import('../components/BookingModal.vue'));
 
 const slotsStore = useSlotsStore();
 
