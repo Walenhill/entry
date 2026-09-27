@@ -19,7 +19,7 @@
         </div>
       </dl>
 
-      <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="handleSubmit" aria-labelledby="booking-modal-title">
         <div class="form-group mb-3">
           <label for="clientName">Имя клиента <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
           <input
