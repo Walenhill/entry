@@ -122,3 +122,7 @@
 ## 2024-11-20 - Component Code Splitting for Modals and Forms
 **Learning:** Statically importing conditionally rendered components (like modals or create forms) in Vue views includes their entire code in the main bundle, unnecessarily increasing the initial page load size for all users, even if they never interact with those components.
 **Action:** Use Vue 3's `defineAsyncComponent` to lazy-load these components (e.g., `const BookingModal = defineAsyncComponent(() => import('./BookingModal.vue'))`). This implements component-level code splitting, significantly reducing the initial JavaScript bundle size and improving Time to Interactive (TTI).
+
+## 2024-11-21 - True Lazy Loading of Vue Async Components
+**Learning:** Using `defineAsyncComponent` for modals (like `BookingModal`) does not lazy-load the chunk if the component is mounted but visually hidden via an internal prop (e.g., `<BookingModal :show="false" />` with an internal `v-if="show"`). Vue downloads the component chunk immediately because it must render the component instance to evaluate the props.
+**Action:** Enforce true lazy loading by moving the condition to the parent template (e.g., `<BookingModal v-if="showBookingModal" />`). This completely defers the network request for the component's JavaScript chunk until the user interacts with the UI, drastically reducing the initial bundle size and improving Time to Interactive (TTI).

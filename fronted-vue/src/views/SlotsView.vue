@@ -79,8 +79,11 @@
     </div>
 
     <!-- Модальное окно бронирования -->
+    <!-- Performance optimization: Enforce true lazy loading of the AsyncComponent
+         by conditionally rendering it via v-if in the parent rather than passing an internal prop.
+         This defers the download of the BookingModal chunk until it is actually needed. -->
     <BookingModal
-      :show="showBookingModal"
+      v-if="showBookingModal"
       :slot="selectedSlot"
       :is-submitting="isBooking"
       @close="closeBookingModal"
