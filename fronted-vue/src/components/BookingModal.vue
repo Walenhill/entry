@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show" class="modal-overlay" @click.self="!isSubmitting && $emit('close')">
+  <div class="modal-overlay" @click.self="!isSubmitting && $emit('close')">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
@@ -91,10 +91,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 
 const props = defineProps({
-  show: Boolean,
   slot: Object,
   isSubmitting: Boolean
 });
@@ -112,44 +111,38 @@ let previousActiveElement = null;
 const nameError = ref(false);
 const phoneError = ref(false);
 
-// Reset form when modal opens
-watch(() => props.show, async (newVal) => {
-  if (newVal) {
-    previousActiveElement = document.activeElement;
-    formData.value = { name: '', phone: '' };
-    nameError.value = false;
-    phoneError.value = false;
-    document.body.style.overflow = 'hidden';
-    await nextTick();
-    if (nameInput.value) {
-      nameInput.value.focus();
-    }
-  } else {
-    document.body.style.overflow = '';
-    await nextTick();
-    if (previousActiveElement) {
-      previousActiveElement.focus();
-    }
-  }
-});
-
 const handleSubmit = () => {
   emit('submit', formData.value);
 };
 
 const handleKeydown = (e) => {
-  if (e.key === 'Escape' && props.show && !props.isSubmitting) {
+  if (e.key === 'Escape' && !props.isSubmitting) {
     emit('close');
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  previousActiveElement = document.activeElement;
   document.addEventListener('keydown', handleKeydown);
+
+  formData.value = { name: '', phone: '' };
+  nameError.value = false;
+  phoneError.value = false;
+  document.body.style.overflow = 'hidden';
+
+  await nextTick();
+  if (nameInput.value) {
+    nameInput.value.focus();
+  }
 });
 
-onUnmounted(() => {
+onUnmounted(async () => {
   document.removeEventListener('keydown', handleKeydown);
   document.body.style.overflow = '';
+  await nextTick();
+  if (previousActiveElement) {
+    previousActiveElement.focus();
+  }
 });
 </script>
 
