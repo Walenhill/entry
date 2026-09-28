@@ -142,6 +142,10 @@ function handlePostRequest($path) {
         case 'slots/generate':
             checkAdminAuth();
 
+            if (empty($data['date']) || !isset($data['start_hour']) || !isset($data['end_hour']) || !isset($data['duration'])) {
+                jsonResponse(['error' => 'date, start_hour, end_hour, and duration are required'], 400);
+            }
+
             $result = generateSlotsFromTemplate($data);
 
             if (isset($result['error'])) {

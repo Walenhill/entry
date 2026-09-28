@@ -1,3 +1,3 @@
-## 2025-02-06 - Add aria-keyshortcuts for Esc actions
-**Learning:** Adding `aria-keyshortcuts="Escape"` to buttons that can be triggered by the keyboard Esc key (like modals or sidebars) provides explicit context for screen reader users, improving accessibility beyond just visual hints or tooltips.
-**Action:** Next time when adding keyboard event listeners for UI actions (e.g., `handleKeydown` for `Escape`), check if the corresponding trigger buttons explicitly bind the `aria-keyshortcuts` attribute.
+## 2024-05-18 - Added input validation to slots/generate API endpoint
+**Learning:** When validating numeric API payload inputs in PHP that can legitimately be `0` (e.g., `start_hour`, `duration`), use `isset()` rather than `empty()` to avoid falsely rejecting valid zero values.
+**Action:** Always inspect the domain semantics of numeric fields before using `empty()` for validation. Use `isset()` for fields where `0` is a valid input.
