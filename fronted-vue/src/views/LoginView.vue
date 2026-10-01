@@ -25,6 +25,7 @@
               @keyup="checkCapsLock"
               @keydown="checkCapsLock"
               @mousedown="checkCapsLock"
+              @input="error = ''"
             />
             <span :title="isLoading ? (showPassword ? 'Скрыть пароль - Действие недоступно во время загрузки' : 'Показать пароль - Действие недоступно во время загрузки') : (showPassword ? 'Скрыть пароль' : 'Показать пароль')" style="display: inline-flex; position: absolute; right: 0.5rem;">
               <button
