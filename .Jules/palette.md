@@ -12,3 +12,7 @@
 ## $(date +%Y-%m-%d) - Adding explicit form labeling
 **Learning:** Adding explicit `aria-labelledby` linking forms to their respective headings (like "Вход в панель" or "Создать новый слот") provides crucial screen reader context, making it easier for users using assistive technologies to understand the form's purpose immediately.
 **Action:** Always verify if forms have an implicit or explicit label. If missing, link them to the nearest descriptive heading using `id` and `aria-labelledby`.
+
+## $(date +%Y-%m-%d) - Clearing field-specific error states dynamically
+**Learning:** In Vue forms, field-specific error states (e.g., a "wrong password" message) can persist even after the user starts typing a correction. This creates a confusing UX where the user sees an error for input they are actively modifying.
+**Action:** To improve frontend UX in Vue forms, clear field-specific error states (e.g., `@input="error = ''"`) as soon as the user begins modifying the input, preventing stale error messages from persisting on the screen.
