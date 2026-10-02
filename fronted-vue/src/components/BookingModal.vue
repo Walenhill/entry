@@ -1,6 +1,6 @@
 <template>
   <div class="modal-overlay" @click.self="!isSubmitting && $emit('close')">
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+    <div class="modal-content" ref="modalContent" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
         <span :title="isSubmitting ? 'Закрыть (Esc) - Действие недоступно во время загрузки' : 'Закрыть (Esc)'" style="display: inline-flex;">
@@ -106,6 +106,7 @@ const formData = ref({
 });
 
 const nameInput = ref(null);
+const modalContent = ref(null);
 let previousActiveElement = null;
 
 const nameError = ref(false);
@@ -118,6 +119,29 @@ const handleSubmit = () => {
 const handleKeydown = (e) => {
   if (e.key === 'Escape' && !props.isSubmitting) {
     emit('close');
+    return;
+  }
+
+  if (e.key === 'Tab' && modalContent.value) {
+    const focusableElements = modalContent.value.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
   }
 };
 

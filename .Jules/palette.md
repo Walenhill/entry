@@ -16,3 +16,6 @@
 ## $(date +%Y-%m-%d) - Clearing field-specific error states dynamically
 **Learning:** In Vue forms, field-specific error states (e.g., a "wrong password" message) can persist even after the user starts typing a correction. This creates a confusing UX where the user sees an error for input they are actively modifying.
 **Action:** To improve frontend UX in Vue forms, clear field-specific error states (e.g., `@input="error = ''"`) as soon as the user begins modifying the input, preventing stale error messages from persisting on the screen.
+## 2024-05-14 - Modal Focus Trapping
+**Learning:** By default, Vue modals that use simple `v-if` overlay layers do not prevent keyboard focus from escaping into the underlying page content when users press Tab, which violates WCAG 2.1 guidelines for focus management in dialogs.
+**Action:** Always implement a manual focus trap within custom modal components by listening for the 'Tab' keydown event, querying all focusable elements (`button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])`), and programmatically cycling focus between the first and last elements based on the Shift modifier.
