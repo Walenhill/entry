@@ -23,17 +23,13 @@ function getDbConnection() {
             // Log the actual error for debugging, but don't expose it to the user
             // This prevents fatal errors in PHP 8.1+ which throw mysqli_sql_exception on connection failure
             error_log('Database connection failed: ' . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(['error' => 'Database connection failed']);
-            exit;
+            jsonResponse(['error' => 'Database connection failed'], 500);
         }
         
         if ($conn->connect_error) {
             // Log the actual error for debugging, but don't expose it to the user
             error_log('Database connection failed: ' . $conn->connect_error);
-            http_response_code(500);
-            echo json_encode(['error' => 'Database connection failed']);
-            exit;
+            jsonResponse(['error' => 'Database connection failed'], 500);
         }
     }
     
