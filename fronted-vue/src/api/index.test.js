@@ -5,19 +5,23 @@ import apiClient, { slotsApi, authApi } from './index.js';
 describe('slotsApi', () => {
   let originalGet;
   let originalPost;
+  let originalPut;
   let originalDelete;
 
   let getCalls = [];
   let postCalls = [];
+  let putCalls = [];
   let deleteCalls = [];
 
   beforeEach(() => {
     getCalls = [];
     postCalls = [];
+    putCalls = [];
     deleteCalls = [];
 
     originalGet = apiClient.get;
     originalPost = apiClient.post;
+    originalPut = apiClient.put;
     originalDelete = apiClient.delete;
 
     apiClient.get = (url, config) => {
@@ -30,6 +34,11 @@ describe('slotsApi', () => {
       return Promise.resolve({ data: 'mocked post response' });
     };
 
+    apiClient.put = (url, data, config) => {
+      putCalls.push({ url, data, config });
+      return Promise.resolve({ data: 'mocked put response' });
+    };
+
     apiClient.delete = (url, config) => {
       deleteCalls.push({ url, config });
       return Promise.resolve({ data: 'mocked delete response' });
@@ -39,6 +48,7 @@ describe('slotsApi', () => {
   afterEach(() => {
     apiClient.get = originalGet;
     apiClient.post = originalPost;
+    apiClient.put = originalPut;
     apiClient.delete = originalDelete;
   });
 
@@ -91,6 +101,14 @@ describe('slotsApi', () => {
     await slotsApi.deleteSlot(123);
     assert.strictEqual(deleteCalls.length, 1);
     assert.strictEqual(deleteCalls[0].url, '/slots/123');
+  });
+
+  test('updateSlot calls PUT /slots/{id} with correct id and data', async () => {
+    const slotData = { description: 'New description' };
+    await slotsApi.updateSlot(123, slotData);
+    assert.strictEqual(putCalls.length, 1);
+    assert.strictEqual(putCalls[0].url, '/slots/123');
+    assert.deepStrictEqual(putCalls[0].data, slotData);
   });
 
   test('getStats calls GET /stats', async () => {
