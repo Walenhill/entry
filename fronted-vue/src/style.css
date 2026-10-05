@@ -81,7 +81,13 @@ input, textarea, select {
   color: var(--text-primary);
   font-family: inherit;
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, opacity 0.2s;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--bg-surface);
 }
 
 input:focus, textarea:focus, select:focus {
