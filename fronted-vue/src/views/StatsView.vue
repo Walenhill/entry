@@ -241,7 +241,8 @@ onMounted(() => {
   transition: background-color 0.2s ease;
 }
 
-.table tbody tr:hover {
+.table tbody tr:hover,
+.table tbody tr:focus-within {
   background-color: var(--bg-surface-hover);
 }
 
