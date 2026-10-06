@@ -245,12 +245,6 @@ onMounted(() => {
   background-color: var(--bg-surface-hover);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .table tbody tr {
-    transition: none;
-  }
-}
-
 .badge-info {
   background-color: rgba(59, 130, 246, 0.1);
   color: #3b82f6;
