@@ -19,3 +19,6 @@
 ## 2024-05-14 - Modal Focus Trapping
 **Learning:** By default, Vue modals that use simple `v-if` overlay layers do not prevent keyboard focus from escaping into the underlying page content when users press Tab, which violates WCAG 2.1 guidelines for focus management in dialogs.
 **Action:** Always implement a manual focus trap within custom modal components by listening for the 'Tab' keydown event, querying all focusable elements (`button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])`), and programmatically cycling focus between the first and last elements based on the Shift modifier.
+## 2026-10-06 - Interactive Table Rows Styling
+**Learning:** Found that table rows containing interactive elements (like phone links) only showed background-color highlighting on `:hover`, excluding keyboard-only users who tab through these links.
+**Action:** Pair `:hover` with `:focus-within` on table rows that act as interactive containers, ensuring keyboard users receive the same visual elevation and context cues as mouse users.
