@@ -1,4 +1,4 @@
-import { test, describe, beforeEach, afterEach } from 'node:test';
+import { test, describe, beforeEach, afterEach } from 'vitest';
 import assert from 'node:assert';
 import { handleApiError, extractErrorMessage } from './errorHandler.js';
 

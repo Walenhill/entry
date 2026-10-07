@@ -95,3 +95,7 @@
 ## 2024-10-25 - Interactive Card Keyboard Focus Context
 **Learning:** Cards containing multiple interactive elements (buttons, links) provide a hover effect for mouse users (`:hover`), but keyboard users tabbing through the elements do not receive the same card-level visual feedback, which can lead to a loss of context.
 **Action:** Always pair `:hover` state styles with `:focus-within` on card components containing interactive elements so keyboard users get the same visual elevation and context cues as mouse users.
+
+## 2024-10-25 - Off-canvas Mobile Menu Focus Trapping
+**Learning:** Found that the mobile sidebar menu used `transform: translateX(-100%);` to visually hide itself, but lacked `visibility: hidden;`. This means the elements within the menu (like links and buttons) were still in the document flow and reachable via keyboard tabbing, allowing users to interact with invisible elements off-screen.
+**Action:** Always pair `transform` translations for off-canvas menus with `visibility: hidden;` when closed, and `visibility: visible;` when open. Crucially, apply a delayed visibility transition when closing (`transition: transform 0.3s ease, visibility 0s 0.3s;`) so the menu stays visible while sliding out, but use an immediate transition when opening (`transition: transform 0.3s ease, visibility 0s 0s;`) so it appears before sliding in.
