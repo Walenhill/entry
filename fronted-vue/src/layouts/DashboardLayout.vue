@@ -274,10 +274,14 @@ const handleLogout = async () => {
     left: 0;
     bottom: 0;
     transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0s 0.3s;
   }
 
   .sidebar-open {
     transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.3s ease, visibility 0s 0s;
   }
 
   .close-mobile {
