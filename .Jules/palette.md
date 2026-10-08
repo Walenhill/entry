@@ -22,3 +22,7 @@
 ## 2026-10-06 - Interactive Table Rows Styling
 **Learning:** Found that table rows containing interactive elements (like phone links) only showed background-color highlighting on `:hover`, excluding keyboard-only users who tab through these links.
 **Action:** Pair `:hover` with `:focus-within` on table rows that act as interactive containers, ensuring keyboard users receive the same visual elevation and context cues as mouse users.
+
+## 2026-10-08 - Focus Trapping in Off-Canvas Menus
+**Learning:** Implementing off-canvas mobile menus (like sidebars) using absolute/fixed positioning requires a manual focus trap. Otherwise, keyboard users can 'Tab' out of the visible menu and invisibly focus on underlying page content, which breaks accessibility.
+**Action:** Whenever creating a mobile menu or off-canvas element that visually overlays the main content, ensure a keyboard event listener captures 'Tab' to cycle focus cyclically between the menu's focusable elements until it is closed.
