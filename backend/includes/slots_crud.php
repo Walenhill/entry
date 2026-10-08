@@ -36,20 +36,26 @@ function getSlots($isAdmin = false, $dateFilter = null) {
     // condition for clients utilizes the idx_status_start_time composite index to eliminate filesort overhead.
     $sql .= " ORDER BY start_time ASC";
     
-    $stmt = $conn->prepare($sql);
-    
     if ($dateFilter) {
+        $stmt = $conn->prepare($sql);
         $stmt->bind_param("ss", $dateFilter, $dateFilter);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Performance optimization: Using fetch_all(MYSQLI_ASSOC) instead of a while loop with fetch_assoc()
+        // pushes the array construction down to the C layer, avoiding slow user-land PHP iteration
+        $slots = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+    } else {
+        // Performance optimization: Avoid preparing static queries that have no dynamic parameters.
+        // Using query() directly eliminates the unnecessary network roundtrip overhead associated with prepare().
+        $result = $conn->query($sql);
+
+        // Performance optimization: Using fetch_all(MYSQLI_ASSOC) instead of a while loop with fetch_assoc()
+        // pushes the array construction down to the C layer, avoiding slow user-land PHP iteration
+        $slots = $result->fetch_all(MYSQLI_ASSOC);
     }
-    
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    // Performance optimization: Using fetch_all(MYSQLI_ASSOC) instead of a while loop with fetch_assoc()
-    // pushes the array construction down to the C layer, avoiding slow user-land PHP iteration
-    $slots = $result->fetch_all(MYSQLI_ASSOC);
-    
-    $stmt->close();
 
     return $slots;
 }

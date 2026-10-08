@@ -126,3 +126,7 @@
 ## 2024-11-21 - True Lazy Loading of Vue Async Components
 **Learning:** Using `defineAsyncComponent` for modals (like `BookingModal`) does not lazy-load the chunk if the component is mounted but visually hidden via an internal prop (e.g., `<BookingModal :show="false" />` with an internal `v-if="show"`). Vue downloads the component chunk immediately because it must render the component instance to evaluate the props.
 **Action:** Enforce true lazy loading by moving the condition to the parent template (e.g., `<BookingModal v-if="showBookingModal" />`). This completely defers the network request for the component's JavaScript chunk until the user interacts with the UI, drastically reducing the initial bundle size and improving Time to Interactive (TTI).
+
+## 2026-10-08 - Eliminate prepare overhead for static queries
+**Learning:** In PHP/MySQL backends using `mysqli`, `prepare()` and `execute()` for static queries without dynamic parameters forces an unnecessary network round-trip to the MySQL server.
+**Action:** When a query has no parameters (e.g., initial `GET /slots` fetch without a date filter), use `$conn->query()` directly instead of `$stmt = $conn->prepare()`.
