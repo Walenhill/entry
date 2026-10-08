@@ -9,7 +9,7 @@
     >
       Перейти к основному контенту
     </a>
-    <aside class="sidebar" id="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
+    <aside class="sidebar" id="sidebar" ref="sidebar" :class="{ 'sidebar-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <h2 class="logo">BookingApp</h2>
         <button
@@ -94,6 +94,7 @@ const isLoggingOut = ref(false);
 
 const menuToggle = ref(null);
 const closeButton = ref(null);
+const sidebar = ref(null);
 
 const openMenu = async () => {
   isMobileMenuOpen.value = true;
@@ -114,8 +115,33 @@ const closeMenu = async () => {
 };
 
 const handleKeydown = (e) => {
-  if (e.key === 'Escape' && isMobileMenuOpen.value) {
+  if (!isMobileMenuOpen.value) return;
+
+  if (e.key === 'Escape') {
     closeMenu();
+    return;
+  }
+
+  if (e.key === 'Tab' && sidebar.value) {
+    const focusableElements = sidebar.value.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
   }
 };
 
