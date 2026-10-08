@@ -109,4 +109,9 @@ describe('extractErrorMessage', () => {
   test('returns default fallback when no message and no fallback provided', () => {
     assert.strictEqual(extractErrorMessage({}), 'Unknown error');
   });
+
+  test('handles null or undefined error gracefully', () => {
+    assert.strictEqual(extractErrorMessage(null, 'Custom fallback'), 'Custom fallback');
+    assert.strictEqual(extractErrorMessage(undefined), 'Unknown error');
+  });
 });

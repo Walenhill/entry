@@ -5,6 +5,7 @@
  * @param {string} alertPrefix - Prefix for the user-facing alert
  */
 export const extractErrorMessage = (error, fallback = 'Unknown error') => {
+  if (!error) return fallback;
   return error.response?.data?.error || error.response?.data?.message || error.message || fallback;
 };
 
