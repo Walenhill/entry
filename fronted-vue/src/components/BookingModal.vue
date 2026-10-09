@@ -40,10 +40,13 @@
             @input="nameError = false"
             @invalid="nameError = true"
           />
-          <div v-if="nameError" id="name-error" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Поле не может состоять только из пробелов</div>
-          <div id="name-counter" :class="formData.name.length === 100 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
-            {{ formData.name.length }} / 100
-            <span v-if="formData.name.length === 100" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.25rem;">
+            <div v-if="nameError" id="name-error" class="text-danger" style="font-size: 0.75rem;">Поле не может состоять только из пробелов</div>
+            <div v-else></div>
+            <div id="name-counter" :class="formData.name.length === 100 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right;" aria-live="polite">
+              {{ formData.name.length }} / 100
+              <span v-if="formData.name.length === 100" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+            </div>
           </div>
         </div>
 
@@ -66,10 +69,13 @@
             @input="phoneError = false"
             @invalid="phoneError = true"
           />
-          <div v-if="phoneError" id="phone-error" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))</div>
-          <div id="phone-counter" :class="formData.phone.length === 20 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
-            {{ formData.phone.length }} / 20
-            <span v-if="formData.phone.length === 20" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.25rem; gap: 1rem;">
+            <div v-if="phoneError" id="phone-error" class="text-danger" style="font-size: 0.75rem;">Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))</div>
+            <div v-else></div>
+            <div id="phone-counter" :class="formData.phone.length === 20 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; flex-shrink: 0;" aria-live="polite">
+              {{ formData.phone.length }} / 20
+              <span v-if="formData.phone.length === 20" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+            </div>
           </div>
         </div>
 
