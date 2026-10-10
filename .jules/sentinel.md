@@ -85,3 +85,8 @@
 **Vulnerability:** API responses lacked `Referrer-Policy` and `Permissions-Policy` standard security headers, exposing the application to potential cross-origin referrer leakage and unnecessary browser feature access.
 **Learning:** Security headers are not automatically applied in vanilla PHP APIs unless explicitly configured.
 **Prevention:** Ensure standard security headers (Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) are set at the main entry point for all API responses.
+
+## 2026-10-10 - Prepared Statement Parameter Binding Error with INTERVAL
+**Vulnerability:** Fatal `mysqli_sql_exception` caused by attempting to bind a parameter to the `INTERVAL` keyword in a MySQL query (e.g., `INTERVAL ? MINUTE`). This triggers an application-level DoS when the authentication endpoint is hit, as the database driver throws an unhandled exception before the query executes.
+**Learning:** In MySQL/MariaDB, you cannot use placeholders (`?`) for identifiers or certain keywords like the amount in an `INTERVAL` clause. The parser expects a constant value or a specific expression structure, not a parameterized bind value.
+**Prevention:** If the interval duration is dynamic but controlled by the application (not user input), cast it strictly to an integer (e.g., `(int)$duration`) and safely concatenate it directly into the SQL string instead of using a bound parameter.

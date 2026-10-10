@@ -17,13 +17,15 @@ function isIpBlocked($ipAddress) {
     $maxAttempts = 5;
     $blockDuration = 15; // минут
     
+    // Ensure blockDuration is an integer to safely interpolate it into the query string
+    $blockDuration = (int)$blockDuration;
     $stmt = $conn->prepare("
         SELECT COUNT(*) as attempts 
         FROM login_attempts 
         WHERE ip_address = ? 
-        AND attempt_time > DATE_SUB(NOW(), INTERVAL ? MINUTE)
+        AND attempt_time > DATE_SUB(NOW(), INTERVAL $blockDuration MINUTE)
     ");
-    $stmt->bind_param("si", $ipAddress, $blockDuration);
+    $stmt->bind_param("s", $ipAddress);
     $stmt->execute();
     $result = $stmt->get_result()->fetch_assoc();
     $stmt->close();
