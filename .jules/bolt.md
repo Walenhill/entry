@@ -130,3 +130,6 @@
 ## 2026-10-08 - Eliminate prepare overhead for static queries
 **Learning:** In PHP/MySQL backends using `mysqli`, `prepare()` and `execute()` for static queries without dynamic parameters forces an unnecessary network round-trip to the MySQL server.
 **Action:** When a query has no parameters (e.g., initial `GET /slots` fetch without a date filter), use `$conn->query()` directly instead of `$stmt = $conn->prepare()`.
+## 2026-11-20 - Fast Array Fetching in mysqli
+**Learning:** Using `while ($row = $result->fetch_assoc())` to iterate over result sets in PHP user-land introduces unnecessary overhead compared to fetching the entire result set at once using the C layer.
+**Action:** In PHP/MySQL backends using `mysqli`, to optimize array construction from query results, prefer using `$result->fetch_all(MYSQLI_ASSOC)` followed by a `foreach` loop instead of a `while ($row = $result->fetch_assoc())` loop. This pushes the array construction down to the C layer, avoiding slow user-land PHP iteration.

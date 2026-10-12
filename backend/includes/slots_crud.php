@@ -412,7 +412,10 @@ function getStatistics() {
         'cancelled' => 0
     ];
 
-    while ($row = $result->fetch_assoc()) {
+    // Performance optimization: Using fetch_all(MYSQLI_ASSOC) instead of a while loop with fetch_assoc()
+    // pushes the array construction down to the C layer, avoiding slow user-land PHP iteration
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    foreach ($rows as $row) {
         $status = $row['status'];
         $count = (int)$row['count'];
         $summary[$status] = $count;
