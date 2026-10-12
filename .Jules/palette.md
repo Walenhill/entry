@@ -26,3 +26,7 @@
 ## 2026-10-08 - Focus Trapping in Off-Canvas Menus
 **Learning:** Implementing off-canvas mobile menus (like sidebars) using absolute/fixed positioning requires a manual focus trap. Otherwise, keyboard users can 'Tab' out of the visible menu and invisibly focus on underlying page content, which breaks accessibility.
 **Action:** Whenever creating a mobile menu or off-canvas element that visually overlays the main content, ensure a keyboard event listener captures 'Tab' to cycle focus cyclically between the menu's focusable elements until it is closed.
+
+## 2026-10-12 - Dark Mode Text and Link Contrast Verification
+**Learning:** Default Tailwind/Tailwind-like color palettes often fail WCAG AA contrast (4.5:1) when applied as text or links on dark backgrounds (e.g., `#27272a` or `#18181b`). For instance, `#ef4444` and `#71717a` have ~3.95:1 and ~3.08:1 contrast, rendering them illegible. Additionally, buttons with danger backgrounds need appropriately dark backgrounds (`#dc2626` and `#b91c1c`) to support white text.
+**Action:** Always manually calculate or verify the contrast ratio of text and link colors on dark surfaces, preferring lighter shades (`#fca5a5`, `#a1a1aa`) over mid-tones for typography.

@@ -12,17 +12,17 @@
   --accent-secondary-hover: #7559a4;
 
   /* Status Colors */
-  --status-success: #10b981;
+  --status-success: #6ee7b7;
   --status-success-bg: rgba(16, 185, 129, 0.1);
   --status-warning: #f59e0b;
-  --status-danger: #ef4444;
+  --status-danger: #fca5a5;
   --status-danger-bg: rgba(239, 68, 68, 0.1);
   --status-info: #3b82f6;
 
   /* Text Colors */
   --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
   --text-inverse: #ffffff;
 
   /* Borders & Shadows */
@@ -163,12 +163,12 @@ a:focus-visible {
 }
 
 .btn-danger {
-  background-color: var(--status-danger);
+  background-color: #dc2626;
   color: var(--text-inverse);
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #dc2626;
+  background-color: #b91c1c;
 }
 
 .btn-warning {
@@ -242,12 +242,12 @@ a:focus-visible {
 
 .phone-link {
   text-decoration: none;
-  color: var(--accent-secondary);
+  color: #a78bfa;
   transition: color 0.2s;
 }
 
 .phone-link:hover, .phone-link:focus {
-  color: var(--accent-secondary-hover);
+  color: #c4b5fd;
   text-decoration: underline;
 }
 
