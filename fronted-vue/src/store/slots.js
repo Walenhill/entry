@@ -65,7 +65,7 @@ export const useSlotsStore = defineStore('slots', {
 
         // Handle both array response and object with data array to prevent integration failures
         const slotsData = Array.isArray(response.data) ? response.data :
-                         (response.data.success ? response.data.data : null);
+                         (response.data?.success ? response.data.data : null);
 
         if (slotsData) {
           this.slots = slotsData.map(slot => this.formatSlot(slot));
