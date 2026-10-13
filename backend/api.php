@@ -52,6 +52,11 @@ function handleGetRequest($path, $queryParams) {
     // GET /slots - Get all slots (admin) or available only (client)
     if ($path === 'slots' || strpos($path, 'slots?') === 0) {
         $dateFilter = isset($queryParams['date']) && is_string($queryParams['date']) ? $queryParams['date'] : null;
+
+        if ($dateFilter && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
+            jsonResponse(['error' => 'Invalid date format. Use YYYY-MM-DD'], 400);
+        }
+
         $role = isset($queryParams['role']) && is_string($queryParams['role']) ? $queryParams['role'] : 'client';
         
         $isAdmin = false;
