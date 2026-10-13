@@ -1,6 +1,6 @@
 <template>
   <div class="login-wrapper">
-    <div class="login-card">
+    <div class="login-card" :class="{ shake: shakeError }">
       <div class="login-header">
         <h2 id="login-heading">Вход в панель</h2>
         <p class="text-muted">Введите пароль для доступа к управлению</p>
@@ -74,6 +74,7 @@ const password = ref('');
 const isLoading = ref(false);
 const error = ref('');
 const capsLockOn = ref(false);
+const shakeError = ref(false);
 
 const checkCapsLock = (event) => {
   if (event.getModifierState) {
@@ -100,6 +101,10 @@ const handleLogin = async () => {
   } else {
     error.value = result.message;
     password.value = '';
+    shakeError.value = true;
+    setTimeout(() => {
+      shakeError.value = false;
+    }, 500);
     nextTick(() => {
       if (passwordInput.value) {
         passwordInput.value.focus();
@@ -191,5 +196,30 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake {
+    animation: none;
+  }
 }
 </style>
