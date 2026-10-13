@@ -133,3 +133,6 @@
 ## 2026-11-20 - Fast Array Fetching in mysqli
 **Learning:** Using `while ($row = $result->fetch_assoc())` to iterate over result sets in PHP user-land introduces unnecessary overhead compared to fetching the entire result set at once using the C layer.
 **Action:** In PHP/MySQL backends using `mysqli`, to optimize array construction from query results, prefer using `$result->fetch_all(MYSQLI_ASSOC)` followed by a `foreach` loop instead of a `while ($row = $result->fetch_assoc())` loop. This pushes the array construction down to the C layer, avoiding slow user-land PHP iteration.
+## 2024-11-20 - Caching Route Components with Keep-Alive
+**Learning:** Switching between tabs (like Slots and Stats views) in Vue usually completely unmounts and destroys the previous view's components, including large unpaginated lists. This forces expensive re-rendering (O(N) component creation) and triggers redundant `onMounted` API calls every time the user navigates.
+**Action:** Wrap `<component :is="Component" />` inside `<keep-alive>` within the main `router-view`. This caches the component state and DOM instances in memory, preventing teardown overhead and providing instantaneous tab switching for complex views.
