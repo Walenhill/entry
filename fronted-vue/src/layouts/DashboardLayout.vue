@@ -66,7 +66,10 @@
       <main id="main-content" class="content-area" tabindex="-1" style="outline: none;">
         <router-view v-slot="{ Component }">
           <transition name="page-fade" mode="out-in">
-            <component :is="Component" />
+            <!-- Performance optimization: Cache route components in memory to prevent O(N) re-rendering on tab switch -->
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
           </transition>
         </router-view>
       </main>
