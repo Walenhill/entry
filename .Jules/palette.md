@@ -9,11 +9,11 @@
 **Learning:** Discovered that raw HTML tables lack descriptive names for assistive technologies, and row-level hover states were missing, making horizontal scanning difficult for sighted users.
 **Action:** Always associate data tables with their headings using `aria-labelledby` and add `:hover` states to table rows (respecting `prefers-reduced-motion`) to improve visual scanability.
 
-## $(date +%Y-%m-%d) - Adding explicit form labeling
+## 2024-10-13 - Adding explicit form labeling
 **Learning:** Adding explicit `aria-labelledby` linking forms to their respective headings (like "Вход в панель" or "Создать новый слот") provides crucial screen reader context, making it easier for users using assistive technologies to understand the form's purpose immediately.
 **Action:** Always verify if forms have an implicit or explicit label. If missing, link them to the nearest descriptive heading using `id` and `aria-labelledby`.
 
-## $(date +%Y-%m-%d) - Clearing field-specific error states dynamically
+## 2024-10-13 - Clearing field-specific error states dynamically
 **Learning:** In Vue forms, field-specific error states (e.g., a "wrong password" message) can persist even after the user starts typing a correction. This creates a confusing UX where the user sees an error for input they are actively modifying.
 **Action:** To improve frontend UX in Vue forms, clear field-specific error states (e.g., `@input="error = ''"`) as soon as the user begins modifying the input, preventing stale error messages from persisting on the screen.
 ## 2024-05-14 - Modal Focus Trapping
@@ -30,3 +30,7 @@
 ## 2026-10-12 - Dark Mode Text and Link Contrast Verification
 **Learning:** Default Tailwind/Tailwind-like color palettes often fail WCAG AA contrast (4.5:1) when applied as text or links on dark backgrounds (e.g., `#27272a` or `#18181b`). For instance, `#ef4444` and `#71717a` have ~3.95:1 and ~3.08:1 contrast, rendering them illegible. Additionally, buttons with danger backgrounds need appropriately dark backgrounds (`#dc2626` and `#b91c1c`) to support white text.
 **Action:** Always manually calculate or verify the contrast ratio of text and link colors on dark surfaces, preferring lighter shades (`#fca5a5`, `#a1a1aa`) over mid-tones for typography.
+
+## 2024-10-13 - Adding physical feedback for form errors
+**Learning:** Using a subtle CSS `shake` animation on a form container provides intuitive physical feedback for validation or authentication failures (like incorrect passwords), immediately drawing the user's attention without relying solely on color (which helps color-blind users). However, this must be paired with `@media (prefers-reduced-motion: reduce)` to disable the shaking, as such sudden movements can cause discomfort for users with motion sensitivity.
+**Action:** When adding motion-based UI feedback (like shaking error states), always wrap the keyframes or animation application in a `prefers-reduced-motion` media query to ensure accessibility for all users.
