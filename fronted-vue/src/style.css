@@ -1,4 +1,6 @@
 :root {
+  color-scheme: dark;
+
   /* Dark Graphite Theme */
   --bg-main: #18181b;
   --bg-surface: #27272a;
