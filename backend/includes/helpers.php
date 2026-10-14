@@ -47,6 +47,10 @@ function jsonResponse($data, $statusCode = 200) {
     header('Pragma: no-cache');
     header('Content-Type: application/json');
 
+    if (!ini_get('zlib.output_compression') && extension_loaded('zlib')) {
+        ob_start('ob_gzhandler');
+    }
+
     // Use JSON_UNESCAPED_UNICODE to prevent unnecessary escaping of multibyte characters (like Cyrillic)
     // saving network bandwidth without measurable CPU overhead
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
