@@ -136,3 +136,7 @@
 ## 2024-11-20 - Caching Route Components with Keep-Alive
 **Learning:** Switching between tabs (like Slots and Stats views) in Vue usually completely unmounts and destroys the previous view's components, including large unpaginated lists. This forces expensive re-rendering (O(N) component creation) and triggers redundant `onMounted` API calls every time the user navigates.
 **Action:** Wrap `<component :is="Component" />` inside `<keep-alive>` within the main `router-view`. This caches the component state and DOM instances in memory, preventing teardown overhead and providing instantaneous tab switching for complex views.
+
+## 2026-10-14 - Request/Response Compression
+**Learning:** Returning large unpaginated JSON payloads from PHP APIs without compression drastically increases network transfer time.
+**Action:** Always enable gzip compression for JSON API responses in PHP by adding `ob_start('ob_gzhandler');` if `zlib` is available. This can reduce large JSON payload sizes by over 95%.
