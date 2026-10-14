@@ -34,3 +34,7 @@
 ## 2024-10-13 - Adding physical feedback for form errors
 **Learning:** Using a subtle CSS `shake` animation on a form container provides intuitive physical feedback for validation or authentication failures (like incorrect passwords), immediately drawing the user's attention without relying solely on color (which helps color-blind users). However, this must be paired with `@media (prefers-reduced-motion: reduce)` to disable the shaking, as such sudden movements can cause discomfort for users with motion sensitivity.
 **Action:** When adding motion-based UI feedback (like shaking error states), always wrap the keyframes or animation application in a `prefers-reduced-motion` media query to ensure accessibility for all users.
+
+## 2024-10-14 - Native Theming for Date/Time Pickers and Scrollbars
+**Learning:** Adding `color-scheme: dark;` to the `:root` element instructs the browser to use a dark theme for native form controls (like `<input type="date">` and `<input type="time">`) and default scrollbars. This is a one-line CSS fix that dramatically improves the UX for users on dark-themed sites who otherwise see glaring white calendar popups or scrollbars. Additionally, setting `<meta name="theme-color" content="#18181b" />` ensures mobile browsers style their address bars to match the background, completing the immersive dark mode experience.
+**Action:** When building dark mode apps, always include `color-scheme: dark;` globally to correctly style native UI components without complex custom CSS.
