@@ -99,3 +99,7 @@
 ## 2024-10-25 - Off-canvas Mobile Menu Focus Trapping
 **Learning:** Found that the mobile sidebar menu used `transform: translateX(-100%);` to visually hide itself, but lacked `visibility: hidden;`. This means the elements within the menu (like links and buttons) were still in the document flow and reachable via keyboard tabbing, allowing users to interact with invisible elements off-screen.
 **Action:** Always pair `transform` translations for off-canvas menus with `visibility: hidden;` when closed, and `visibility: visible;` when open. Crucially, apply a delayed visibility transition when closing (`transition: transform 0.3s ease, visibility 0s 0.3s;`) so the menu stays visible while sliding out, but use an immediate transition when opening (`transition: transform 0.3s ease, visibility 0s 0s;`) so it appears before sliding in.
+
+## 2024-10-25 - Item-Level Async Operation Feedback
+**Learning:** While the application uses stale-while-revalidate patterns for full lists, performing destructive or async actions on individual items (like deleting or canceling a slot) only shows a loading spinner in the button. This leaves the rest of the item visually interactive, which can lead to confusing UX or accidental double-clicks if users interact with other parts of the card.
+**Action:** Always apply the stale-while-revalidate visual pattern (`opacity: 0.6; pointer-events: none;`) and `:aria-busy="true"` to the root container of an individual item while an async mutation is occurring on it, matching the behavior used for list-level refreshes.
