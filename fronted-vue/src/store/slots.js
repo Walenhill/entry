@@ -85,12 +85,25 @@ export const useSlotsStore = defineStore('slots', {
           // Performance optimization: Mutate local array instead of re-fetching all slots
           const newSlot = this.formatSlot(response.data.slot);
 
-          // Performance optimization: O(N) insertion using findIndex and splice
-          // avoids O(N log N) overhead of push() followed by sort().
-          // Using raw_start_time string comparison eliminates O(N) inner-loop string allocations.
-          const insertIndex = this.slots.findIndex(s => s.raw_start_time > response.data.slot.start_time);
+          // Performance optimization: O(log N) insertion using binary search and splice
+          // avoids O(N) overhead of findIndex(), improving performance for large unpaginated lists.
+          // Using raw_start_time string comparison eliminates inner-loop string allocations.
+          let low = 0;
+          let high = this.slots.length - 1;
+          let insertIndex = this.slots.length;
+          const targetTime = response.data.slot.start_time;
 
-          if (insertIndex === -1) {
+          while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            if (this.slots[mid].raw_start_time > targetTime) {
+              insertIndex = mid;
+              high = mid - 1;
+            } else {
+              low = mid + 1;
+            }
+          }
+
+          if (insertIndex === this.slots.length) {
             this.slots.push(newSlot);
           } else {
             this.slots.splice(insertIndex, 0, newSlot);
