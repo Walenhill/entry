@@ -140,3 +140,7 @@
 ## 2026-10-14 - Request/Response Compression
 **Learning:** Returning large unpaginated JSON payloads from PHP APIs without compression drastically increases network transfer time.
 **Action:** Always enable gzip compression for JSON API responses in PHP by adding `ob_start('ob_gzhandler');` if `zlib` is available. This can reduce large JSON payload sizes by over 95%.
+
+## 2024-11-20 - Binary Search for Sorted Array Insertion
+**Learning:** In Vue/Pinia stores, inserting items into a chronologically sorted array (like unpaginated lists of slots) using `findIndex()` to locate the insertion point incurs an O(N) time complexity. For large lists, this slows down the update cycle.
+**Action:** Replace `findIndex()` with a binary search algorithm to reduce the time complexity of finding the insertion index from O(N) to O(log N), significantly speeding up client-side reactivity for large data sets.
