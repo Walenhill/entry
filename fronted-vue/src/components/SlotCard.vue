@@ -1,5 +1,5 @@
 <template>
-  <div class="card slot-card" :class="`status-${slot.statusClass}`">
+  <div class="card slot-card" :class="[`status-${slot.statusClass}`, { 'is-busy': isCanceling || isDeleting }]" :aria-busy="isCanceling || isDeleting">
     <div class="slot-header">
       <div class="time-block">
         <span class="time">
@@ -78,7 +78,7 @@ defineEmits(['book', 'cancel', 'delete']);
 .slot-card {
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
   border-left: 4px solid var(--status-success);
   /* Performance optimization: Native CSS virtualization prevents browser layout/painting of off-screen list items */
   content-visibility: auto;
@@ -93,6 +93,11 @@ defineEmits(['book', 'cancel', 'delete']);
 
 .status-booked {
   border-left-color: var(--status-danger);
+}
+
+.is-busy {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .slot-header {
