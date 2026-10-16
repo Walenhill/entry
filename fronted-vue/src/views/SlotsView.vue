@@ -26,12 +26,14 @@
     </div>
 
     <!-- Форма создания -->
-    <CreateSlotForm
-      v-if="showCreateForm"
-      :is-submitting="isCreating"
-      @submit="handleCreateSlot"
-      @cancel="closeCreateForm"
-    />
+    <transition name="page-fade">
+      <CreateSlotForm
+        v-if="showCreateForm"
+        :is-submitting="isCreating"
+        @submit="handleCreateSlot"
+        @cancel="closeCreateForm"
+      />
+    </transition>
 
     <!-- Фильтр (опционально, пока просто заголовок) -->
     <div class="mb-4">
@@ -82,13 +84,15 @@
     <!-- Performance optimization: Enforce true lazy loading of the AsyncComponent
          by conditionally rendering it via v-if in the parent rather than passing an internal prop.
          This defers the download of the BookingModal chunk until it is actually needed. -->
-    <BookingModal
-      v-if="showBookingModal"
-      :slot="selectedSlot"
-      :is-submitting="isBooking"
-      @close="closeBookingModal"
-      @submit="handleBookSlot"
-    />
+    <transition name="page-fade">
+      <BookingModal
+        v-if="showBookingModal"
+        :slot="selectedSlot"
+        :is-submitting="isBooking"
+        @close="closeBookingModal"
+        @submit="handleBookSlot"
+      />
+    </transition>
   </div>
 </template>
 
