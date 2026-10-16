@@ -103,3 +103,7 @@
 ## 2024-10-25 - Item-Level Async Operation Feedback
 **Learning:** While the application uses stale-while-revalidate patterns for full lists, performing destructive or async actions on individual items (like deleting or canceling a slot) only shows a loading spinner in the button. This leaves the rest of the item visually interactive, which can lead to confusing UX or accidental double-clicks if users interact with other parts of the card.
 **Action:** Always apply the stale-while-revalidate visual pattern (`opacity: 0.6; pointer-events: none;`) and `:aria-busy="true"` to the root container of an individual item while an async mutation is occurring on it, matching the behavior used for list-level refreshes.
+
+## 2026-10-14 - Vue Component Mount Transitions
+**Learning:** Conditionally rendered UI elements (like `<CreateSlotForm>` and `<BookingModal>`) that lack a `<transition>` wrapper appear and disappear abruptly, creating a jarring user experience. Adding subtle entry/exit animations via Vue's built-in `<transition>` component significantly smooths state changes without requiring external animation libraries.
+**Action:** Always wrap dynamically mounted, heavy interactive components (especially modals and inline forms) in a `<transition name="...">` block with accompanying CSS opacity/transform rules, ensuring they are disabled within a `prefers-reduced-motion` media query.
