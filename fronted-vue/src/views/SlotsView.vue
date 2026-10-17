@@ -47,8 +47,12 @@
     </div>
 
     <div v-else-if="slotsStore.error && slotsStore.slots.length === 0" class="state-container error-state" role="alert" aria-live="assertive">
-      <p class="text-danger">{{ slotsStore.error }}</p>
-      <button class="btn btn-outline mt-3" @click="slotsStore.fetchSlots()">Повторить попытку</button>
+      <div class="empty-icon" aria-hidden="true" style="font-size: 3rem; opacity: 0.5;">⚠️</div>
+      <h3 class="mt-3">Ошибка загрузки</h3>
+      <p class="text-danger mb-4">{{ slotsStore.error }}</p>
+      <button class="btn btn-outline" @click="slotsStore.fetchSlots()">
+        <span aria-hidden="true" style="margin-right: 0.5rem;">↻</span> Повторить попытку
+      </button>
     </div>
 
     <div v-else-if="slotsStore.slots.length === 0 && !slotsStore.isLoading" class="state-container empty-state" role="status" aria-live="polite">
