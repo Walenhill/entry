@@ -107,3 +107,7 @@
 ## 2026-10-14 - Vue Component Mount Transitions
 **Learning:** Conditionally rendered UI elements (like `<CreateSlotForm>` and `<BookingModal>`) that lack a `<transition>` wrapper appear and disappear abruptly, creating a jarring user experience. Adding subtle entry/exit animations via Vue's built-in `<transition>` component significantly smooths state changes without requiring external animation libraries.
 **Action:** Always wrap dynamically mounted, heavy interactive components (especially modals and inline forms) in a `<transition name="...">` block with accompanying CSS opacity/transform rules, ensuring they are disabled within a `prefers-reduced-motion` media query.
+
+## 2026-10-25 - Avoid relying purely on color for error states
+**Learning:** Found that the general error messages in `LoginView.vue`, `SlotsView.vue`, and `StatsView.vue` relied primarily on red text and background colors (`text-danger`, `status-danger-bg`) to convey failure. This is less accessible for users with color vision deficiencies.
+**Action:** When enhancing error messages or empty states, always include a visual indicator like an icon (e.g., `⚠️`) wrapped in `aria-hidden="true"` to provide context that doesn't rely on color alone.

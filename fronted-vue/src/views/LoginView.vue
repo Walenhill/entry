@@ -52,8 +52,9 @@
           </button>
         </span>
 
-        <div v-if="error" id="login-error" class="error-message mt-3 text-center" role="alert" aria-live="assertive">
-          {{ error }}
+        <div v-if="error" id="login-error" class="error-message mt-3 text-center" role="alert" aria-live="assertive" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span aria-hidden="true">⚠️</span>
+          <span>{{ error }}</span>
         </div>
       </form>
     </div>
