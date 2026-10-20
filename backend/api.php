@@ -147,7 +147,7 @@ function handlePostRequest($path) {
         case 'slots/generate':
             checkAdminAuth();
 
-            if (empty($data['date']) || !isset($data['start_hour']) || !is_numeric($data['start_hour']) || !isset($data['end_hour']) || !is_numeric($data['end_hour']) || !isset($data['duration']) || !is_numeric($data['duration'])) {
+            if (!isset($data['date']) || !is_string($data['date']) || trim($data['date']) === '' || !isset($data['start_hour']) || !is_numeric($data['start_hour']) || !isset($data['end_hour']) || !is_numeric($data['end_hour']) || !isset($data['duration']) || !is_numeric($data['duration'])) {
                 jsonResponse(['error' => 'date, start_hour, end_hour, and duration are required and must be numeric'], 400);
             }
 
@@ -171,7 +171,7 @@ function handlePostRequest($path) {
             checkAdminAuth();
 
             // Validate required fields
-            if (empty($data['start_time']) || empty($data['end_time'])) {
+            if (!isset($data['start_time']) || !is_string($data['start_time']) || trim($data['start_time']) === '' || !isset($data['end_time']) || !is_string($data['end_time']) || trim($data['end_time']) === '') {
                 jsonResponse(['error' => 'start_time and end_time are required'], 400);
             }
 
