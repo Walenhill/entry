@@ -25,7 +25,7 @@
         <label for="description">Описание (опционально)</label>
         <textarea
           id="description"
-          v-model="form.description"
+          v-model.trim="form.description"
           rows="2"
           placeholder="Например: Стрижка бороды"
           maxlength="255"
