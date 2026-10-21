@@ -27,7 +27,81 @@ describe('Slots Store - Error Handling', () => {
     delete global.localStorage;
   });
 
+  describe('formatSlot', () => {
+    it('formats an available slot correctly', () => {
+      const store = useSlotsStore();
+      const slotData = {
+        id: 1,
+        start_time: '2023-11-01 10:00:00',
+        end_time: '2023-11-01 11:00:00',
+        description: 'Test description',
+        status: 'available',
+        client_name: null,
+        client_phone: null
+      };
+
+      const formatted = store.formatSlot(slotData);
+
+      expect(formatted.id).toBe(1);
+      expect(formatted.raw_start_time).toBe('2023-11-01 10:00:00');
+      expect(formatted.date).toBe('2023-11-01');
+      expect(formatted.start_time).toBe('10:00');
+      expect(formatted.end_time).toBe('11:00');
+      expect(formatted.description).toBe('Test description');
+      expect(formatted.is_booked).toBe(false);
+      expect(formatted.booked_by).toBeNull();
+      expect(formatted.booking_comment).toBeNull();
+      expect(formatted.statusClass).toBe('available');
+      expect(formatted.statusText).toBe('Свободно');
+      expect(formatted.formattedDate).toBeDefined(); // Formatted by Intl.DateTimeFormat
+    });
+
+    it('formats a booked slot correctly', () => {
+      const store = useSlotsStore();
+      const slotData = {
+        id: 2,
+        start_time: '2023-11-02 14:30:00',
+        end_time: '2023-11-02 15:30:00',
+        description: '',
+        status: 'booked',
+        client_name: 'John Doe',
+        client_phone: '+1234567890'
+      };
+
+      const formatted = store.formatSlot(slotData);
+
+      expect(formatted.id).toBe(2);
+      expect(formatted.is_booked).toBe(true);
+      expect(formatted.booked_by).toBe('John Doe');
+      expect(formatted.booking_comment).toBe('+1234567890');
+      expect(formatted.statusClass).toBe('booked');
+      expect(formatted.statusText).toBe('Забронировано');
+    });
+  });
+
   describe('fetchSlots', () => {
+    it('successfully fetches and formats slots', async () => {
+      const store = useSlotsStore();
+      const mockSlots = [
+        { id: 1, start_time: '2023-10-27 10:00:00', end_time: '2023-10-27 11:00:00', status: 'available' },
+        { id: 2, start_time: '2023-10-28 12:00:00', end_time: '2023-10-28 13:00:00', status: 'booked', client_name: 'Alice' }
+      ];
+
+      slotsApi.getAllSlots.mockResolvedValue({ data: { success: true, data: mockSlots } });
+
+      await store.fetchSlots();
+
+      expect(slotsApi.getAllSlots).toHaveBeenCalled();
+      expect(store.slots.length).toBe(2);
+      expect(store.slots[0].id).toBe(1);
+      expect(store.slots[0].is_booked).toBe(false);
+      expect(store.slots[1].id).toBe(2);
+      expect(store.slots[1].is_booked).toBe(true);
+      expect(store.slots[1].booked_by).toBe('Alice');
+      expect(store.isLoading).toBe(false);
+      expect(store.error).toBeNull();
+    });
+
     it('handles API errors gracefully in catch block', async () => {
       const store = useSlotsStore();
       const mockError = new Error('API Error');
