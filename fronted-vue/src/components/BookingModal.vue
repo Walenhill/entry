@@ -41,7 +41,7 @@
             @invalid="nameError = true"
           />
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.25rem;">
-            <div v-if="nameError" id="name-error" class="text-danger" style="font-size: 0.75rem;">Поле не может состоять только из пробелов</div>
+            <div v-if="nameError" id="name-error" class="text-danger" role="alert" aria-live="assertive" style="font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.25rem;"><span aria-hidden="true">⚠️</span><span>Поле не может состоять только из пробелов</span></div>
             <div v-else></div>
             <div id="name-counter" :class="formData.name.length === 100 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right;" aria-live="polite">
               {{ formData.name.length }} / 100
@@ -70,7 +70,7 @@
             @invalid="phoneError = true"
           />
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.25rem; gap: 1rem;">
-            <div v-if="phoneError" id="phone-error" class="text-danger" style="font-size: 0.75rem;">Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))</div>
+            <div v-if="phoneError" id="phone-error" class="text-danger" role="alert" aria-live="assertive" style="font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.25rem;"><span aria-hidden="true">⚠️</span><span>Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))</span></div>
             <div v-else></div>
             <div id="phone-counter" :class="formData.phone.length === 20 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; flex-shrink: 0;" aria-live="polite">
               {{ formData.phone.length }} / 20
