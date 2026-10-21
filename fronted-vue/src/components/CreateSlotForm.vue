@@ -17,8 +17,9 @@
         </div>
       </div>
 
-      <div v-if="timeError" id="time-error" class="error-message mb-3 mt-2" role="alert" aria-live="assertive">
-        {{ timeError }}
+      <div v-if="timeError" id="time-error" class="error-message mb-3 mt-2" role="alert" aria-live="assertive" style="display: flex; align-items: center; gap: 0.5rem;">
+        <span aria-hidden="true">⚠️</span>
+        <span>{{ timeError }}</span>
       </div>
 
       <div class="form-group mb-3 mt-3">
