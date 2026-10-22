@@ -42,3 +42,11 @@
 ## 2024-10-15 - Inline Form Validation Error Accessibility
 **Learning:** Using only text color (e.g., `.text-danger`) to indicate validation errors is insufficient for accessibility, as color-blind users or those with reduced contrast might miss it. Additionally, if the error container lacks `role="alert"` and `aria-live="assertive"`, screen readers won't announce the error immediately when it appears dynamically.
 **Action:** When adding inline validation errors, always combine `role="alert"`, `aria-live="assertive"`, and an accessible icon (e.g., `<span aria-hidden="true">⚠️</span>`) paired with flex alignment to provide immediate, multi-sensory feedback for invalid form states.
+
+## 2024-10-22 - Screen Reader Pronunciation of Time Ranges
+**Learning:** Screen readers often mispronounce raw text time ranges like "10:00 - 11:00" (e.g. reading it literally as "ten colon zero zero dash eleven colon zero zero").
+**Action:** When displaying time ranges or formats that need a natural flow, add a descriptive `aria-label` to the container (e.g. `aria-label="с 10:00 до 11:00"`) and wrap the raw visible HTML within an `aria-hidden="true"` span. This overrides the visually presented text with grammatically correct spoken text for screen readers.
+
+## 2024-10-22 - Screen Reader Pronunciation of Time Ranges (Correction)
+**Learning:** Screen readers often mispronounce raw text time ranges like "10:00 - 11:00". However, applying an `aria-label` directly to non-interactive elements (like `<dd>` or `<span>`) while hiding the content with `aria-hidden="true"` is an anti-pattern. Major screen readers (like NVDA and JAWS) frequently ignore `aria-label` attributes on generic elements unless they have a specific role, risking the complete omission of crucial data.
+**Action:** When providing custom screen-reader-only text for natural pronunciation (e.g. "с 10:00 до 11:00"), wrap the visible semantic elements (e.g. `<time>`) in `aria-hidden="true"`, and place a visually hidden `<span>` (using `clip: rect(...)` inline styles or a `.sr-only` class) immediately after it containing the spoken text. This ensures robust accessibility without relying on unpredictable `aria-label` behavior on non-interactive elements.
