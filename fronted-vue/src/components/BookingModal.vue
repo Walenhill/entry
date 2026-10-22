@@ -15,7 +15,12 @@
         </div>
         <div class="info-item">
           <dt>Время:</dt>
-          <dd><time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> - <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time></dd>
+          <dd>
+            <span aria-hidden="true">
+              <time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> - <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time>
+            </span>
+            <span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">с {{ slot.start_time }} до {{ slot.end_time }}</span>
+          </dd>
         </div>
       </dl>
 
