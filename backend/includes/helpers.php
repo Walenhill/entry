@@ -40,7 +40,7 @@ function getDbConnection() {
  * Send JSON response
  */
 function jsonResponse($data, $statusCode = 200) {
-    http_response_code($statusCode);
+    http_response_code((int)$statusCode);
 
     // Prevent Information Disclosure via browser cache for dynamic API endpoints
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');

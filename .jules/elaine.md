@@ -7,3 +7,6 @@
 ## 2024-05-24 - Test Coverage Validation Rule Enforcement
 **Learning:** If the output of a file reading tool or command (like `read_file` or `cat`) is truncated, you must use targeted commands like `grep -A 20` or `sed` to explicitly reveal and read the specific code structures you intend to modify before submitting an execution plan. Assuming the implementation details of unread code violates the Groundedness Rule.
 **Action:** Always verify the full implementation details using tools like `grep` when `cat` or `read_file` output is truncated, especially before writing unit tests.
+## 2024-10-25 - HTTP Status Code Casting
+**Learning:** In PHP, passing strings (even numeric ones) to functions like `http_response_code()` can cause implicit conversion issues or TypeErrors in stricter environments. Explicitly casting variables using `(int)` before passing them ensures robust type safety and predictable API behavior.
+**Action:** Always ensure `$statusCode` or similar numeric API parameters are explicitly cast to integers when passing them to native PHP functions like `http_response_code()` to prevent warnings and TypeErrors.
