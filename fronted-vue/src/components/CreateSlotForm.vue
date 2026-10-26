@@ -1,5 +1,5 @@
 <template>
-  <div class="card create-form">
+  <div class="card create-form" :class="{ shake: shakeError }">
     <h3 class="mb-3" id="create-slot-heading">Создать новый слот</h3>
     <form @submit.prevent="handleSubmit" aria-labelledby="create-slot-heading">
       <div class="form-row">
@@ -112,6 +112,8 @@ const form = ref({
 });
 
 const timeError = ref('');
+const shakeError = ref(false);
+let shakeTimeout = null;
 
 watch(() => form.value.start_time, (newStartTime) => {
   if (newStartTime && form.value.end_time) {
@@ -129,6 +131,25 @@ const handleSubmit = () => {
   timeError.value = '';
   if (form.value.start_time >= form.value.end_time) {
     timeError.value = 'Время начала должно быть раньше времени окончания';
+
+    if (shakeTimeout) {
+      clearTimeout(shakeTimeout);
+      shakeError.value = false;
+      // Allow browser to register the class removal before adding it back
+      setTimeout(() => {
+        shakeError.value = true;
+        shakeTimeout = setTimeout(() => {
+          shakeError.value = false;
+        }, 500);
+      }, 10);
+    } else {
+      shakeError.value = true;
+      shakeTimeout = setTimeout(() => {
+        shakeError.value = false;
+        shakeTimeout = null;
+      }, 500);
+    }
+
     return;
   }
   emit('submit', form.value);
