@@ -151,6 +151,10 @@ function handlePostRequest($path) {
                 jsonResponse(['error' => 'date, start_hour, end_hour, and duration are required and must be numeric'], 400);
             }
 
+            if (isset($data['description']) && !is_string($data['description'])) {
+                jsonResponse(['error' => 'description must be a string'], 400);
+            }
+
             $result = generateSlotsFromTemplate($data);
 
             if (isset($result['error'])) {
@@ -268,6 +272,9 @@ function handleUpdateRequest($path) {
         
         // Only update description for now
         if (isset($data['description'])) {
+            if (!is_string($data['description'])) {
+                jsonResponse(['error' => 'Description must be a string'], 400);
+            }
             $description = sanitizeInput($data['description']);
             if (mb_strlen($description) > 255) {
                 jsonResponse(['error' => 'Description must not exceed 255 characters'], 400);
