@@ -111,3 +111,7 @@
 ## 2026-10-25 - Avoid relying purely on color for error states
 **Learning:** Found that the general error messages in `LoginView.vue`, `SlotsView.vue`, and `StatsView.vue` relied primarily on red text and background colors (`text-danger`, `status-danger-bg`) to convey failure. This is less accessible for users with color vision deficiencies.
 **Action:** When enhancing error messages or empty states, always include a visual indicator like an icon (e.g., `⚠️`) wrapped in `aria-hidden="true"` to provide context that doesn't rely on color alone.
+
+## 2024-10-27 - Adding Semantic List Roles to CSS Grids
+**Learning:** Using CSS `display: grid` or `display: flex` can sometimes cause screen readers (like VoiceOver) to strip the implicit list semantics of containing elements, making it harder for visually impaired users to understand the structure and count of items.
+**Action:** When rendering a collection of similar items (like a grid of slot cards or stats), explicitly add `role="list"` to the container and `role="listitem"` to the child elements to guarantee robust screen reader support.
