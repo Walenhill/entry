@@ -1,5 +1,5 @@
 <template>
-  <div class="card slot-card" :class="[`status-${slot.statusClass}`, { 'is-busy': isCanceling || isDeleting }]" :aria-busy="isCanceling || isDeleting">
+  <div class="card slot-card" :class="[`status-${slot.statusClass}`, { 'is-busy': isCanceling || isDeleting }]" :aria-busy="isCanceling || isDeleting" role="listitem">
     <div class="slot-header">
       <div class="time-block">
         <span class="time">

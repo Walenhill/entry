@@ -35,8 +35,8 @@
 
     <div v-else-if="slotsStore.stats" class="stats-content" :style="slotsStore.statsLoading ? 'opacity: 0.6; pointer-events: none;' : ''" :aria-busy="slotsStore.statsLoading">
       <!-- Cards -->
-      <div class="stats-cards mb-4">
-        <div class="card stat-card">
+      <div class="stats-cards mb-4" role="list">
+        <div class="card stat-card" role="listitem">
           <div class="stat-icon info" aria-hidden="true">📋</div>
           <div class="stat-details">
             <span class="stat-value">{{ slotsStore.stats.summary.total }}</span>
@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <div class="card stat-card">
+        <div class="card stat-card" role="listitem">
           <div class="stat-icon success" aria-hidden="true">✓</div>
           <div class="stat-details">
             <span class="stat-value text-success">{{ slotsStore.stats.summary.booked }}</span>
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="card stat-card">
+        <div class="card stat-card" role="listitem">
           <div class="stat-icon primary" aria-hidden="true">⏳</div>
           <div class="stat-details">
             <span class="stat-value" style="color: var(--accent-secondary)">{{ slotsStore.stats.summary.available }}</span>
@@ -60,7 +60,7 @@
           </div>
         </div>
 
-        <div class="card stat-card">
+        <div class="card stat-card" role="listitem">
           <div class="stat-icon danger" aria-hidden="true">✕</div>
           <div class="stat-details">
             <span class="stat-value text-danger">{{ slotsStore.stats.summary.cancelled }}</span>
@@ -166,7 +166,7 @@ onMounted(() => {
   font-weight: bold;
 }
 
-.stat-icon.info { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.stat-icon.info { background-color: rgba(96, 165, 250, 0.1); color: var(--status-info); }
 .stat-icon.success { background-color: var(--status-success-bg); color: var(--status-success); }
 .stat-icon.primary { background-color: rgba(139, 109, 190, 0.1); color: var(--accent-secondary); }
 .stat-icon.danger { background-color: var(--status-danger-bg); color: var(--status-danger); }
@@ -251,8 +251,8 @@ onMounted(() => {
 }
 
 .badge-info {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  background-color: rgba(96, 165, 250, 0.1);
+  color: var(--status-info);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.875rem;
