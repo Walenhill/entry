@@ -1,6 +1,6 @@
 <template>
   <div class="modal-overlay" @click.self="!isSubmitting && $emit('close')">
-    <div class="modal-content" ref="modalContent" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+    <div class="modal-content" :class="{ shake: shakeError }" ref="modalContent" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       <div class="modal-header">
         <h3 id="booking-modal-title">Бронирование слота</h3>
         <span :title="isSubmitting ? 'Закрыть (Esc) - Действие недоступно во время загрузки' : 'Закрыть (Esc)'" style="display: inline-flex;">
@@ -43,7 +43,7 @@
             :aria-invalid="formData.name.length === 100 || nameError"
             :style="(formData.name.length === 100 || nameError) ? 'border-color: var(--status-danger);' : ''"
             @input="nameError = false"
-            @invalid="nameError = true"
+            @invalid="nameError = true; triggerShake()"
           />
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.25rem;">
             <div v-if="nameError" id="name-error" class="text-danger" role="alert" aria-live="assertive" style="font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.25rem;"><span aria-hidden="true">⚠️</span><span>Поле не может состоять только из пробелов</span></div>
@@ -72,7 +72,7 @@
             :aria-invalid="formData.phone.length === 20 || phoneError"
             :style="(formData.phone.length === 20 || phoneError) ? 'border-color: var(--status-danger);' : ''"
             @input="phoneError = false"
-            @invalid="phoneError = true"
+            @invalid="phoneError = true; triggerShake()"
           />
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.25rem; gap: 1rem;">
             <div v-if="phoneError" id="phone-error" class="text-danger" role="alert" aria-live="assertive" style="font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.25rem;"><span aria-hidden="true">⚠️</span><span>Введите корректный номер телефона (от 7 до 20 символов, допускаются цифры, пробелы, +, -, (, ))</span></div>
@@ -122,6 +122,27 @@ let previousActiveElement = null;
 
 const nameError = ref(false);
 const phoneError = ref(false);
+const shakeError = ref(false);
+let shakeTimeout = null;
+
+const triggerShake = () => {
+  if (shakeTimeout) {
+    clearTimeout(shakeTimeout);
+    shakeError.value = false;
+    setTimeout(() => {
+      shakeError.value = true;
+      shakeTimeout = setTimeout(() => {
+        shakeError.value = false;
+      }, 500);
+    }, 10);
+  } else {
+    shakeError.value = true;
+    shakeTimeout = setTimeout(() => {
+      shakeError.value = false;
+      shakeTimeout = null;
+    }, 500);
+  }
+};
 
 const handleSubmit = () => {
   emit('submit', formData.value);
