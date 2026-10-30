@@ -152,6 +152,8 @@ defineEmits(['book', 'cancel', 'delete']);
 .description {
   font-size: 0.875rem;
   margin-bottom: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .booking-details {
@@ -166,6 +168,7 @@ defineEmits(['book', 'cancel', 'delete']);
   display: flex;
   justify-content: space-between;
   font-size: 0.875rem;
+  gap: 1rem;
 }
 
 .detail-item:not(:last-child) {
@@ -174,12 +177,15 @@ defineEmits(['book', 'cancel', 'delete']);
 
 .detail-item .label {
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 .detail-item .value {
   color: var(--text-primary);
   font-weight: 500;
   margin-left: 0;
+  word-break: break-word;
+  text-align: right;
 }
 
 .slot-footer {

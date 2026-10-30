@@ -115,3 +115,7 @@
 ## 2024-10-27 - Adding Semantic List Roles to CSS Grids
 **Learning:** Using CSS `display: grid` or `display: flex` can sometimes cause screen readers (like VoiceOver) to strip the implicit list semantics of containing elements, making it harder for visually impaired users to understand the structure and count of items.
 **Action:** When rendering a collection of similar items (like a grid of slot cards or stats), explicitly add `role="list"` to the container and `role="listitem"` to the child elements to guarantee robust screen reader support.
+
+## 2026-10-31 - Preserving User Formatting and Preventing Flex Overflow
+**Learning:** Textareas allow users to input line breaks, but generic `<p>` tags strip them out, leading to unreadable walls of text. Additionally, long unbroken strings (like long names or URLs) in flex containers will blow out the card's width if not constrained.
+**Action:** Always add `white-space: pre-wrap;` to display elements rendering textarea input, and ensure flex children containing dynamic text have `word-break: break-word;` to prevent layout breaking.
