@@ -4,15 +4,15 @@
     <form @submit.prevent="handleSubmit" aria-labelledby="create-slot-heading">
       <div class="form-row">
         <div class="form-group">
-          <label for="date">Дата <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
+          <label for="date">Дата <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
           <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required :disabled="isSubmitting" />
         </div>
         <div class="form-group">
-          <label for="start_time">Начало <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
+          <label for="start_time">Начало <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
           <input type="time" id="start_time" v-model="form.start_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" :style="timeError ? 'border-color: var(--status-danger);' : ''" @input="timeError = ''" />
         </div>
         <div class="form-group">
-          <label for="end_time">Конец <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
+          <label for="end_time">Конец <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
           <input type="time" id="end_time" v-model="form.end_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" :style="timeError ? 'border-color: var(--status-danger);' : ''" @input="timeError = ''" />
         </div>
       </div>
@@ -37,7 +37,7 @@
         ></textarea>
         <div id="desc-counter" :class="form.description.length === 255 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; margin-top: 0.25rem;" aria-live="polite">
           {{ form.description.length }} / 255
-          <span v-if="form.description.length === 255" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+          <span v-if="form.description.length === 255" class="sr-only"> (достигнут лимит символов)</span>
         </div>
       </div>
 
