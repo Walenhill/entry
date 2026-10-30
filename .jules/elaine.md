@@ -10,3 +10,6 @@
 ## 2024-10-25 - HTTP Status Code Casting
 **Learning:** In PHP, passing strings (even numeric ones) to functions like `http_response_code()` can cause implicit conversion issues or TypeErrors in stricter environments. Explicitly casting variables using `(int)` before passing them ensures robust type safety and predictable API behavior.
 **Action:** Always ensure `$statusCode` or similar numeric API parameters are explicitly cast to integers when passing them to native PHP functions like `http_response_code()` to prevent warnings and TypeErrors.
+## 2024-10-30 - Execution Plan Specificity Rule Enforcement
+**Learning:** When drafting execution plans, including steps that summarize past actions or describe context (e.g., 'I have explored...') triggers a REVISION_REQUIRED status because it violates the Specificity Rule, which mandates that every step must be a granular, actionable future task.
+**Action:** When drafting execution plans, do not include steps that summarize past actions or codebase context (e.g., 'I have explored the codebase and identified...'). Every step must describe a concrete, actionable future task mapped to a specific tool to avoid violating the Specificity Rule.

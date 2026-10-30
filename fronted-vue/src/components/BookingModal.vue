@@ -19,14 +19,14 @@
             <span aria-hidden="true">
               <time :datetime="`${slot.date}T${slot.start_time}`">{{ slot.start_time }}</time> - <time :datetime="`${slot.date}T${slot.end_time}`">{{ slot.end_time }}</time>
             </span>
-            <span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">с {{ slot.start_time }} до {{ slot.end_time }}</span>
+            <span class="sr-only">с {{ slot.start_time }} до {{ slot.end_time }}</span>
           </dd>
         </div>
       </dl>
 
       <form @submit.prevent="handleSubmit" aria-labelledby="booking-modal-title">
         <div class="form-group mb-3">
-          <label for="clientName">Имя клиента <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
+          <label for="clientName">Имя клиента <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
           <input
             type="text"
             id="clientName"
@@ -50,13 +50,13 @@
             <div v-else></div>
             <div id="name-counter" :class="formData.name.length === 100 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right;" aria-live="polite">
               {{ formData.name.length }} / 100
-              <span v-if="formData.name.length === 100" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+              <span v-if="formData.name.length === 100" class="sr-only"> (достигнут лимит символов)</span>
             </div>
           </div>
         </div>
 
         <div class="form-group mb-4">
-          <label for="clientPhone">Телефон <span class="text-danger" aria-hidden="true">*</span><span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (обязательно)</span></label>
+          <label for="clientPhone">Телефон <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
           <input
             type="tel"
             id="clientPhone"
@@ -79,7 +79,7 @@
             <div v-else></div>
             <div id="phone-counter" :class="formData.phone.length === 20 ? 'text-danger' : 'text-muted'" style="font-size: 0.75rem; text-align: right; flex-shrink: 0;" aria-live="polite">
               {{ formData.phone.length }} / 20
-              <span v-if="formData.phone.length === 20" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;"> (достигнут лимит символов)</span>
+              <span v-if="formData.phone.length === 20" class="sr-only"> (достигнут лимит символов)</span>
             </div>
           </div>
         </div>
