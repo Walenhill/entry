@@ -54,3 +54,7 @@
 ## 2024-10-23 - Reusable Validation Shake Animation
 **Learning:** Adding a CSS `shake` animation for form validation provides accessible physical feedback. By moving the `@keyframes shake` and the `.shake` class to a global stylesheet (like `style.css`), we avoid code duplication across multiple forms (e.g. `LoginView.vue` and `CreateSlotForm.vue`). Furthermore, to ensure the animation triggers reliably on consecutive invalid submissions, we must clear the previous `setTimeout` and briefly yield to the event loop (e.g., using a 10ms `setTimeout`) before resetting the reactive boolean to `true` to force a DOM reflow.
 **Action:** When applying shake animations to multiple components, define the styles globally. Always use a timeout-clearing logic pattern with a small delay to ensure the animation re-triggers seamlessly.
+
+## 2024-10-24 - Form Input Interactive Context
+**Learning:** Default form inputs often lack sufficient visual cues before interaction, and labels fade into the background when filling out complex forms. By adding subtle hover borders and lighting up the associated label during `:focus-within` on the `.form-group`, we significantly improve the "feel" of forms and help users maintain context without structural changes.
+**Action:** When styling forms, always ensure inputs have distinct `:hover` states in addition to `:focus`, and use `:focus-within` on form containers to visually elevate the associated label while the field is active.
