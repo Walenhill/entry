@@ -92,6 +92,10 @@ input:disabled, textarea:disabled, select:disabled {
   background-color: var(--bg-surface);
 }
 
+input:hover:not(:disabled), textarea:hover:not(:disabled), select:hover:not(:disabled) {
+  border-color: var(--text-muted);
+}
+
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--accent-secondary);
@@ -108,6 +112,11 @@ label {
   color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.form-group:focus-within label {
+  color: var(--text-primary);
 }
 
 a:focus-visible {
