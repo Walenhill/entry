@@ -58,3 +58,7 @@
 ## 2024-10-24 - Form Input Interactive Context
 **Learning:** Default form inputs often lack sufficient visual cues before interaction, and labels fade into the background when filling out complex forms. By adding subtle hover borders and lighting up the associated label during `:focus-within` on the `.form-group`, we significantly improve the "feel" of forms and help users maintain context without structural changes.
 **Action:** When styling forms, always ensure inputs have distinct `:hover` states in addition to `:focus`, and use `:focus-within` on form containers to visually elevate the associated label while the field is active.
+
+## 2024-11-02 - Form Native Validation Animation Triggers
+**Learning:** Native HTML form validation (like `required` or constraints) prevents the `@submit` event from firing in Vue. This means if the physical validation feedback (e.g., the `.shake` class animation) is only triggered inside the form's submit handler (like `handleLogin` or `handleSubmit`), users will not receive the accessible shaking feedback when the browser catches native validation errors.
+**Action:** When adding motion-based UI feedback for validation (like a form shake), always extract the logic into a reusable method (e.g., `triggerShake`) and explicitly bind it to the `@invalid` event on the constrained input fields (e.g., `@invalid="triggerShake()"`), in addition to calling it within the submit handler for custom logic validations.

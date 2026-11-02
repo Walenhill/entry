@@ -5,15 +5,15 @@
       <div class="form-row">
         <div class="form-group">
           <label for="date">Дата <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
-          <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required :disabled="isSubmitting" />
+          <input type="date" id="date" ref="dateInput" v-model="form.date" :min="today" required :disabled="isSubmitting" @invalid="triggerShake()" />
         </div>
         <div class="form-group">
           <label for="start_time">Начало <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
-          <input type="time" id="start_time" v-model="form.start_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" :style="timeError ? 'border-color: var(--status-danger);' : ''" @input="timeError = ''" />
+          <input type="time" id="start_time" v-model="form.start_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" :style="timeError ? 'border-color: var(--status-danger);' : ''" @input="timeError = ''" @invalid="triggerShake()" />
         </div>
         <div class="form-group">
           <label for="end_time">Конец <span class="text-danger" aria-hidden="true">*</span><span class="sr-only"> (обязательно)</span></label>
-          <input type="time" id="end_time" v-model="form.end_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" :style="timeError ? 'border-color: var(--status-danger);' : ''" @input="timeError = ''" />
+          <input type="time" id="end_time" v-model="form.end_time" required :disabled="isSubmitting" :aria-invalid="!!timeError" :aria-describedby="timeError ? 'time-error' : null" :style="timeError ? 'border-color: var(--status-danger);' : ''" @input="timeError = ''" @invalid="triggerShake()" />
         </div>
       </div>
 
@@ -115,6 +115,25 @@ const timeError = ref('');
 const shakeError = ref(false);
 let shakeTimeout = null;
 
+const triggerShake = () => {
+  if (shakeTimeout) {
+    clearTimeout(shakeTimeout);
+    shakeError.value = false;
+    setTimeout(() => {
+      shakeError.value = true;
+      shakeTimeout = setTimeout(() => {
+        shakeError.value = false;
+      }, 500);
+    }, 10);
+  } else {
+    shakeError.value = true;
+    shakeTimeout = setTimeout(() => {
+      shakeError.value = false;
+      shakeTimeout = null;
+    }, 500);
+  }
+};
+
 watch(() => form.value.start_time, (newStartTime) => {
   if (newStartTime && form.value.end_time) {
     if (newStartTime >= form.value.end_time) {
@@ -131,25 +150,7 @@ const handleSubmit = () => {
   timeError.value = '';
   if (form.value.start_time >= form.value.end_time) {
     timeError.value = 'Время начала должно быть раньше времени окончания';
-
-    if (shakeTimeout) {
-      clearTimeout(shakeTimeout);
-      shakeError.value = false;
-      // Allow browser to register the class removal before adding it back
-      setTimeout(() => {
-        shakeError.value = true;
-        shakeTimeout = setTimeout(() => {
-          shakeError.value = false;
-        }, 500);
-      }, 10);
-    } else {
-      shakeError.value = true;
-      shakeTimeout = setTimeout(() => {
-        shakeError.value = false;
-        shakeTimeout = null;
-      }, 500);
-    }
-
+    triggerShake();
     return;
   }
   emit('submit', form.value);

@@ -26,6 +26,7 @@
               @keydown="checkCapsLock"
               @mousedown="checkCapsLock"
               @input="error = ''"
+              @invalid="triggerShake()"
             />
             <span :title="isLoading ? (showPassword ? 'Скрыть пароль - Действие недоступно во время загрузки' : 'Показать пароль - Действие недоступно во время загрузки') : (showPassword ? 'Скрыть пароль' : 'Показать пароль')" style="display: inline-flex; position: absolute; right: 0.5rem;">
               <button
@@ -78,6 +79,25 @@ const capsLockOn = ref(false);
 const shakeError = ref(false);
 let shakeTimeout = null;
 
+const triggerShake = () => {
+  if (shakeTimeout) {
+    clearTimeout(shakeTimeout);
+    shakeError.value = false;
+    setTimeout(() => {
+      shakeError.value = true;
+      shakeTimeout = setTimeout(() => {
+        shakeError.value = false;
+      }, 500);
+    }, 10);
+  } else {
+    shakeError.value = true;
+    shakeTimeout = setTimeout(() => {
+      shakeError.value = false;
+      shakeTimeout = null;
+    }, 500);
+  }
+};
+
 const checkCapsLock = (event) => {
   if (event.getModifierState) {
     capsLockOn.value = event.getModifierState('CapsLock');
@@ -104,22 +124,7 @@ const handleLogin = async () => {
     error.value = result.message;
     password.value = '';
 
-    if (shakeTimeout) {
-      clearTimeout(shakeTimeout);
-      shakeError.value = false;
-      setTimeout(() => {
-        shakeError.value = true;
-        shakeTimeout = setTimeout(() => {
-          shakeError.value = false;
-        }, 500);
-      }, 10);
-    } else {
-      shakeError.value = true;
-      shakeTimeout = setTimeout(() => {
-        shakeError.value = false;
-        shakeTimeout = null;
-      }, 500);
-    }
+    triggerShake();
 
     nextTick(() => {
       if (passwordInput.value) {
