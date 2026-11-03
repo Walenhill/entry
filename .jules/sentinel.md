@@ -6,3 +6,7 @@
 **Vulnerability:** The application was calling `session_destroy()` without emptying the `$_SESSION` array or invalidating the session cookie (`PHPSESSID`). This allowed old session cookies to potentially be reused or left on the client's browser, increasing the risk of session hijacking or fixation attacks.
 **Learning:** `session_destroy()` only removes the session data from the server's storage; it does not clear the `$_SESSION` superglobal for the current request, nor does it delete the session cookie from the client's browser.
 **Prevention:** To fully destroy a session, always empty `$_SESSION` (`$_SESSION = array();`) and use `setcookie` to expire the session cookie with a past time (e.g., `time() - 42000`) before calling `session_destroy()`.
+## 2024-05-24 - Exception Handler Missing in API Router
+**Vulnerability:** The application was missing a global exception handler in the `backend/main.php` entry point, and `display_errors` was not explicitly disabled.
+**Learning:** This could allow internal server errors or database connection failures to leak raw PHP stack traces directly to the client as HTML responses, exposing sensitive infrastructure details.
+**Prevention:** Always set `ini_set('display_errors', '0');` in production endpoints and implement a catch-all `set_exception_handler` to intercept `\Throwable` exceptions, ensuring they return a generic, non-revealing JSON 500 response.
