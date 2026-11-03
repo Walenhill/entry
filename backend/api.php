@@ -147,8 +147,12 @@ function handlePostRequest($path) {
         case 'slots/generate':
             checkAdminAuth();
 
-            if (!isset($data['date']) || !is_string($data['date']) || trim($data['date']) === '' || !isset($data['start_hour']) || !is_numeric($data['start_hour']) || !isset($data['end_hour']) || !is_numeric($data['end_hour']) || !isset($data['duration']) || !is_numeric($data['duration'])) {
-                jsonResponse(['error' => 'date, start_hour, end_hour, and duration are required and must be numeric'], 400);
+            if (!isset($data['date']) || !is_string($data['date']) || trim($data['date']) === '') {
+                jsonResponse(['error' => 'date is required and must be a string'], 400);
+            }
+
+            if (!isset($data['start_hour']) || !is_numeric($data['start_hour']) || !isset($data['end_hour']) || !is_numeric($data['end_hour']) || !isset($data['duration']) || !is_numeric($data['duration'])) {
+                jsonResponse(['error' => 'start_hour, end_hour, and duration are required and must be numeric'], 400);
             }
 
             if (isset($data['description']) && !is_string($data['description'])) {
