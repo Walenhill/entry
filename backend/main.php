@@ -5,6 +5,16 @@
  */
 
 // Enable gzip compression for API responses to reduce payload size
+
+// Security configurations
+ini_set('display_errors', '0');
+header_remove('X-Powered-By');
+set_exception_handler(function(\Throwable $e) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Internal Server Error']);
+    exit;
+});
 if (extension_loaded('zlib')) {
     ini_set('zlib.output_compression', 'On');
 }
