@@ -103,6 +103,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { useShake } from '../composables/useShake';
 
 const props = defineProps({
   slot: Object,
@@ -122,27 +123,7 @@ let previousActiveElement = null;
 
 const nameError = ref(false);
 const phoneError = ref(false);
-const shakeError = ref(false);
-let shakeTimeout = null;
-
-const triggerShake = () => {
-  if (shakeTimeout) {
-    clearTimeout(shakeTimeout);
-    shakeError.value = false;
-    setTimeout(() => {
-      shakeError.value = true;
-      shakeTimeout = setTimeout(() => {
-        shakeError.value = false;
-      }, 500);
-    }, 10);
-  } else {
-    shakeError.value = true;
-    shakeTimeout = setTimeout(() => {
-      shakeError.value = false;
-      shakeTimeout = null;
-    }, 500);
-  }
-};
+const { shakeError, triggerShake } = useShake();
 
 const handleSubmit = () => {
   emit('submit', formData.value);

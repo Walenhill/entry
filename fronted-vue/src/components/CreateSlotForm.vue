@@ -59,6 +59,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { useShake } from '../composables/useShake';
 
 const props = defineProps({
   isSubmitting: Boolean
@@ -112,27 +113,7 @@ const form = ref({
 });
 
 const timeError = ref('');
-const shakeError = ref(false);
-let shakeTimeout = null;
-
-const triggerShake = () => {
-  if (shakeTimeout) {
-    clearTimeout(shakeTimeout);
-    shakeError.value = false;
-    setTimeout(() => {
-      shakeError.value = true;
-      shakeTimeout = setTimeout(() => {
-        shakeError.value = false;
-      }, 500);
-    }, 10);
-  } else {
-    shakeError.value = true;
-    shakeTimeout = setTimeout(() => {
-      shakeError.value = false;
-      shakeTimeout = null;
-    }, 500);
-  }
-};
+const { shakeError, triggerShake } = useShake();
 
 watch(() => form.value.start_time, (newStartTime) => {
   if (newStartTime && form.value.end_time) {
