@@ -234,7 +234,8 @@ const handleLogout = async () => {
   border-left: 3px solid transparent;
 }
 
-.nav-item:hover {
+.nav-item:hover,
+.nav-item:focus-visible {
   background-color: var(--bg-surface-hover);
   color: var(--text-primary);
 }
