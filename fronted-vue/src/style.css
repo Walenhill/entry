@@ -197,7 +197,8 @@ a:focus-visible {
   color: var(--text-primary);
 }
 
-.btn-outline:hover:not(:disabled) {
+.btn-outline:hover:not(:disabled),
+.btn-outline:focus-visible:not(:disabled) {
   background-color: var(--bg-surface-hover);
 }
 

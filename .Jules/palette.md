@@ -62,3 +62,7 @@
 ## 2024-11-02 - Form Native Validation Animation Triggers
 **Learning:** Native HTML form validation (like `required` or constraints) prevents the `@submit` event from firing in Vue. This means if the physical validation feedback (e.g., the `.shake` class animation) is only triggered inside the form's submit handler (like `handleLogin` or `handleSubmit`), users will not receive the accessible shaking feedback when the browser catches native validation errors.
 **Action:** When adding motion-based UI feedback for validation (like a form shake), always extract the logic into a reusable method (e.g., `triggerShake`) and explicitly bind it to the `@invalid` event on the constrained input fields (e.g., `@invalid="triggerShake()"`), in addition to calling it within the submit handler for custom logic validations.
+
+## 2026-11-13 - Focus states for Outline Buttons
+**Learning:** While testing keyboard navigation, discovered that outline buttons (`.btn-outline`) only change their background color on hover, leaving keyboard users without clear visual feedback when tabbing through them, unlike primary/secondary buttons which rely on box-shadow.
+**Action:** Always ensure that focus states (`:focus-visible`) match or provide equivalent visual feedback to hover states. For outline buttons, apply the background-color change on `:focus-visible` as well.
