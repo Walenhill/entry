@@ -6,6 +6,7 @@
  */
 export const extractErrorMessage = (error, fallback = 'Unknown error') => {
   if (!error) return fallback;
+  if (typeof error === 'string') return error;
   return error.response?.data?.error || error.response?.data?.message || error.message || fallback;
 };
 
