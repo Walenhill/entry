@@ -102,6 +102,10 @@ describe('extractErrorMessage', () => {
     assert.strictEqual(extractErrorMessage({ message: 'Native message' }), 'Native message');
   });
 
+  test('extracts error if it is a string', () => {
+    assert.strictEqual(extractErrorMessage('Just a string error'), 'Just a string error');
+  });
+
   test('returns fallback when no message is found', () => {
     assert.strictEqual(extractErrorMessage({}, 'Custom fallback'), 'Custom fallback');
   });
