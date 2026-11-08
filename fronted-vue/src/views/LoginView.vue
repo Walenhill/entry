@@ -66,6 +66,7 @@
 import { ref, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
+import { useShake } from '../composables/useShake';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -76,27 +77,7 @@ const password = ref('');
 const isLoading = ref(false);
 const error = ref('');
 const capsLockOn = ref(false);
-const shakeError = ref(false);
-let shakeTimeout = null;
-
-const triggerShake = () => {
-  if (shakeTimeout) {
-    clearTimeout(shakeTimeout);
-    shakeError.value = false;
-    setTimeout(() => {
-      shakeError.value = true;
-      shakeTimeout = setTimeout(() => {
-        shakeError.value = false;
-      }, 500);
-    }, 10);
-  } else {
-    shakeError.value = true;
-    shakeTimeout = setTimeout(() => {
-      shakeError.value = false;
-      shakeTimeout = null;
-    }, 500);
-  }
-};
+const { shakeError, triggerShake } = useShake();
 
 const checkCapsLock = (event) => {
   if (event.getModifierState) {
