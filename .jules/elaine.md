@@ -16,3 +16,6 @@
 ## 2025-02-14 - Replace inline screen-reader CSS with .sr-only
 **Learning:** The project's global `style.css` defines an `.sr-only` utility class for visually hiding text while keeping it accessible to screen readers, but several components were still using verbose inline styles for this purpose.
 **Action:** Always prefer the `.sr-only` class over inline `clip`/`absolute` styles when hiding labels and helper text for screen readers to maintain cleaner and more maintainable templates.
+## 2025-02-14 - Playwright Locator Specificity with Screen-Reader Text
+**Learning:** When using Playwright's `get_by_label()` on inputs where the label contains an icon or visually hidden text (like `sr-only` "(обязательно)"), Playwright might resolve multiple elements (e.g., the input and a related button) if the label text isn't uniquely targeting just the input's accessible name.
+**Action:** In Playwright verification scripts, when selecting form inputs whose labels contain visually hidden text for screen readers (e.g., `(обязательно)`), use `page.get_by_role('textbox', name='...')` incorporating the full accessible name, rather than `page.get_by_label()`, to prevent element resolution errors and strictly match the intended input.
