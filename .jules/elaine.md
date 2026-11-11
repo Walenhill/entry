@@ -19,3 +19,6 @@
 ## 2025-02-14 - Playwright Locator Specificity with Screen-Reader Text
 **Learning:** When using Playwright's `get_by_label()` on inputs where the label contains an icon or visually hidden text (like `sr-only` "(обязательно)"), Playwright might resolve multiple elements (e.g., the input and a related button) if the label text isn't uniquely targeting just the input's accessible name.
 **Action:** In Playwright verification scripts, when selecting form inputs whose labels contain visually hidden text for screen readers (e.g., `(обязательно)`), use `page.get_by_role('textbox', name='...')` incorporating the full accessible name, rather than `page.get_by_label()`, to prevent element resolution errors and strictly match the intended input.
+## 2024-03-26 - Extracting keyboard shortcut styles to semantic HTML
+**Learning:** In the `fronted-vue` project, several components were using verbose inline styles on generic `<span>` tags to display keyboard shortcuts like "Esc". This leads to code duplication and poor semantics.
+**Action:** When semantic keyboard shortcuts are needed in the `fronted-vue` project, use the semantic HTML `<kbd>` tag. The styling for `<kbd>` elements is globally defined in `src/style.css`, eliminating the need for inline styles on generic tags.

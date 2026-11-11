@@ -44,7 +44,7 @@
       <div class="form-actions justify-end">
         <button type="button" class="btn btn-outline mr-2" @click="$emit('cancel')" :disabled="isSubmitting" aria-keyshortcuts="Escape">
           Отмена
-          <span class="text-muted" style="font-size: 0.8em; margin-left: 4px; padding: 1px 4px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-main);">Esc</span>
+          <kbd style="margin-left: 4px;">Esc</kbd>
         </button>
         <span :title="isSubmitting ? 'Добавить слот - Действие недоступно во время загрузки' : 'Добавить слот'" style="display: inline-flex;">
           <button type="submit" class="btn btn-primary" :disabled="isSubmitting" :aria-label="isSubmitting ? 'Добавить слот - Действие недоступно во время загрузки' : 'Добавить слот'">

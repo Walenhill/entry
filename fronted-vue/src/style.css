@@ -367,3 +367,12 @@ a:focus-visible {
     animation: none !important;
   }
 }
+
+kbd {
+  font-size: 0.8em;
+  padding: 1px 4px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+}
