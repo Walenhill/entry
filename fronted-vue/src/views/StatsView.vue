@@ -92,7 +92,12 @@
       <div class="card">
         <h3 id="top-clients-heading" class="mb-3">Активные клиенты</h3>
 
-        <div class="table-responsive">
+        <div
+          class="table-responsive"
+          :tabindex="slotsStore.stats.top_clients && slotsStore.stats.top_clients.length > 0 ? 0 : null"
+          :role="slotsStore.stats.top_clients && slotsStore.stats.top_clients.length > 0 ? 'region' : null"
+          :aria-labelledby="slotsStore.stats.top_clients && slotsStore.stats.top_clients.length > 0 ? 'top-clients-heading' : null"
+        >
           <table class="table" v-if="slotsStore.stats.top_clients && slotsStore.stats.top_clients.length > 0" aria-labelledby="top-clients-heading">
             <thead>
               <tr>

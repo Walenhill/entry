@@ -87,7 +87,7 @@
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" @click="$emit('close')" :disabled="isSubmitting" aria-keyshortcuts="Escape">
             Отмена
-            <kbd style="margin-left: 4px;">Esc</kbd>
+            <kbd style="margin-left: 4px;" aria-hidden="true">Esc</kbd>
           </button>
           <span :title="isSubmitting ? 'Подтвердить бронь - Действие недоступно во время загрузки' : 'Подтвердить бронь'" style="display: inline-flex;">
             <button type="submit" class="btn btn-primary" :disabled="isSubmitting" :aria-label="isSubmitting ? 'Подтвердить бронь - Действие недоступно во время загрузки' : 'Подтвердить бронь'">

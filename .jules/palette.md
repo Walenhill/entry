@@ -119,3 +119,11 @@
 ## 2026-10-31 - Preserving User Formatting and Preventing Flex Overflow
 **Learning:** Textareas allow users to input line breaks, but generic `<p>` tags strip them out, leading to unreadable walls of text. Additionally, long unbroken strings (like long names or URLs) in flex containers will blow out the card's width if not constrained.
 **Action:** Always add `white-space: pre-wrap;` to display elements rendering textarea input, and ensure flex children containing dynamic text have `word-break: break-word;` to prevent layout breaking.
+
+## 2026-11-11 - Prevent Redundant Screen Reader Noise on Keyboard Hints
+**Learning:** When using `<kbd>` for visual keyboard hints inside buttons that already have `aria-keyshortcuts`, screen readers will announce the button text, the shortcut from `aria-keyshortcuts`, AND the visible `<kbd>` text, creating confusing redundancy.
+**Action:** Always add `aria-hidden="true"` to visual `<kbd>` hints when their information is already exposed to screen readers.
+
+## 2026-11-11 - Accessible Scrollable Regions
+**Learning:** Layout containers with `overflow: auto` are inaccessible to keyboard-only users because they cannot be scrolled using arrow keys unless they are focusable.
+**Action:** Always add `tabindex="0"`, `role="region"`, and an `aria-labelledby` to dynamically scrollable containers so keyboard users can focus and scroll them.
